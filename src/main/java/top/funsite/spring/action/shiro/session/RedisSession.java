@@ -1,7 +1,6 @@
 package top.funsite.spring.action.shiro.session;
 
 import org.apache.shiro.session.InvalidSessionException;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.ValidatingSession;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -25,42 +24,40 @@ public class RedisSession implements ValidatingSession {
 
     /// keys
 
-    public static final String id = "id";
+    public interface Key {
+        String id = "id";
+        String host = "host";
+        String lastAccessTime = "lastAccessTime";
+        String startTimestamp = "startTimestamp";
+        String user = "user";
+        String realmName = "realmName";
+    }
 
-    public static final String host = "host";
-
-    public static final String lastAccessTime = "lastAccessTime";
-
-    public static final String startTimestamp = "startTimestamp";
 
     public RedisSession(RedisTemplate<String, Object> redisTemplate, String sessionKey) {
         this.redisTemplate = redisTemplate;
         this.hashOperations = redisTemplate.opsForHash();
         // 不存在就创建。
         if (!Boolean.TRUE.equals(redisTemplate.hasKey(sessionKey))) {
-            redisTemplate.opsForHash().put(sessionKey, id, sessionKey);
+            redisTemplate.opsForHash().put(sessionKey, Key.id, sessionKey);
         }
         this.session = hashOperations.entries(sessionKey);
         this.sessionKey = sessionKey;
     }
 
-    public static Session create(RedisTemplate<String, Object> redisTemplate, String sessionKey) {
-        return new RedisSession(redisTemplate, sessionKey);
-    }
-
     @Override
     public Serializable getId() {
-        return cast(session.get(id));
+        return cast(session.get(Key.id));
     }
 
     @Override
     public Date getStartTimestamp() {
-        return cast(session.get(startTimestamp));
+        return cast(session.get(Key.startTimestamp));
     }
 
     @Override
     public Date getLastAccessTime() {
-        return cast(session.get(lastAccessTime));
+        return cast(session.get(Key.lastAccessTime));
     }
 
     @Override
@@ -76,12 +73,12 @@ public class RedisSession implements ValidatingSession {
 
     @Override
     public String getHost() {
-        return (String) session.get(host);
+        return (String) session.get(Key.host);
     }
 
     @Override
     public void touch() throws InvalidSessionException {
-        hashOperations.put(sessionKey, lastAccessTime, new Date());
+        hashOperations.put(sessionKey, Key.lastAccessTime, new Date());
     }
 
     @Override
@@ -111,9 +108,11 @@ public class RedisSession implements ValidatingSession {
     public Object removeAttribute(Object key) throws InvalidSessionException {
         try {
             String sKey = assertString(key);
-            Object removed = hashOperations.get(sessionKey, sKey);
-            hashOperations.delete(sessionKey, sKey);
-            return removed;
+            boolean hasKey = hashOperations.hasKey(sessionKey, sKey);
+            if (hasKey) {
+                hashOperations.delete(sessionKey, sKey);
+            }
+            return hasKey;
         } catch (Exception e) {
             throw new InvalidSessionException(e);
         }

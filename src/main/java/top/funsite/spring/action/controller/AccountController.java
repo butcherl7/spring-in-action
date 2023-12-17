@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.funsite.spring.action.shiro.session.RedisSession;
+import top.funsite.spring.action.util.WebUtils;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,20 +24,20 @@ public class AccountController {
     private RedisTemplate<String, Object> redisTemplate;
 
     @GetMapping("login")
-    public String login(@RequestParam String username, @RequestParam String password) {
+    public String login(@RequestParam String username, @RequestParam String password, HttpServletRequest request) {
         Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-        subject.login(token);
-
-        String jsessionid = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
+        subject.login(new UsernamePasswordToken(username, password));
 
         Date date = new Date();
+        String jsessionid = generateJsessionid();
 
         Map<String, Object> map = new HashMap<>(16);
-        map.put(RedisSession.id, jsessionid);
-        map.put(RedisSession.host, "localhost");
-        map.put(RedisSession.lastAccessTime, date);
-        map.put(RedisSession.startTimestamp, date);
+        map.put(RedisSession.Key.id, jsessionid);
+        map.put(RedisSession.Key.host, WebUtils.getRequestIp(request));
+        map.put(RedisSession.Key.lastAccessTime, date);
+        map.put(RedisSession.Key.startTimestamp, date);
+        map.put(RedisSession.Key.user, subject.getPrincipal());
+        map.put(RedisSession.Key.realmName, subject.getPrincipals().getRealmNames().iterator().next());
         redisTemplate.opsForHash().putAll(jsessionid, map);
 
         return "jsessionid: " + jsessionid;
@@ -44,5 +46,9 @@ public class AccountController {
     @GetMapping("info")
     public String info() {
         return "Info";
+    }
+
+    private static String generateJsessionid() {
+        return UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
     }
 }

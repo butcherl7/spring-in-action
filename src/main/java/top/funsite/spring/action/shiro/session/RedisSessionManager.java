@@ -19,21 +19,21 @@ public class RedisSessionManager extends DefaultWebSessionManager {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public RedisSessionManager(RedisSessionDAO sessionDAO) {
+    public RedisSessionManager(RedisTemplate<String, Object> redisTemplate) {
         setSessionIdCookieEnabled(false);
         setSessionIdUrlRewritingEnabled(false);
         // this.sessionDAO = sessionDAO;
-        this.redisTemplate = sessionDAO.getRedisTemplate();
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
     public Session getSession(SessionKey key) throws SessionException {
         String jsessionid = getJsessionid(WebUtils.getHttpRequest(key));
 
-        log.info("jsessionid is {}.", jsessionid);
+        log.debug("jsessionid is {}.", jsessionid);
 
         if (StringUtils.isBlank(jsessionid) || BlankSession.ID.equals(jsessionid) || Boolean.FALSE.equals(redisTemplate.hasKey(jsessionid))) {
-            log.info("Session is Blank.");
+            log.debug("Session is Blank.");
             return BlankSession.getInstance();
         }
         return new RedisSession(redisTemplate, jsessionid);

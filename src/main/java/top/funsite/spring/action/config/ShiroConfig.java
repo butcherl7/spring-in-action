@@ -1,7 +1,6 @@
 package top.funsite.spring.action.config;
 
 import org.apache.shiro.realm.Realm;
-import org.apache.shiro.realm.text.TextConfigurationRealm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.ShiroHttpServletResponse;
@@ -11,8 +10,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
+import top.funsite.spring.action.shiro.DemoRealm;
+import top.funsite.spring.action.shiro.RedisSubjectDAO;
 import top.funsite.spring.action.shiro.RedisSubjectFactory;
-import top.funsite.spring.action.shiro.session.RedisSessionDAO;
 import top.funsite.spring.action.shiro.session.RedisSessionManager;
 
 import javax.annotation.Resource;
@@ -26,9 +26,9 @@ import static org.apache.shiro.web.filter.mgt.DefaultFilter.authc;
 /**
  * Shiro 配置类。
  * <ol>
- *     <li>Shiro 重定向为何默认带上 JSESSIONID？see {@link ShiroHttpServletResponse#encodeRedirectURL(String)}.</li>
+ *     <li>Shiro 重定向为何默认带上 JSESSIONID？See {@link ShiroHttpServletResponse#encodeRedirectURL(String)}.</li>
  * </ol>
- * 使用 Bean 定义 Shiro Filter. see {@link ShiroFilterFactoryBean}.
+ * 使用 Bean 定义 Shiro Filter. See {@link ShiroFilterFactoryBean}.
  */
 @Configuration
 public class ShiroConfig {
@@ -46,20 +46,17 @@ public class ShiroConfig {
 
     @Bean
     public Realm realm() {
-        TextConfigurationRealm realm = new TextConfigurationRealm();
-        realm.setUserDefinitions("tom=password,user\n" + "jill.coder=password,admin");
-        realm.setRoleDefinitions("admin=read,write\n" + "user=read");
-        realm.setCachingEnabled(true);
-        return realm;
+        return new DemoRealm();
     }
 
     @Bean
     public DefaultWebSecurityManager securityManager(@Autowired Realm realm) {
-        RedisSessionDAO sessionDAO = new RedisSessionDAO(redisTemplate);
+        // RedisSessionDAO sessionDAO = new RedisSessionDAO(redisTemplate);
 
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setSessionManager(new RedisSessionManager(sessionDAO));
+        securityManager.setSessionManager(new RedisSessionManager(redisTemplate));
         securityManager.setSubjectFactory(new RedisSubjectFactory());
+        securityManager.setSubjectDAO(new RedisSubjectDAO());
         securityManager.setRealm(realm);
         return securityManager;
     }

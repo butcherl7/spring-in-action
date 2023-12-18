@@ -13,10 +13,13 @@ public class WebUtils {
     private WebUtils() {
     }
 
+
     public static String getRequestIp(HttpServletRequest request) {
         Objects.requireNonNull(request, "HttpServletRequest 不能为空");
 
         final String unknown = "UNKNOWN";
+        final String ipv4Localhost = "127.0.0.1";
+        final String ipv6Localhost = "0:0:0:0:0:0:0:1";
 
         String ip = request.getHeader("X-Real-IP");
         String forwarded = request.getHeader("X-Forwarded-For");
@@ -50,6 +53,9 @@ public class WebUtils {
         }
         if (!isNotBlank(forwarded) || unknown.equalsIgnoreCase(forwarded)) {
             forwarded = request.getRemoteAddr();
+        }
+        if (ipv6Localhost.equals(forwarded)) {
+            forwarded = ipv4Localhost;
         }
         return forwarded;
     }

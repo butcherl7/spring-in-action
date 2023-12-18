@@ -1,4 +1,4 @@
-package top.funsite.spring.action.shiro;
+package top.funsite.spring.action.shiro.realm;
 
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;

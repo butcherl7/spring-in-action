@@ -13,7 +13,6 @@ public class WebUtils {
     private WebUtils() {
     }
 
-
     public static String getRequestIp(HttpServletRequest request) {
         Objects.requireNonNull(request, "HttpServletRequest 不能为空");
 

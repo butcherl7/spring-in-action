@@ -1,12 +1,14 @@
 package top.funsite.spring.action.config;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.ShiroHttpServletResponse;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -39,11 +41,18 @@ public class ShiroConfig {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
+    /**
+     * 解决 Shiro 权限注解不生效的问题。
+     *
+     * @return DefaultAdvisorAutoProxyCreator
+     * @see RequiresRoles
+     * @see RequiresPermissions
+     * @see <a href="https://blog.csdn.net/m0_37890289/article/details/94014359">shiro使用注解鉴权时一直404</a>
+     */
     @Bean
-    @ConditionalOnMissingBean
     public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator() {
         DefaultAdvisorAutoProxyCreator proxyCreator = new DefaultAdvisorAutoProxyCreator();
-        proxyCreator.setProxyTargetClass(true);
+        proxyCreator.setUsePrefix(true);
         return proxyCreator;
     }
 
@@ -73,14 +82,19 @@ public class ShiroConfig {
         return shiroFilterFactoryBean;
     }
 
+    /**
+     * 过滤器链的定义，例如：
+     * <p>{@code xxx.put("/access/role", "authc, roles[ROLE_A,ROLE_B]")}</p>
+     * <p>{@code xxx.put("/access/perm", "authc, perms[doc:read]")}</p>
+     * <p>或者使用 {@link DefaultShiroFilterChainDefinition}.</p>
+     */
     private static Map<String, String> filterChainDefinitionMap() {
-        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-        filterChainDefinitionMap.put("/login", anon.name());
-        filterChainDefinitionMap.put("/home", anon.name());
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("/login", anon.name());
         // https://www.jianshu.com/p/0bad726d0454
         // org.apache.catalina.core.StandardHostValve.java:166 status(request, response);
-        filterChainDefinitionMap.put("/error", anon.name());
-        filterChainDefinitionMap.put("/**", authc.name());
-        return filterChainDefinitionMap;
+        map.put("/error", anon.name());
+        map.put("/**", authc.name());
+        return map;
     }
 }

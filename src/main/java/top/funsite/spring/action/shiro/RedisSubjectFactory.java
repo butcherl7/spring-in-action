@@ -24,6 +24,7 @@ public class RedisSubjectFactory extends DefaultWebSubjectFactory {
     public Subject createSubject(SubjectContext context) {
         WebSubjectContext wsc = (WebSubjectContext) context;
 
+        String host = wsc.resolveHost();
         Session session = wsc.getSession();
         ServletRequest request = wsc.resolveServletRequest();
         ServletResponse response = wsc.resolveServletResponse();
@@ -44,6 +45,6 @@ public class RedisSubjectFactory extends DefaultWebSubjectFactory {
 
         boolean authenticated = principals != null && principals.getPrimaryPrincipal() instanceof User;
 
-        return new WebDelegatingSubject(principals, authenticated, "", session, request, response, securityManager);
+        return new WebDelegatingSubject(principals, authenticated, host, session, request, response, securityManager);
     }
 }

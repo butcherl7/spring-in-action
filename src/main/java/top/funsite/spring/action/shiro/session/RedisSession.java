@@ -33,8 +33,14 @@ public class RedisSession implements ValidatingSession {
         String realmName = "realmName";
     }
 
-
+    /**
+     * 构造函数。
+     *
+     * @param redisTemplate RedisTemplate
+     * @param sessionKey    session 的 key 值。
+     */
     public RedisSession(RedisTemplate<String, Object> redisTemplate, String sessionKey) {
+        this.sessionKey = sessionKey;
         this.redisTemplate = redisTemplate;
         this.hashOperations = redisTemplate.opsForHash();
         // 不存在就创建。
@@ -42,7 +48,6 @@ public class RedisSession implements ValidatingSession {
             redisTemplate.opsForHash().put(sessionKey, Key.id, sessionKey);
         }
         this.session = hashOperations.entries(sessionKey);
-        this.sessionKey = sessionKey;
     }
 
     @Override

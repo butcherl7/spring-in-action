@@ -9,13 +9,15 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class JacksonUtils {
+public class JsonUtils {
 
     /**
      * ObjectMapper，默认配置了：
@@ -48,6 +50,16 @@ public class JacksonUtils {
         DEFAULT_OBJECT_MAPPER.setDateFormat(new SimpleDateFormat(DATE_TIME_PATTERN));
     }
 
-    private JacksonUtils() {
+    /**
+     * 该方法用于使用提供的输出流（使用 UTF8 编码）将任何 Java 值序列化为 JSON 输出。
+     *
+     * @param out   OutputStream
+     * @param value Java Object
+     */
+    public static void writeValue(OutputStream out, Object value) throws IOException {
+        DEFAULT_OBJECT_MAPPER.writeValue(out, value);
+    }
+
+    private JsonUtils() {
     }
 }

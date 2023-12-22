@@ -2,14 +2,12 @@ package top.funsite.spring.action.shiro.session;
 
 import org.apache.shiro.session.InvalidSessionException;
 import org.apache.shiro.session.mgt.ValidatingSession;
+import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class RedisSession implements ValidatingSession {
@@ -27,11 +25,20 @@ public class RedisSession implements ValidatingSession {
     public interface Key {
         String id = "id";
         String host = "host";
-        String lastAccessTime = "lastAccessTime";
-        String startTimestamp = "startTimestamp";
         String user = "user";
         String realmName = "realmName";
+        String startTimestamp = "startTimestamp";
+        String lastAccessTime = "lastAccessTime";
     }
+
+    /**
+     * 被禁止作为 session key 的名单。
+     */
+    private static final List<String> KEY_BLACKLIST = Arrays.asList(
+            // 不需要把 principals 存到 session. 也有序列化异常的问题。
+            DefaultSubjectContext.AUTHENTICATED_SESSION_KEY,
+            DefaultSubjectContext.PRINCIPALS_SESSION_KEY
+    );
 
     /**
      * 构造函数。
@@ -102,8 +109,12 @@ public class RedisSession implements ValidatingSession {
 
     @Override
     public void setAttribute(Object key, Object value) throws InvalidSessionException {
+        String sKey = assertString(key);
+        if (KEY_BLACKLIST.contains(sKey)) {
+            return;
+        }
         try {
-            hashOperations.put(sessionKey, assertString(key), value);
+            hashOperations.put(sessionKey, sKey, value);
         } catch (Exception e) {
             throw new InvalidSessionException(e);
         }
@@ -111,16 +122,18 @@ public class RedisSession implements ValidatingSession {
 
     @Override
     public Object removeAttribute(Object key) throws InvalidSessionException {
+        Object o = null;
         try {
             String sKey = assertString(key);
             boolean hasKey = hashOperations.hasKey(sessionKey, sKey);
             if (hasKey) {
+                o = hashOperations.get(sessionKey, sKey);
                 hashOperations.delete(sessionKey, sKey);
             }
-            return hasKey;
         } catch (Exception e) {
             throw new InvalidSessionException(e);
         }
+        return o;
     }
 
     @Override

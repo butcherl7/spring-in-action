@@ -41,4 +41,9 @@ public class AccountController {
     public String home2() {
         return "Welcome Home 2 🤣";
     }
+
+    @GetMapping("jwt")
+    public String jwt() {
+        return "JSON Web Token";
+    }
 }

@@ -15,6 +15,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import top.funsite.spring.action.shiro.RedisSubjectDAO;
 import top.funsite.spring.action.shiro.RedisSubjectFactory;
 import top.funsite.spring.action.shiro.filter.AuthFilter;
+import top.funsite.spring.action.shiro.filter.JwtFilter;
 import top.funsite.spring.action.shiro.filter.PermissionsAuthFilter;
 import top.funsite.spring.action.shiro.filter.RolesAuthFilter;
 import top.funsite.spring.action.shiro.realm.DemoRealm;
@@ -89,6 +90,7 @@ public class ShiroConfig {
         filters.put(authc.name(), new AuthFilter());
         filters.put(roles.name(), new RolesAuthFilter());
         filters.put(perms.name(), new PermissionsAuthFilter());
+        filters.put("jwt", new JwtFilter());
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap());
         return shiroFilterFactoryBean;
     }
@@ -111,6 +113,7 @@ public class ShiroConfig {
         map.put("/favicon.ico", anon.name());
         map.put("/error", anon.name());
         map.put("/home1", "authc, roles[home1]");
+        map.put("/jwt", "jwt");
         map.put("/**", authc.name());
         return map;
     }

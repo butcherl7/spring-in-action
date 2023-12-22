@@ -4,13 +4,14 @@ import org.apache.shiro.web.filter.authc.PassThruAuthenticationFilter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMethod;
-import top.funsite.spring.action.domin.HttpErrorEntity;
+import top.funsite.spring.action.shiro.HttpErrorEntity;
 import top.funsite.spring.action.util.JsonUtils;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -56,34 +57,30 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
 
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+        return accessDenied(request, response);
+    }
+
+    protected boolean accessDenied(ServletRequest request, ServletResponse response) throws IOException {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        String message = "Access denied";
+        return denied(request, response, status, message);
+    }
+
+    protected boolean permissionDenied(ServletRequest request, ServletResponse response) throws IOException {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        String message = "Permission denied";
+        return denied(request, response, status, message);
+    }
+
+    private boolean denied(ServletRequest request, ServletResponse response, HttpStatus status, String message) throws IOException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
 
+        resp.setStatus(status.value());
         resp.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        HttpStatus status = getDeniedHttpStatus();
-        if (status != null) {
-            resp.setStatus(status.value());
-        }
-        JsonUtils.writeValue(response.getOutputStream(), getDeniedEntity(req));
+        HttpErrorEntity entity = HttpErrorEntity.create(status, message, req.getRequestURI());
+        JsonUtils.writeValue(response.getOutputStream(), entity);
         return false;
-    }
-
-    /**
-     * 访问被拒绝时的 HTTP 状态码。
-     *
-     * @return HttpStatus
-     */
-    protected HttpStatus getDeniedHttpStatus() {
-        return HttpStatus.UNAUTHORIZED;
-    }
-
-    /**
-     * 访问被拒绝时响应的实体。
-     *
-     * @return HttpStatus
-     */
-    protected Object getDeniedEntity(HttpServletRequest request) {
-        return HttpErrorEntity.create(getDeniedHttpStatus(), "Access denied", request.getRequestURI());
     }
 }

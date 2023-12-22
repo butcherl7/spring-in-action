@@ -9,7 +9,7 @@ import javax.servlet.ServletResponse;
 /**
  * @see PermissionsAuthorizationFilter
  */
-public class PermissionsAuthFilter extends PermissionDeniedFilter {
+public class PermissionsAuthFilter extends PassThruFilter {
 
     @Override
     public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
@@ -29,5 +29,10 @@ public class PermissionsAuthFilter extends PermissionDeniedFilter {
             }
         }
         return isPermitted;
+    }
+
+    @Override
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+        return permissionDenied(request, response);
     }
 }

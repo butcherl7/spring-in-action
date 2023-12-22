@@ -8,8 +8,8 @@ import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import top.funsite.spring.action.domin.HttpErrorEntity;
 import top.funsite.spring.action.domin.Result;
+import top.funsite.spring.action.shiro.HttpErrorEntity;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

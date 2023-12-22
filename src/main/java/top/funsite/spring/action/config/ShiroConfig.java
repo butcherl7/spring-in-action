@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import top.funsite.spring.action.shiro.RedisSubjectDAO;
 import top.funsite.spring.action.shiro.RedisSubjectFactory;
-import top.funsite.spring.action.shiro.filter.FormAuthFilter;
+import top.funsite.spring.action.shiro.filter.AuthFilter;
 import top.funsite.spring.action.shiro.filter.PermissionsAuthFilter;
 import top.funsite.spring.action.shiro.filter.RolesAuthFilter;
 import top.funsite.spring.action.shiro.realm.DemoRealm;
@@ -86,7 +86,7 @@ public class ShiroConfig {
 
         Map<String, Filter> filters = shiroFilterFactoryBean.getFilters();
         // 使用重写过的过滤器代替默认的。
-        filters.put(authc.name(), new FormAuthFilter());
+        filters.put(authc.name(), new AuthFilter());
         filters.put(roles.name(), new RolesAuthFilter());
         filters.put(perms.name(), new PermissionsAuthFilter());
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap());

@@ -1,4 +1,4 @@
-package top.funsite.spring.action.domin;
+package top.funsite.spring.action.shiro;
 
 import lombok.Getter;
 import lombok.Setter;

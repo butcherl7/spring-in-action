@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * @see RolesAuthorizationFilter
  */
-public class RolesAuthFilter extends PermissionDeniedFilter {
+public class RolesAuthFilter extends PassThruFilter {
 
     @Override
     public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
@@ -26,4 +26,10 @@ public class RolesAuthFilter extends PermissionDeniedFilter {
         Set<String> roles = CollectionUtils.asSet(rolesArray);
         return subject.hasAllRoles(roles);
     }
+
+    @Override
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+        return permissionDenied(request, response);
+    }
+
 }

@@ -85,7 +85,7 @@ public class RedisSession implements ValidatingSession {
 
     @Override
     public String getHost() {
-        return (String) session.get(Key.host);
+        return cast(session.get(Key.host));
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.Date;
 
 /**
- * 未登录情况下的 session.
+ * 未登录情况下的空 session.
  */
 public class BlankSession implements Session {
 
@@ -52,7 +52,7 @@ public class BlankSession implements Session {
 
     @Override
     public String getHost() {
-        return "127.0.0.1";
+        return "unknown";
     }
 
     @Override

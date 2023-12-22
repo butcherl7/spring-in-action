@@ -38,12 +38,21 @@ public class ControllerAdviceConfig {
      * @see UnauthenticatedException
      */
     @ExceptionHandler(AuthorizationException.class)
-    public HttpErrorEntity handleAuthorizationException(AuthorizationException e,
-                                                        HttpServletRequest request,
-                                                        HttpServletResponse response) {
+    public HttpErrorEntity handleAuthorizationException(AuthorizationException e, HttpServletRequest request, HttpServletResponse response) {
         HttpStatus status = (e instanceof UnauthorizedException) ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED;
         String message = (e instanceof UnauthorizedException) ? "Permission denied" : "Access denied";
         response.setStatus(status.value());
         return HttpErrorEntity.create(status, message, request.getRequestURI());
+    }
+
+    /**
+     * 最后捕获所有异常。
+     */
+    @ExceptionHandler(Exception.class)
+    public HttpErrorEntity handleException(Exception e, HttpServletRequest request, HttpServletResponse response) {
+        log.error(e.getMessage(), e);
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        response.setStatus(status.value());
+        return HttpErrorEntity.create(status, e.getMessage(), request.getRequestURI());
     }
 }

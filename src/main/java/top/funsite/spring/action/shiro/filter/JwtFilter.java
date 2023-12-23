@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -24,7 +25,7 @@ public class JwtFilter extends PassThruFilter {
             verifier.verify(token);
         } catch (JWTVerificationException e) {
             log.error(e.getMessage(), e);
-            return super.onAccessDenied(request, response);
+            return super.responseDenied(request, response, HttpStatus.UNAUTHORIZED, e.getMessage());
         }
         return true;
     }

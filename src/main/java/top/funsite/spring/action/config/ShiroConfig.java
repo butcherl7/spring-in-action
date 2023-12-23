@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import top.funsite.spring.action.shiro.RedisSubjectDAO;
 import top.funsite.spring.action.shiro.RedisSubjectFactory;
+import top.funsite.spring.action.shiro.configurers.FilterChainBuilder;
 import top.funsite.spring.action.shiro.filter.AuthFilter;
 import top.funsite.spring.action.shiro.filter.JwtFilter;
 import top.funsite.spring.action.shiro.filter.PermissionsAuthFilter;
@@ -23,10 +24,9 @@ import top.funsite.spring.action.shiro.session.RedisSessionManager;
 
 import javax.annotation.Resource;
 import javax.servlet.Filter;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.apache.shiro.web.filter.mgt.DefaultFilter.*;
+import static top.funsite.spring.action.shiro.configurers.NamedFilter.*;
 
 /**
  * Shiro 配置类。
@@ -90,7 +90,7 @@ public class ShiroConfig {
         filters.put(authc.name(), new AuthFilter());
         filters.put(roles.name(), new RolesAuthFilter());
         filters.put(perms.name(), new PermissionsAuthFilter());
-        filters.put("jwt", new JwtFilter());
+        filters.put(jwt.name(), new JwtFilter());
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap());
         return shiroFilterFactoryBean;
     }
@@ -108,13 +108,11 @@ public class ShiroConfig {
      * @see "org.apache.catalina.core.StandardHostValve.java:166 status(request, response);"
      */
     private static Map<String, String> filterChainDefinitionMap() {
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("/login", anon.name());
-        map.put("/favicon.ico", anon.name());
-        map.put("/error", anon.name());
-        map.put("/home1", "authc, roles[home1]");
-        map.put("/jwt", "jwt");
-        map.put("/**", authc.name());
-        return map;
+        return FilterChainBuilder.newBuilder()
+                .antMatchers("/login", "/error", "/favicon.ico").permitAll()
+                .antMatchers("home1").hasRole("home1")
+                .antMatchers("/jwt").jwt()
+                .antMatchers("/**").authenticated()
+                .build();
     }
 }

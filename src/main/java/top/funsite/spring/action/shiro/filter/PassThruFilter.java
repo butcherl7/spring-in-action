@@ -72,7 +72,7 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
         return responseDenied(request, response, status, message);
     }
 
-    private boolean responseDenied(ServletRequest request, ServletResponse response, HttpStatus status, String message) throws IOException {
+    protected boolean responseDenied(ServletRequest request, ServletResponse response, HttpStatus status, String message) throws IOException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
 

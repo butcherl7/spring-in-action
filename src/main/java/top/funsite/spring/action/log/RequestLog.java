@@ -2,38 +2,39 @@ package top.funsite.spring.action.log;
 
 import java.lang.annotation.*;
 
+/**
+ * 记录接口请求信息的注解。
+ */
 @Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequestLog {
 
+    /**
+     * 接口在日志记录的名称。
+     *
+     * @return 接口在日志记录的名称。
+     */
     String name() default "";
 
     /**
-     * 声明要记录的请求头。
+     * 声明要记录的请求头（默认为空）。
      *
-     * @return array
+     * @return 要记录的请求头数组。
      */
     String[] headers() default {};
 
     /**
-     * 是否记录 URL 中包含的查询字符串。
+     * 是否记录请求参数（默认为 True）。
      *
-     * @return bool
-     */
-    boolean logQueryString() default true;
-
-    /**
-     * 是否记录请求体。
-     *
-     * @return bool
+     * @return True 表示记录。
      */
     boolean logRequest() default true;
 
     /**
-     * 是否记录响应体。
+     * 是否记录响应结果（默认为 True）。
      *
-     * @return bool
+     * @return True 表示记录。
      */
     boolean logResponse() default true;
 }

@@ -23,7 +23,7 @@ public class TestController {
     }
 
     @GetMapping("/users")
-    @RequestLog(name = "Users")
+    @RequestLog(name = "Users", headers = {"Token", "Ha"})
     public ResponseEntity<Map<String, Object>> users(User user, HttpServletRequest request) {
         Map<String, Object> entity = new HashMap<>(16);
         entity.put("name", "Haha");

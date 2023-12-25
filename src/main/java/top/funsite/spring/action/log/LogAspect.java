@@ -1,7 +1,9 @@
 package top.funsite.spring.action.log;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -13,9 +15,12 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+@Slf4j
 @Aspect
 @Component
 public class LogAspect {
@@ -28,26 +33,87 @@ public class LogAspect {
 
     @Around("pointCut()")
     public Object around(ProceedingJoinPoint joinPoint) {
+        LogEntity logEntity = null;
+
         try {
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             Method method = signature.getMethod();
+
             RequestLog requestLog = method.getAnnotation(RequestLog.class);
 
             if (requestLog == null) {
                 return joinPoint.proceed();
             }
 
+            String methodName = method.getDeclaringClass().getName() + "." + method.getName();
+
+            logEntity = new LogEntity();
+            logEntity.setName(requestLog.name());
+            logEntity.setMethodName(methodName);
+            logEntity.setRequestTime(LocalDateTime.now());
+
             Object[] args = joinPoint.getArgs();
+
+
+            log.info("method: {}", methodName);
 
             HttpServletRequest request = getHttpServletRequest();
 
             if (request != null) {
+                String requestURI = request.getRequestURI();
+                String httpMethod = request.getMethod();
 
+                logEntity.setRequestURI(requestURI);
+                logEntity.setHttpMethod(httpMethod);
+
+                if (requestLog.logQueryString()) {
+                    logEntity.setQueryString(request.getQueryString());
+                }
+
+                String[] logHeaders = requestLog.headers();
+
+                if (logHeaders != null) {
+                    Map<String, Object> map = new HashMap<>(16);
+                    for (String name : logHeaders) {
+                        List<String> headers = new ArrayList<>();
+                        Enumeration<String> enumeration = request.getHeaders(name);
+                        while (enumeration.hasMoreElements()) {
+                            headers.add(enumeration.nextElement());
+                        }
+                        if (headers.isEmpty()) {
+                            map.put(name, null);
+                        } else {
+                            if (headers.size() == 1) {
+                                map.put(name, headers.getFirst());
+                            } else {
+                                map.put(name, headers);
+                            }
+                        }
+                    }
+                    if (!map.isEmpty()) {
+                        logEntity.setHeaders(objectMapper.writeValueAsString(map));
+                    }
+                }
             }
 
-            return joinPoint.proceed();
+            Object proceed = joinPoint.proceed();
+
+            if (requestLog.logResponse()) {
+                logEntity.setResponseBody(objectMapper.writeValueAsString(proceed));
+            }
+
+            return proceed;
         } catch (Throwable e) {
             throw new RuntimeException(e);
+        } finally {
+            if (logEntity != null) {
+                logEntity.setResponseTime(LocalDateTime.now());
+                try {
+                    System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(logEntity));
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

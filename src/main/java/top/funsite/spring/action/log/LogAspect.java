@@ -2,6 +2,8 @@ package top.funsite.spring.action.log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -13,9 +15,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.reflect.Method;
-import java.time.LocalDateTime;
+import java.lang.reflect.Parameter;
 import java.util.*;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -25,9 +28,28 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 @Component
 public class LogAspect {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    @Pointcut("@annotation(RequestLog)")
+    /*private static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
+
+    static {
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        // LocalDate LocalTime 和 LocalDateTime 的格式。
+        javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ISO_LOCAL_TIME));
+        javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ISO_LOCAL_TIME));
+        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ISO_LOCAL_DATE));
+        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ISO_LOCAL_DATE));
+        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DATE_TIME_FORMATTER));
+        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DATE_TIME_FORMATTER));
+
+        OBJECT_MAPPER.registerModule(javaTimeModule);
+        OBJECT_MAPPER.setDateFormat(new SimpleDateFormat(DATE_TIME_PATTERN));
+    }*/
+
+
+    @Pointcut("@annotation(top.funsite.spring.action.log.RequestLog)")
     public void pointCut() {
     }
 
@@ -38,7 +60,6 @@ public class LogAspect {
         try {
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             Method method = signature.getMethod();
-
             RequestLog requestLog = method.getAnnotation(RequestLog.class);
 
             if (requestLog == null) {
@@ -50,31 +71,45 @@ public class LogAspect {
             logEntity = new LogEntity();
             logEntity.setName(requestLog.name());
             logEntity.setMethodName(methodName);
-            logEntity.setRequestTime(LocalDateTime.now());
+            logEntity.setRequestTimestamp(System.currentTimeMillis());
 
-            Object[] args = joinPoint.getArgs();
+            // log request parameter
+            if (requestLog.logRequest()) {
+                Map<String, Object> parameterMap = new HashMap<>(16);
 
+                Parameter[] parameters = method.getParameters();
 
-            log.info("method: {}", methodName);
+                for (int i = 0; i < joinPoint.getArgs().length; i++) {
+                    Object arg = joinPoint.getArgs()[i];
+                    if (arg instanceof ServletRequest || arg instanceof ServletResponse || arg instanceof MultipartFile) {
+                        continue;
+                    }
+                    parameterMap.put(parameters[i].getName(), arg);
+                }
+                if (!parameterMap.isEmpty()) {
+                    if (parameterMap.size() == 1) {
+                        Collection<Object> values = parameterMap.values();
+                        for (Object value : values) {
+                            if (value != null) {
+                                logEntity.setRequestParameter(toJson(value));
+                            }
+                        }
+                    } else {
+                        logEntity.setRequestParameter(toJson(parameterMap));
+                    }
+                }
+            }
 
             HttpServletRequest request = getHttpServletRequest();
-
             if (request != null) {
-                String requestURI = request.getRequestURI();
-                String httpMethod = request.getMethod();
+                logEntity.setHttpMethod(request.getMethod());
+                logEntity.setRequestIp(getRequestIp(request));
+                logEntity.setRequestUri(request.getRequestURI());
 
-                logEntity.setRequestURI(requestURI);
-                logEntity.setHttpMethod(httpMethod);
-
-                if (requestLog.logQueryString()) {
-                    logEntity.setQueryString(request.getQueryString());
-                }
-
-                String[] logHeaders = requestLog.headers();
-
-                if (logHeaders != null) {
+                // log headers
+                if (requestLog.headers() != null) {
                     Map<String, Object> map = new HashMap<>(16);
-                    for (String name : logHeaders) {
+                    for (String name : requestLog.headers()) {
                         List<String> headers = new ArrayList<>();
                         Enumeration<String> enumeration = request.getHeaders(name);
                         while (enumeration.hasMoreElements()) {
@@ -91,36 +126,46 @@ public class LogAspect {
                         }
                     }
                     if (!map.isEmpty()) {
-                        logEntity.setHeaders(objectMapper.writeValueAsString(map));
+                        logEntity.setHeaders(toJson(map));
                     }
                 }
             }
 
             Object proceed = joinPoint.proceed();
 
+            // log response result
             if (requestLog.logResponse()) {
-                logEntity.setResponseBody(objectMapper.writeValueAsString(proceed));
+                logEntity.setResponseResult(toJson(proceed));
             }
 
             return proceed;
         } catch (Throwable e) {
+            if (logEntity != null) {
+                logEntity.setErrorMessage(e.getMessage());
+            }
             throw new RuntimeException(e);
         } finally {
             if (logEntity != null) {
-                logEntity.setResponseTime(LocalDateTime.now());
+                logEntity.setResponseTimestamp(System.currentTimeMillis());
                 try {
-                    System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(logEntity));
+                    System.out.println(OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(logEntity));
                 } catch (JsonProcessingException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(), e);
                 }
             }
         }
     }
 
+    private static String toJson(Object o) {
+        try {
+            return OBJECT_MAPPER.writeValueAsString(o);
+        } catch (JsonProcessingException e) {
+            return e.getMessage();
+        }
+    }
+
     private static String getRequestIp(HttpServletRequest request) {
-        final String unknown = "UNKNOWN";
-        final String ipv4Localhost = "127.0.0.1";
-        final String ipv6Localhost = "0:0:0:0:0:0:0:1";
+        final String unknown = "UNKNOWN", ipv4Localhost = "127.0.0.1", ipv6Localhost = "0:0:0:0:0:0:0:1";
 
         String ip = request.getHeader("X-Real-IP");
         String forwarded = request.getHeader("X-Forwarded-For");
@@ -167,6 +212,5 @@ public class LogAspect {
                 ? ((ServletRequestAttributes) requestAttributes).getRequest()
                 : null;
     }
-
 
 }

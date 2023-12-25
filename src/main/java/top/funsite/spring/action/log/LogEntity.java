@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @ToString
@@ -17,7 +15,9 @@ public class LogEntity {
 
     private String methodName;
 
-    private String requestURI;
+    private String requestIp;
+
+    private String requestUri;
 
     private String httpMethod;
 
@@ -25,20 +25,16 @@ public class LogEntity {
 
     private String headers;
 
-    private String queryString;
+    private String requestParameter;
 
-    private String requestBody;
-
-    private String responseBody;
-
-    // private Integer httpStatusCode;
+    private String responseResult;
 
     private String errorMessage;
 
     private String operator;
 
-    private LocalDateTime requestTime;
+    private Long requestTimestamp;
 
-    private LocalDateTime responseTime;
+    private Long responseTimestamp;
 
 }

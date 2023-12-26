@@ -95,6 +95,7 @@ public class RedisSession implements ValidatingSession {
 
     @Override
     public void stop() throws InvalidSessionException {
+        redisTemplate.delete(sessionKey);
     }
 
     @Override

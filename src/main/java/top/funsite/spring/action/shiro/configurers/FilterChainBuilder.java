@@ -1,6 +1,7 @@
 package top.funsite.spring.action.shiro.configurers;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.web.filter.mgt.DefaultFilter;
 import org.apache.shiro.web.filter.mgt.FilterChainManager;
 
@@ -40,7 +41,7 @@ public class FilterChainBuilder {
      *
      * @return FilterChainDefinitionMap.
      */
-    public Map<String, String> build() {
+    public Map<String, String> buildFilterChainMap() {
         Map<String, String> map = new LinkedHashMap<>();
         for (Auth auth : auths) {
             String chainDefinition = auth.filter.name();
@@ -59,19 +60,35 @@ public class FilterChainBuilder {
         return map;
     }
 
+    public Map<String, Logical> buildAuthorizationLogic() {
+        Map<String, Logical> map = new LinkedHashMap<>();
+        for (Auth auth : auths) {
+            String[] authorities = auth.authorities;
+            if (authorities != null && authorities.length > 0) {
+                for (String antPattern : auth.antPatterns) {
+                    map.put(antPattern, auth.logical);
+                }
+            }
+        }
+        return map;
+    }
+
+
     public static FilterChainBuilder newBuilder() {
         return new FilterChainBuilder();
     }
 
     public static class Auth {
 
-        private final FilterChainBuilder filterChainBuilder;
-
         private final String[] antPatterns;
+
+        private final FilterChainBuilder filterChainBuilder;
 
         private NamedFilter filter;
 
         private String[] authorities;
+
+        private Logical logical = Logical.AND;
 
         /**
          * 指定通过 JWT 的验证才能允许访问 URL.
@@ -94,24 +111,74 @@ public class FilterChainBuilder {
         }
 
         /**
-         * 指定需要某些角色才能访问 URL.
+         * 拥有指定的角色才能访问 URL.
          *
-         * @param roles 定义的任意角色字符串。
+         * @param role 角色名称。
          * @return FilterChainBuilder
          */
-        public FilterChainBuilder hasRole(String... roles) {
+        public FilterChainBuilder hasRole(String role) {
+            this.filter = NamedFilter.roles;
+            this.authorities = new String[]{role};
+            return filterChainBuilder;
+        }
+
+        /**
+         * 拥有指定的任意一个角色才能访问 URL.
+         *
+         * @param roles 角色名称数组。
+         * @return FilterChainBuilder
+         */
+        public FilterChainBuilder hasAnyRoles(String... roles) {
+            this.filter = NamedFilter.roles;
+            this.authorities = roles;
+            this.logical = Logical.OR;
+            return filterChainBuilder;
+        }
+
+        /**
+         * 拥有指定的所有角色才能访问 URL.
+         *
+         * @param roles 角色名称数组。
+         * @return FilterChainBuilder
+         */
+        public FilterChainBuilder hasAllRoles(String... roles) {
             this.filter = NamedFilter.roles;
             this.authorities = roles;
             return filterChainBuilder;
         }
 
         /**
-         * 指定需要某些权限才能访问 URL.
+         * 拥有指定的所有权限才能访问 URL.
          *
-         * @param permissions 定义的任意权限字符串。
+         * @param permission 权限名称数组。
          * @return FilterChainBuilder
          */
-        public FilterChainBuilder hasPermission(String... permissions) {
+        public FilterChainBuilder hasPermission(String permission) {
+            this.filter = NamedFilter.perms;
+            this.authorities = new String[]{permission};
+            return filterChainBuilder;
+        }
+
+        /**
+         * 拥有指定的任意一个权限才能访问 URL.
+         *
+         * @param permissions 权限名称数组。
+         * @return FilterChainBuilder
+         */
+        public FilterChainBuilder hasAnyPermissions(String... permissions) {
+            this.filter = NamedFilter.perms;
+            this.authorities = permissions;
+            this.logical = Logical.OR;
+            return filterChainBuilder;
+        }
+
+        /**
+         * 拥有指定的所有权限才能访问 URL.
+         *
+         * @param permissions 权限名称数组。
+         * @return FilterChainBuilder
+         */
+        public FilterChainBuilder hasAllPermissions(String... permissions) {
             this.filter = NamedFilter.perms;
             this.authorities = permissions;
             return filterChainBuilder;

@@ -1,5 +1,6 @@
 package top.funsite.spring.action.config;
 
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.realm.Realm;
@@ -85,13 +86,17 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         shiroFilterFactoryBean.setLoginUrl(LOGIN_URL);
 
+        FilterChainBuilder filterChainBuilder = createFilterChainDefinition();
+        Map<String, String> filterChainMap = filterChainBuilder.buildFilterChainMap();
+        Map<String, Logical> appliedLogicalMap = filterChainBuilder.buildAuthorizationLogic();
+
         Map<String, Filter> filters = shiroFilterFactoryBean.getFilters();
         // 使用重写过的过滤器代替默认的。
         filters.put(authc.name(), new AuthFilter());
-        filters.put(roles.name(), new RolesAuthFilter());
-        filters.put(perms.name(), new PermissionsAuthFilter());
+        filters.put(roles.name(), new RolesAuthFilter(appliedLogicalMap));
+        filters.put(perms.name(), new PermissionsAuthFilter(appliedLogicalMap));
         filters.put(jwt.name(), new JwtFilter());
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap());
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainMap);
         return shiroFilterFactoryBean;
     }
 
@@ -107,12 +112,11 @@ public class ShiroConfig {
      * @see <a href="https://www.jianshu.com/p/0bad726d0454">关于springMvc错误重定向/error</a>
      * @see "org.apache.catalina.core.StandardHostValve.java:166 status(request, response);"
      */
-    private static Map<String, String> filterChainDefinitionMap() {
+    private static FilterChainBuilder createFilterChainDefinition() {
         return FilterChainBuilder.newBuilder()
                 .antMatchers("/login", "/error", "/favicon.ico").permitAll()
                 .antMatchers("home1").hasRole("home1")
                 .antMatchers("/jwt").jwt()
-                .antMatchers("/**").authenticated()
-                .build();
+                .antMatchers("/**").authenticated();
     }
 }

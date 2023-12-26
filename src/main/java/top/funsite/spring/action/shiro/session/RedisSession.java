@@ -104,16 +104,21 @@ public class RedisSession implements ValidatingSession {
 
     @Override
     public Object getAttribute(Object key) throws InvalidSessionException {
-        return hashOperations.get(sessionKey, assertString(key));
+        try {
+            return hashOperations.get(sessionKey, assertString(key));
+        } catch (Exception e) {
+            throw new InvalidSessionException(e);
+        }
     }
 
     @Override
     public void setAttribute(Object key, Object value) throws InvalidSessionException {
-        String sKey = assertString(key);
-        if (KEY_BLACKLIST.contains(sKey)) {
-            return;
-        }
         try {
+            String sKey = assertString(key);
+
+            if (KEY_BLACKLIST.contains(sKey)) {
+                return;
+            }
             hashOperations.put(sessionKey, sKey, value);
         } catch (Exception e) {
             throw new InvalidSessionException(e);
@@ -125,6 +130,7 @@ public class RedisSession implements ValidatingSession {
         Object o = null;
         try {
             String sKey = assertString(key);
+
             boolean hasKey = hashOperations.hasKey(sessionKey, sKey);
             if (hasKey) {
                 o = hashOperations.get(sessionKey, sKey);

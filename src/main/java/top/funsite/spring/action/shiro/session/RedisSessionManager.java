@@ -26,7 +26,7 @@ public class RedisSessionManager extends DefaultWebSessionManager {
      * 构造函数。
      *
      * @param redisTemplate RedisTemplate
-     * @param keySeparator  存储在 redis 中的 session 数据的分隔符（既用 ":" 分隔的形式），例如 {@code new RedisSessionManager(redisTemplate, "AppSessions:")}
+     * @param keySeparator  存储在 redis 中的 session 数据的分隔符（既用 ":" 分隔的形式），例如 {@code new RedisSessionManager(redisTemplate, "UserSessions:")}
      * @see <a href="https://redis.io/docs/manual/patterns/indexes/#adding-auxiliary-information-in-the-index">Adding auxiliary information in the index</a>
      */
     public RedisSessionManager(RedisTemplate<String, Object> redisTemplate, String keySeparator) {

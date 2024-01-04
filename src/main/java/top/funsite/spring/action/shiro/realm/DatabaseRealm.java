@@ -50,4 +50,9 @@ public class DatabaseRealm extends AuthorizingRealm {
         info.setStringPermissions(user.getPermissions());
         return info;
     }
+
+    @Override
+    public boolean supports(AuthenticationToken token) {
+        return token instanceof UsernamePasswordToken;
+    }
 }

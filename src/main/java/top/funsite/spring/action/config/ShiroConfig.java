@@ -18,8 +18,8 @@ import top.funsite.spring.action.shiro.RedisSubjectFactory;
 import top.funsite.spring.action.shiro.configurers.FilterChainBuilder;
 import top.funsite.spring.action.shiro.filter.AuthFilter;
 import top.funsite.spring.action.shiro.filter.JwtFilter;
-import top.funsite.spring.action.shiro.filter.PermissionsAuthFilter;
-import top.funsite.spring.action.shiro.filter.RolesAuthFilter;
+import top.funsite.spring.action.shiro.filter.PermissionsFilter;
+import top.funsite.spring.action.shiro.filter.RoleFilter;
 import top.funsite.spring.action.shiro.realm.DemoRealm;
 import top.funsite.spring.action.shiro.session.RedisSessionManager;
 
@@ -87,14 +87,14 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setLoginUrl(LOGIN_URL);
 
         FilterChainBuilder filterChainBuilder = createFilterChainDefinition();
-        Map<String, String> filterChainMap = filterChainBuilder.buildFilterChainMap();
-        Map<String, Logical> appliedLogicalMap = filterChainBuilder.buildAuthorizationLogic();
+        Map<String, String> filterChainMap = filterChainBuilder.buildChainMap();
+        Map<String, Logical> appliedLogicalMap = filterChainBuilder.buildAuthLogic();
 
         Map<String, Filter> filters = shiroFilterFactoryBean.getFilters();
         // 使用重写过的过滤器代替默认的。
         filters.put(authc.name(), new AuthFilter());
-        filters.put(roles.name(), new RolesAuthFilter(appliedLogicalMap));
-        filters.put(perms.name(), new PermissionsAuthFilter(appliedLogicalMap));
+        filters.put(roles.name(), new RoleFilter(appliedLogicalMap));
+        filters.put(perms.name(), new PermissionsFilter(appliedLogicalMap));
         filters.put(jwt.name(), new JwtFilter());
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainMap);
         return shiroFilterFactoryBean;

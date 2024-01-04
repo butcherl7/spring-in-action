@@ -2,37 +2,37 @@ package top.funsite.spring.action.shiro.filter;
 
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.util.CollectionUtils;
-import org.apache.shiro.web.filter.authz.RolesAuthorizationFilter;
+import org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.util.Map;
-import java.util.Set;
 
 /**
- * @see RolesAuthorizationFilter
+ * 如果当前用户具有指定的权限，则允许访问，如果没有指定的所有权限，则拒绝访问的过滤器。
+ *
+ * @see PermissionsAuthorizationFilter
  */
-public class RolesAuthFilter extends AuthorizationLogicFilter {
+public class PermissionsFilter extends AuthorityFilter {
 
     @Override
     public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
         Subject subject = getSubject(request, response);
-        Set<String> roles = CollectionUtils.asSet((String[]) mappedValue);
+        String[] perms = (String[]) mappedValue;
 
-        if (roles.isEmpty()) {
+        if (perms == null || perms.length == 0) {
             return true;
         }
 
         Logical logic = getAuthLogic(request);
 
         if (logic == Logical.AND) {
-            return subject.hasAllRoles(roles);
+            return subject.isPermittedAll(perms);
         }
 
         if (logic == Logical.OR) {
-            for (String role : roles) {
-                if (subject.hasRole(role)) {
+            for (String perm : perms) {
+                if (subject.isPermitted(perm)) {
                     return true;
                 }
             }
@@ -42,15 +42,10 @@ public class RolesAuthFilter extends AuthorizationLogicFilter {
         return true;
     }
 
-    @Override
-    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
-        return permissionDenied(request, response);
+    public PermissionsFilter() {
     }
 
-    public RolesAuthFilter() {
-    }
-
-    public RolesAuthFilter(Map<String, Logical> appliedLogicalPaths) {
+    public PermissionsFilter(Map<String, Logical> appliedLogicalPaths) {
         this.appliedLogicalPaths = appliedLogicalPaths;
     }
 }

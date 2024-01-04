@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  *      .antMatchers("/home","/favicon.ico").permitAll()
  *      .antMatchers("/info").hasRole("admin")
  *      .antMatchers("/**").authenticated()
- *      .build();}
+ *      .buildChainMap();}
  * </pre>
  *
  * @see DefaultFilter
@@ -41,7 +41,7 @@ public class FilterChainBuilder {
      *
      * @return FilterChainDefinitionMap.
      */
-    public Map<String, String> buildFilterChainMap() {
+    public Map<String, String> buildChainMap() {
         Map<String, String> map = new LinkedHashMap<>();
         for (Auth auth : auths) {
             String chainDefinition = auth.filter.name();
@@ -60,7 +60,7 @@ public class FilterChainBuilder {
         return map;
     }
 
-    public Map<String, Logical> buildAuthorizationLogic() {
+    public Map<String, Logical> buildAuthLogic() {
         Map<String, Logical> map = new LinkedHashMap<>();
         for (Auth auth : auths) {
             String[] authorities = auth.authorities;
@@ -91,7 +91,7 @@ public class FilterChainBuilder {
         private Logical logical = Logical.AND;
 
         /**
-         * 指定通过 JWT 的验证才能允许访问 URL.
+         * 通过 JWT 的验证才能访问 URL.
          *
          * @return FilterChainBuilder
          */
@@ -101,7 +101,7 @@ public class FilterChainBuilder {
         }
 
         /**
-         * 指定经过身份验证的用户访问 URL.
+         * 经过身份验证的用户才能访问 URL.
          *
          * @return FilterChainBuilder
          */
@@ -123,7 +123,7 @@ public class FilterChainBuilder {
         }
 
         /**
-         * 拥有指定的任意一个角色才能访问 URL.
+         * 拥有指定的任意一个角色就能访问 URL.
          *
          * @param roles 角色名称数组。
          * @return FilterChainBuilder
@@ -148,7 +148,7 @@ public class FilterChainBuilder {
         }
 
         /**
-         * 拥有指定的所有权限才能访问 URL.
+         * 拥有指定的权限才能访问 URL.
          *
          * @param permission 权限名称数组。
          * @return FilterChainBuilder
@@ -160,7 +160,7 @@ public class FilterChainBuilder {
         }
 
         /**
-         * 拥有指定的任意一个权限才能访问 URL.
+         * 拥有指定的任意一个权限就能访问 URL.
          *
          * @param permissions 权限名称数组。
          * @return FilterChainBuilder

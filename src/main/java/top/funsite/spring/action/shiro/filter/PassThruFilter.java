@@ -57,18 +57,8 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
 
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
-        return accessDenied(request, response);
-    }
-
-    protected boolean accessDenied(ServletRequest request, ServletResponse response) throws IOException {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         String message = "Access denied";
-        return responseDenied(request, response, status, message);
-    }
-
-    protected boolean permissionDenied(ServletRequest request, ServletResponse response) throws IOException {
-        HttpStatus status = HttpStatus.FORBIDDEN;
-        String message = "Permission denied";
         return responseDenied(request, response, status, message);
     }
 

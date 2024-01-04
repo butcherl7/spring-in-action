@@ -20,7 +20,7 @@ import top.funsite.spring.action.shiro.filter.AuthFilter;
 import top.funsite.spring.action.shiro.filter.JwtFilter;
 import top.funsite.spring.action.shiro.filter.PermissionsFilter;
 import top.funsite.spring.action.shiro.filter.RoleFilter;
-import top.funsite.spring.action.shiro.realm.DemoRealm;
+import top.funsite.spring.action.shiro.realm.DatabaseRealm;
 import top.funsite.spring.action.shiro.session.RedisSessionManager;
 
 import javax.annotation.Resource;
@@ -67,7 +67,7 @@ public class ShiroConfig {
 
     @Bean
     public Realm realm() {
-        return new DemoRealm();
+        return new DatabaseRealm();
     }
 
     @Bean

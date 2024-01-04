@@ -11,7 +11,10 @@ import top.funsite.spring.action.domin.User;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DemoRealm extends AuthorizingRealm {
+/**
+ * 从数据库检索用户并获取用户信息的 Realm.
+ */
+public class DatabaseRealm extends AuthorizingRealm {
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {

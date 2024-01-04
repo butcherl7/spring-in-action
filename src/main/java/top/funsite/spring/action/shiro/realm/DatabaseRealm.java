@@ -32,8 +32,6 @@ public class DatabaseRealm extends AuthorizingRealm {
             throw new IncorrectCredentialsException("Incorrect Credentials");
         }
 
-        String realmName = getName();
-
         Set<String> roles = new HashSet<>();
         Set<String> permissions = new HashSet<>();
 
@@ -42,7 +40,7 @@ public class DatabaseRealm extends AuthorizingRealm {
         user.setPassword(String.valueOf(password));
         user.setRoles(roles);
         user.setPermissions(permissions);
-        return new SimpleAuthenticationInfo(user, password, realmName);
+        return new SimpleAuthenticationInfo(user, password, getName());
     }
 
     @Override

@@ -1,7 +1,8 @@
 package top.funsite.spring.action.service;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.HostAuthenticationToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -20,15 +21,18 @@ public class LoginService {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
-    public String login(UsernamePasswordToken upToken) {
+    public String login(AuthenticationToken authToken) {
         Subject subject = SecurityUtils.getSubject();
-        subject.login(upToken);
+        subject.login(authToken);
+
         Date date = new Date();
         String jsessionid = generateJsessionid();
 
+        String host = authToken instanceof HostAuthenticationToken ? ((HostAuthenticationToken) authToken).getHost() : "";
+
         Map<String, Object> map = new HashMap<>(16);
         map.put(RedisSession.Key.id, jsessionid);
-        map.put(RedisSession.Key.host, upToken.getHost());
+        map.put(RedisSession.Key.host, host);
         map.put(RedisSession.Key.lastAccessTime, date);
         map.put(RedisSession.Key.startTimestamp, date);
         map.put(RedisSession.Key.user, subject.getPrincipal());

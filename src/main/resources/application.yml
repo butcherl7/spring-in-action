@@ -1,3 +1,14 @@
 spring:
   profiles:
     active: local-aop-log
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:aop_log
+    username: sa
+    password:
+  sql:
+    init:
+      schema-locations: classpath*:schema/ddl.sql
+  h2:
+    console:
+      enabled: true

@@ -1,34 +1,35 @@
 package top.funsite.spring.action.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import top.funsite.spring.action.log.RequestLog;
+import org.springframework.web.bind.annotation.*;
+import top.funsite.spring.action.log.annotation.RequestLog;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @RestController
 public class TestController {
 
-    @PostMapping("/books")
+    @GetMapping("/books")
     @RequestLog(name = "Books")
-    public ResponseEntity<Map<String, Object>> books(@RequestBody Map<String, Object> map) {
-        Map<String, Object> entity = new HashMap<>(16);
-        entity.put("name", "Haha");
-        return ResponseEntity.ok(entity);
+    public ResponseEntity<Map<String, Object>> books(@RequestParam Map<String, Object> map) throws InterruptedException {
+        TimeUnit.SECONDS.sleep(3);
+        return ResponseEntity.ok(map);
     }
 
     @PostMapping("/users")
     @RequestLog(name = "Users", headers = {"Token", "Ha"})
-    public ResponseEntity<Map<String, Object>> users(@RequestBody Map<String, Object> map, HttpServletRequest request) throws InterruptedException {
-        TimeUnit.SECONDS.sleep(3);
+    public ResponseEntity<Map<String, Object>> users(@RequestBody Map<String, Object> map, HttpServletRequest request) {
+        log.debug(request.getRequestURI());
+        int i = 1 / Integer.parseInt(String.valueOf(map.get("num")));
+        log.debug(String.valueOf(i));
+
         Map<String, Object> entity = new HashMap<>(16);
         entity.put("name", "Haha");
-        int i = 1 / Integer.parseInt(String.valueOf(map.get("num")));
         return ResponseEntity.ok(entity);
     }
 

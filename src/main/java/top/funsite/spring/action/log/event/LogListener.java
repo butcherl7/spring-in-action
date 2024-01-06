@@ -21,7 +21,7 @@ public class LogListener implements ApplicationListener<LogEvent> {
         if (event.getSource() instanceof LogEntity logEntity) {
             int insert = jdbcClient.sql("""
                             insert into request_log (name, method_name, request_ip, request_uri, http_method, token,
-                                                     headers, request_payload, response_result, request_time, response_time,
+                                                     headers, payload, result, request_time, response_time,
                                                      error, error_message, created_by)
                             values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                                                             """)
@@ -32,8 +32,8 @@ public class LogListener implements ApplicationListener<LogEvent> {
                     .param(logEntity.getHttpMethod())
                     .param(logEntity.getToken())
                     .param(logEntity.getHeaders())
-                    .param(logEntity.getRequestPayload())
-                    .param(logEntity.getResponseResult())
+                    .param(logEntity.getPayload())
+                    .param(logEntity.getResult())
                     .param(logEntity.getRequestTime())
                     .param(logEntity.getResponseTime())
                     .param(logEntity.getError())

@@ -102,11 +102,11 @@ public class LogAspect {
                         Collection<Object> values = parameterMap.values();
                         for (Object value : values) {
                             if (value != null) {
-                                logEntity.setRequestPayload(toJson(value));
+                                logEntity.setPayload(toJson(value));
                             }
                         }
                     } else {
-                        logEntity.setRequestPayload(toJson(parameterMap));
+                        logEntity.setPayload(toJson(parameterMap));
                     }
                 }
             }
@@ -146,7 +146,7 @@ public class LogAspect {
 
             // log response result
             if (requestLog.logResponse()) {
-                logEntity.setResponseResult(toJson(proceed));
+                logEntity.setResult(toJson(proceed));
             }
 
             return proceed;

@@ -57,12 +57,12 @@ public class LogEntity {
     /**
      * 接口请求参数。
      */
-    private String requestPayload;
+    private String payload;
 
     /**
      * 接口响应结果。
      */
-    private String responseResult;
+    private String result;
 
     /**
      * 是否异常

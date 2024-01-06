@@ -13,12 +13,15 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
+import top.funsite.spring.action.entity.LogEntity;
+import top.funsite.spring.action.log.annotation.RequestLog;
+import top.funsite.spring.action.log.event.LogEvent;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -35,9 +38,6 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 public class LogAspect {
 
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
-    @Resource
-    private JdbcClient jdbcClient;
 
     private static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
@@ -56,8 +56,10 @@ public class LogAspect {
         OBJECT_MAPPER.setDateFormat(new SimpleDateFormat(DATE_TIME_PATTERN));
     }
 
+    @Resource
+    private ApplicationContext applicationContext;
 
-    @Pointcut("@annotation(top.funsite.spring.action.log.RequestLog)")
+    @Pointcut("@annotation(top.funsite.spring.action.log.annotation.RequestLog)")
     public void pointCut() {
     }
 
@@ -158,32 +160,15 @@ public class LogAspect {
             if (logEntity != null) {
                 logEntity.setResponseTime(LocalDateTime.now());
                 try {
-                    System.out.println(OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(logEntity));
+                    if (log.isDebugEnabled()) {
+                        System.out.println("*******************");
+                        System.out.println(OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(logEntity));
+                        System.out.println("*******************");
+                    }
                 } catch (JsonProcessingException e) {
                     log.error(e.getMessage(), e);
                 }
-                int insert = jdbcClient.sql("""
-                                insert into request_log (name, method_name, request_ip, request_uri, http_method, token,
-                                                         headers, request_payload, response_result, request_time, response_time,
-                                                         error, error_message, created_by)
-                                values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                                                                """)
-                        .param(logEntity.getName())
-                        .param(logEntity.getMethodName())
-                        .param(logEntity.getRequestIp())
-                        .param(logEntity.getRequestURI())
-                        .param(logEntity.getHttpMethod())
-                        .param(logEntity.getToken())
-                        .param(logEntity.getHeaders())
-                        .param(logEntity.getRequestPayload())
-                        .param(logEntity.getResponseResult())
-                        .param(logEntity.getRequestTime())
-                        .param(logEntity.getResponseTime())
-                        .param(logEntity.getError())
-                        .param(logEntity.getErrorMessage())
-                        .param(logEntity.getCreatedBy())
-                        .update();
-                log.info("insert log {}.", insert);
+                applicationContext.publishEvent(new LogEvent(logEntity));
             }
         }
     }

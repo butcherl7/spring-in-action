@@ -2,6 +2,8 @@ package top.funsite.spring.action.log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.annotation.Resource;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +13,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -19,6 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -30,23 +36,25 @@ public class LogAspect {
 
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    /*private static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    @Resource
+    private JdbcClient jdbcClient;
+
+    private static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
 
     static {
         JavaTimeModule javaTimeModule = new JavaTimeModule();
-        // LocalDate LocalTime 和 LocalDateTime 的格式。
-        javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ISO_LOCAL_TIME));
+        /*javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ISO_LOCAL_TIME));
         javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ISO_LOCAL_TIME));
         javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ISO_LOCAL_DATE));
         javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ISO_LOCAL_DATE));
         javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DATE_TIME_FORMATTER));
-        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DATE_TIME_FORMATTER));
+        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DATE_TIME_FORMATTER));*/
 
         OBJECT_MAPPER.registerModule(javaTimeModule);
         OBJECT_MAPPER.setDateFormat(new SimpleDateFormat(DATE_TIME_PATTERN));
-    }*/
+    }
 
 
     @Pointcut("@annotation(top.funsite.spring.action.log.RequestLog)")
@@ -69,9 +77,10 @@ public class LogAspect {
             String methodName = method.getDeclaringClass().getName() + "." + method.getName();
 
             logEntity = new LogEntity();
+            logEntity.setError(false);
             logEntity.setName(requestLog.name());
             logEntity.setMethodName(methodName);
-            logEntity.setRequestTimestamp(System.currentTimeMillis());
+            logEntity.setRequestTime(LocalDateTime.now());
 
             // log request parameter
             if (requestLog.logRequest()) {
@@ -91,11 +100,11 @@ public class LogAspect {
                         Collection<Object> values = parameterMap.values();
                         for (Object value : values) {
                             if (value != null) {
-                                logEntity.setRequestParameter(toJson(value));
+                                logEntity.setRequestPayload(toJson(value));
                             }
                         }
                     } else {
-                        logEntity.setRequestParameter(toJson(parameterMap));
+                        logEntity.setRequestPayload(toJson(parameterMap));
                     }
                 }
             }
@@ -104,7 +113,7 @@ public class LogAspect {
             if (request != null) {
                 logEntity.setHttpMethod(request.getMethod());
                 logEntity.setRequestIp(getRequestIp(request));
-                logEntity.setRequestUri(request.getRequestURI());
+                logEntity.setRequestURI(request.getRequestURI());
 
                 // log headers
                 if (requestLog.headers() != null) {
@@ -141,17 +150,40 @@ public class LogAspect {
             return proceed;
         } catch (Throwable e) {
             if (logEntity != null) {
+                logEntity.setError(true);
                 logEntity.setErrorMessage(e.getMessage());
             }
             throw new RuntimeException(e);
         } finally {
             if (logEntity != null) {
-                logEntity.setResponseTimestamp(System.currentTimeMillis());
+                logEntity.setResponseTime(LocalDateTime.now());
                 try {
                     System.out.println(OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(logEntity));
                 } catch (JsonProcessingException e) {
                     log.error(e.getMessage(), e);
                 }
+                int insert = jdbcClient.sql("""
+                                insert into request_log (name, method_name, request_ip, request_uri, http_method, token,
+                                                         headers, request_payload, response_result, request_time, response_time,
+                                                         error, error_message, created_by)
+                                values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                                                """)
+                        .param(logEntity.getName())
+                        .param(logEntity.getMethodName())
+                        .param(logEntity.getRequestIp())
+                        .param(logEntity.getRequestURI())
+                        .param(logEntity.getHttpMethod())
+                        .param(logEntity.getToken())
+                        .param(logEntity.getHeaders())
+                        .param(logEntity.getRequestPayload())
+                        .param(logEntity.getResponseResult())
+                        .param(logEntity.getRequestTime())
+                        .param(logEntity.getResponseTime())
+                        .param(logEntity.getError())
+                        .param(logEntity.getErrorMessage())
+                        .param(logEntity.getCreatedBy())
+                        .update();
+                log.info("insert log {}.", insert);
             }
         }
     }

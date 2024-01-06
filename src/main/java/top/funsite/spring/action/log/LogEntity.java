@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @ToString
@@ -16,7 +18,7 @@ public class LogEntity {
     private Long id;
 
     /**
-     * 接口在日志记录的名称。
+     * 接口在日志中的名称。
      */
     private String name;
 
@@ -35,7 +37,7 @@ public class LogEntity {
      *
      * @see HttpServletRequest#getRequestURI()
      */
-    private String requestUri;
+    private String requestURI;
 
     /**
      * 发出此请求的 HTTP 方法的名称。
@@ -48,19 +50,24 @@ public class LogEntity {
     private String token;
 
     /**
-     * 记录的请求头信息。
+     * 请求头信息。
      */
     private String headers;
 
     /**
      * 接口请求参数。
      */
-    private String requestParameter;
+    private String requestPayload;
 
     /**
      * 接口响应结果。
      */
     private String responseResult;
+
+    /**
+     * 是否异常
+     */
+    private Boolean error;
 
     /**
      * 接口调用发送异常的异常信息。
@@ -70,16 +77,16 @@ public class LogEntity {
     /**
      * 请求的发起人。
      */
-    private String operator;
+    private String createdBy;
 
     /**
      * 接口开始执行的时间戳。
      */
-    private Long requestTimestamp;
+    private LocalDateTime requestTime;
 
     /**
      * 接口结束执行的时间戳。
      */
-    private Long responseTimestamp;
+    private LocalDateTime responseTime;
 
 }

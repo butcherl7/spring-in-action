@@ -1,4 +1,4 @@
-package top.funsite.spring.action.log;
+package top.funsite.spring.action.entity;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;

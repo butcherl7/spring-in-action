@@ -1,4 +1,4 @@
-package top.funsite.spring.action.log;
+package top.funsite.spring.action.log.annotation;
 
 import java.lang.annotation.*;
 

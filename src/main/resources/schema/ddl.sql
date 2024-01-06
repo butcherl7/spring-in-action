@@ -16,3 +16,5 @@ create table request_log
     error_message   varchar comment '接口调用发送异常的异常信息',
     created_by      varchar comment '请求的发起人'
 );
+
+create index idx_name_req on request_log (name, request_time);

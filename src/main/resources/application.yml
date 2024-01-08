@@ -1,6 +1,17 @@
 spring:
   profiles:
     active: local-shiro
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:shiro
+    username: sa
+  sql:
+    init:
+      schema-locations: classpath*:sql/table.sql
+      data-locations: classpath*:sql/data.sql
+  h2:
+    console:
+      enabled: true
 #  redis:
 #    host:
 #    database:

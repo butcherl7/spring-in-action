@@ -107,10 +107,10 @@ public class ShiroConfig {
      * {@code put("/access/role", "authc, roles[ROLE_A,ROLE_B]")}<br />
      * {@code put("/access/perm", "authc, perms[doc:read]")}
      * </p>
+     * "org.apache.catalina.core.StandardHostValve.java:166 status(request, response);"
      *
      * @see DefaultShiroFilterChainDefinition
      * @see <a href="https://www.jianshu.com/p/0bad726d0454">关于springMvc错误重定向/error</a>
-     * @see "org.apache.catalina.core.StandardHostValve.java:166 status(request, response);"
      */
     private static FilterChainBuilder createFilterChainDefinition() {
         return FilterChainBuilder.newBuilder()

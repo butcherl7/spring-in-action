@@ -115,6 +115,7 @@ public class ShiroConfig {
     private static FilterChainBuilder createFilterChainDefinition() {
         return FilterChainBuilder.newBuilder()
                 .antMatchers("/login", "/error", "/favicon.ico").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("home1").hasRole("home1")
                 .antMatchers("/jwt").jwt()
                 .antMatchers("/**").authenticated();

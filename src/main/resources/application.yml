@@ -12,17 +12,3 @@ spring:
   h2:
     console:
       enabled: true
-#  redis:
-#    host:
-#    database:
-#    password:
-#    timeout:
-
-# Just test
-#server:
-#  port: 8080
-#  servlet:
-#    session:
-#      tracking-modes: cookie
-#      cookie:
-#        http-only: true

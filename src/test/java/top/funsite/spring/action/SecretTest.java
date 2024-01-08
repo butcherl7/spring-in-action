@@ -1,5 +1,6 @@
 package top.funsite.spring.action;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -20,7 +21,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Slf4j
-public class JwtTest {
+public class SecretTest {
 
     /**
      * <ul>
@@ -82,6 +83,22 @@ public class JwtTest {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Test
+    public void bcryptHash() {
+        String password = "123456";
+        String hashed = BCrypt.withDefaults().hashToString(6, password.toCharArray());
+        System.out.println(hashed);
+    }
+
+    @Test
+    public void bcryptVerify() {
+        String password = "123456";
+        String hash = "$2a$18$BBLRD2SI2l9HCe4aH22qhuRhQy4bIac7hoZ8qf15gGfjcn6rxBxl2";
+
+        BCrypt.Result verify = BCrypt.verifyer().verify(password.toCharArray(), hash.toCharArray());
+        System.out.println(verify.verified);
     }
 
 }

@@ -33,16 +33,18 @@ public class ControllerAdviceConfig {
      */
     @ExceptionHandler(AuthenticationException.class)
     public Result<Void> handleAuthenticationException(AuthenticationException e) {
-        String message;
-        if (e instanceof UnknownAccountException) {
-            message = "账号不存在";
-        } else if (e instanceof LockedAccountException) {
-            message = "账号被锁定";
-        } else if (e instanceof IncorrectCredentialsException) {
-            message = "密码错误";
-        } else {
-            log.warn(e.getMessage(), e);
-            message = "身份验证错误";
+        String message = e.getMessage();
+        if (message == null) {
+            if (e instanceof UnknownAccountException) {
+                message = "账号不存在";
+            } else if (e instanceof LockedAccountException) {
+                message = "账号被锁定";
+            } else if (e instanceof IncorrectCredentialsException) {
+                message = "密码错误";
+            } else {
+                log.warn(e.getMessage(), e);
+                message = "身份验证错误";
+            }
         }
         return Result.fail(message);
     }

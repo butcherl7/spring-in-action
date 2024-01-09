@@ -55,8 +55,15 @@ public class ControllerAdviceConfig {
      */
     @ExceptionHandler(AuthorizationException.class)
     public HttpErrorEntity handleAuthorizationException(AuthorizationException e, HttpServletRequest request, HttpServletResponse response) {
-        HttpStatus status = (e instanceof UnauthorizedException) ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED;
-        String message = (e instanceof UnauthorizedException) ? MessageConstant.PermissionDenied : MessageConstant.AccessDenied;
+        HttpStatus status;
+        String message;
+        if (e instanceof UnauthorizedException) {
+            status = HttpStatus.FORBIDDEN;
+            message = MessageConstant.PermissionDenied;
+        } else {
+            status = HttpStatus.UNAUTHORIZED;
+            message = MessageConstant.AccessDenied;
+        }
         response.setStatus(status.value());
         return HttpErrorEntity.create(status, message, request.getRequestURI());
     }

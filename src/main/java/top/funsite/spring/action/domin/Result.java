@@ -20,7 +20,7 @@ public class Result<T> {
     private T data;
 
     public static Result<Void> fail(String message) {
-        Objects.requireNonNull(message, "message must not be null");
+        Objects.requireNonNull(message, "fail message must not be null");
         Result<Void> result = new Result<>();
         result.setCode(FAIL);
         result.setMsg(message);

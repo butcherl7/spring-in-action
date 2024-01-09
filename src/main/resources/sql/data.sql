@@ -1,7 +1,7 @@
-insert into sys_user(username, password)
-values ('admin', '123456'),
-       ('tom', '123456'),
-       ('alice', '123456');
+insert into sys_user(username, password, unlocked_time)
+values ('admin', '123456', null),
+       ('tom', '123456', null),
+       ('alice', '123456', DATEADD('HOUR', 1, CURRENT_TIMESTAMP));
 
 insert into sys_role(name, enabled)
 values ('admin', true),

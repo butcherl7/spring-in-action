@@ -6,11 +6,10 @@ drop table if exists sys_permission;
 
 create table sys_user
 (
-    id          bigint primary key auto_increment,
-    username    varchar not null unique,
+    id            bigint primary key auto_increment,
+    username      varchar not null unique,
     password      varchar not null,
-    locked        boolean,
-    locked_time timestamp,
+    unlocked_time timestamp comment '账号解除锁定的时间',
     enabled       boolean   default true,
     created_time  timestamp default current_timestamp(),
     modified_time timestamp default current_timestamp()

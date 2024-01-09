@@ -2,8 +2,8 @@ package top.funsite.spring.action.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.UnauthenticatedException;
@@ -37,8 +37,8 @@ public class ControllerAdviceConfig {
         if (message == null) {
             if (e instanceof UnknownAccountException) {
                 message = "账号不存在";
-            } else if (e instanceof LockedAccountException) {
-                message = "账号被锁定";
+            } else if (e instanceof DisabledAccountException) {
+                message = "账号被禁用";
             } else if (e instanceof IncorrectCredentialsException) {
                 message = "密码错误";
             } else {

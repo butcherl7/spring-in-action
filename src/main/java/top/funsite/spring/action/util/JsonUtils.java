@@ -32,9 +32,17 @@ public class JsonUtils {
      */
     public static final ObjectMapper DEFAULT_OBJECT_MAPPER = new ObjectMapper();
 
-    private static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    /**
+     * {@value}
+     */
+    public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
+    /**
+     * 默认的对 LocalDateTime 的格式化规则。
+     *
+     * @see #DATE_TIME_PATTERN
+     */
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
 
     static {
         JavaTimeModule javaTimeModule = new JavaTimeModule();

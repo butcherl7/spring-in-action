@@ -22,9 +22,7 @@ public class User {
 
     private String password;
 
-    private Boolean locked;
-
-    private String lockedTime;
+    private LocalDateTime unlockedTime;
 
     private Boolean enabled;
 

@@ -5,6 +5,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.funsite.spring.action.exception.BadParameterException;
@@ -27,6 +28,12 @@ public class AccountController {
         }
         String requestIp = WebUtils.getRequestIp(request);
         return loginService.login(new UsernamePasswordToken(username, password, requestIp));
+    }
+
+    @PostMapping("logout")
+    public String logout() {
+        SecurityUtils.getSubject().logout();
+        return "🆗";
     }
 
     @GetMapping("info")

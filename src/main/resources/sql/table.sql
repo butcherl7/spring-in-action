@@ -10,9 +10,9 @@ create table sys_user
     username      varchar not null unique,
     password      varchar not null,
     unlocked_time timestamp comment '账号解除锁定的时间',
-    enabled       boolean   default true,
-    created_time  timestamp default current_timestamp(),
-    modified_time timestamp default current_timestamp()
+    enabled       boolean not null default true,
+    created_time  timestamp        default current_timestamp(),
+    modified_time timestamp        default current_timestamp()
 );
 
 create table sys_role

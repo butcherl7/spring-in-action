@@ -1,43 +1,57 @@
 package top.funsite.spring.action.shiro.realm;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import top.funsite.spring.action.domin.UserDTO;
+import top.funsite.spring.action.domin.entity.Permission;
+import top.funsite.spring.action.domin.entity.Role;
+import top.funsite.spring.action.domin.entity.User;
+import top.funsite.spring.action.service.UserService;
 
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 从数据库检索用户并获取用户信息的 Realm.
  */
 public class DatabaseRealm extends AuthorizingRealm {
 
+    private final UserService userService;
+
+    public DatabaseRealm(UserService userService) {
+        this.userService = userService;
+    }
+
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         UsernamePasswordToken uToken = (UsernamePasswordToken) token;
         String username = uToken.getUsername();
-        char[] password = uToken.getPassword();
+        char[] cPassword = uToken.getPassword();
 
-        if (StringUtils.isBlank(username)) {
-            throw new AccountException("Null usernames are not allowed by this realm.");
+        String password = String.valueOf(cPassword);
+
+        User user = userService.getByUsername(username);
+
+        if (user == null) {
+            throw new UnknownAccountException();
         }
-        if (username.length() > 6) {
-            throw new UnknownAccountException("No account found for user [" + username + "]");
+        if (Boolean.TRUE.equals(user.getLocked())) {
+            throw new LockedAccountException();
         }
-        if (password.length > 10) {
-            throw new IncorrectCredentialsException("Incorrect Credentials");
+        if (!user.getPassword().equals(password)) {
+            throw new IncorrectCredentialsException();
         }
 
-        Set<String> roles = new HashSet<>();
-        Set<String> permissions = new HashSet<>();
+        Set<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
+        Set<String> permissions = user.getRoles().stream().map(Role::getPermissions).flatMap(Collection::stream).map(Permission::getName).collect(Collectors.toSet());
 
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername(username);
-        userDTO.setPassword(String.valueOf(password));
+        userDTO.setPassword(password);
         userDTO.setRoles(roles);
         userDTO.setPermissions(permissions);
         return new SimpleAuthenticationInfo(userDTO, password, getName());

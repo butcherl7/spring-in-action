@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
+import top.funsite.spring.action.service.UserService;
 import top.funsite.spring.action.shiro.RedisSubjectDAO;
 import top.funsite.spring.action.shiro.RedisSubjectFactory;
 import top.funsite.spring.action.shiro.configurers.FilterChainBuilder;
@@ -66,8 +67,8 @@ public class ShiroConfig {
     }
 
     @Bean
-    public Realm realm() {
-        return new DatabaseRealm();
+    public Realm realm(@Autowired UserService userService) {
+        return new DatabaseRealm(userService);
     }
 
     @Bean

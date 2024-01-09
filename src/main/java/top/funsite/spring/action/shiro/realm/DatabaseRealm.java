@@ -6,7 +6,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import top.funsite.spring.action.domin.User;
+import top.funsite.spring.action.domin.UserDTO;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,19 +35,19 @@ public class DatabaseRealm extends AuthorizingRealm {
         Set<String> roles = new HashSet<>();
         Set<String> permissions = new HashSet<>();
 
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(String.valueOf(password));
-        user.setRoles(roles);
-        user.setPermissions(permissions);
-        return new SimpleAuthenticationInfo(user, password, getName());
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(username);
+        userDTO.setPassword(String.valueOf(password));
+        userDTO.setRoles(roles);
+        userDTO.setPermissions(permissions);
+        return new SimpleAuthenticationInfo(userDTO, password, getName());
     }
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        User user = (User) principals.getPrimaryPrincipal();
-        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(user.getRoles());
-        info.setStringPermissions(user.getPermissions());
+        UserDTO userDTO = (UserDTO) principals.getPrimaryPrincipal();
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(userDTO.getRoles());
+        info.setStringPermissions(userDTO.getPermissions());
         return info;
     }
 

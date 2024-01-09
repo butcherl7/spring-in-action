@@ -11,7 +11,7 @@ import org.apache.shiro.subject.SubjectContext;
 import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
 import org.apache.shiro.web.subject.WebSubjectContext;
 import org.apache.shiro.web.subject.support.WebDelegatingSubject;
-import top.funsite.spring.action.domin.User;
+import top.funsite.spring.action.domin.UserDTO;
 import top.funsite.spring.action.shiro.session.RedisSession;
 
 import javax.servlet.ServletRequest;
@@ -33,9 +33,9 @@ public class RedisSubjectFactory extends DefaultWebSubjectFactory {
         PrincipalCollection principals = null;
 
         if (session instanceof RedisSession) {
-            User user = (User) session.getAttribute(RedisSession.Key.user);
+            UserDTO userDTO = (UserDTO) session.getAttribute(RedisSession.Key.user);
             String realmName = (String) session.getAttribute(RedisSession.Key.realmName);
-            principals = new SimplePrincipalCollection(user, realmName);
+            principals = new SimplePrincipalCollection(userDTO, realmName);
         } else {
             AuthenticationInfo authInfo = wsc.getAuthenticationInfo();
             if (authInfo != null) {
@@ -43,7 +43,7 @@ public class RedisSubjectFactory extends DefaultWebSubjectFactory {
             }
         }
 
-        boolean authenticated = principals != null && principals.getPrimaryPrincipal() instanceof User;
+        boolean authenticated = principals != null && principals.getPrimaryPrincipal() instanceof UserDTO;
 
         return new WebDelegatingSubject(principals, authenticated, host, session, request, response, securityManager);
     }

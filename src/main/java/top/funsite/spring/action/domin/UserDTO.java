@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class User {
+public class UserDTO {
 
     private String username;
 

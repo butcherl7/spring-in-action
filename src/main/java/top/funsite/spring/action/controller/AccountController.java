@@ -1,11 +1,13 @@
 package top.funsite.spring.action.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.funsite.spring.action.exception.BadParameterException;
 import top.funsite.spring.action.service.LoginService;
 import top.funsite.spring.action.util.WebUtils;
 
@@ -22,6 +24,10 @@ public class AccountController {
     public String login(@RequestParam String username,
                         @RequestParam String password,
                         HttpServletRequest request) {
+        if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
+            throw new BadParameterException("The username and password can't be empty.");
+        }
+
         String requestIp = WebUtils.getRequestIp(request);
         return loginService.login(new UsernamePasswordToken(username, password, requestIp));
     }

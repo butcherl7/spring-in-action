@@ -45,6 +45,9 @@ public class DatabaseRealm extends AuthorizingRealm {
 
         LocalDateTime unlockedTime = user.getUnlockedTime();
 
+        if (Boolean.FALSE.equals(user.getEnabled())) {
+            throw new DisabledAccountException("账号已被禁用，详情请咨讠");
+        }
         if (unlockedTime != null && unlockedTime.isAfter(LocalDateTime.now())) {
             throw new LockedAccountException("账号被锁定，请在 " + unlockedTime.format(DATE_TIME_FORMATTER) + " 后再试");
         }

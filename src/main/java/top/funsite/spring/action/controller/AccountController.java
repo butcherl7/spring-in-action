@@ -21,13 +21,10 @@ public class AccountController {
     private LoginService loginService;
 
     @GetMapping("login")
-    public String login(@RequestParam String username,
-                        @RequestParam String password,
-                        HttpServletRequest request) {
+    public String login(@RequestParam String username, @RequestParam String password, HttpServletRequest request) {
         if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
             throw new BadParameterException("The username and password can't be empty.");
         }
-
         String requestIp = WebUtils.getRequestIp(request);
         return loginService.login(new UsernamePasswordToken(username, password, requestIp));
     }

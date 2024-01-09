@@ -19,6 +19,8 @@ public class Result<T> {
 
     private T data;
 
+    private final long timestamp = System.currentTimeMillis();
+
     public static Result<Void> fail(String message) {
         Objects.requireNonNull(message, "fail message must not be null");
         Result<Void> result = new Result<>();

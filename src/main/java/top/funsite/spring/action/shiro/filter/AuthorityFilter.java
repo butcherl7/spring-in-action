@@ -2,6 +2,7 @@ package top.funsite.spring.action.shiro.filter;
 
 import org.apache.shiro.authz.annotation.Logical;
 import org.springframework.http.HttpStatus;
+import top.funsite.spring.action.shiro.MessageConstant;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -20,9 +21,7 @@ public class AuthorityFilter extends PassThruFilter {
 
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
-        HttpStatus status = HttpStatus.FORBIDDEN;
-        String message = "Permission denied";
-        return responseDenied(request, response, status, message);
+        return responseDenied(request, response, HttpStatus.FORBIDDEN, MessageConstant.PermissionDenied);
     }
 
     /**

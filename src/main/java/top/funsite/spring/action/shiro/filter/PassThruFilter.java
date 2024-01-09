@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMethod;
 import top.funsite.spring.action.shiro.HttpErrorEntity;
+import top.funsite.spring.action.shiro.MessageConstant;
 import top.funsite.spring.action.util.JsonUtils;
 
 import javax.servlet.ServletRequest;
@@ -57,9 +58,7 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
 
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        String message = "Access denied";
-        return responseDenied(request, response, status, message);
+        return responseDenied(request, response, HttpStatus.UNAUTHORIZED, MessageConstant.AccessDenied);
     }
 
     protected boolean responseDenied(ServletRequest request, ServletResponse response, HttpStatus status, String message) throws IOException {

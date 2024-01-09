@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import top.funsite.spring.action.domin.Result;
 import top.funsite.spring.action.exception.ServiceException;
 import top.funsite.spring.action.shiro.HttpErrorEntity;
+import top.funsite.spring.action.shiro.MessageConstant;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,7 +56,7 @@ public class ControllerAdviceConfig {
     @ExceptionHandler(AuthorizationException.class)
     public HttpErrorEntity handleAuthorizationException(AuthorizationException e, HttpServletRequest request, HttpServletResponse response) {
         HttpStatus status = (e instanceof UnauthorizedException) ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED;
-        String message = (e instanceof UnauthorizedException) ? "Permission denied" : "Access denied";
+        String message = (e instanceof UnauthorizedException) ? MessageConstant.PermissionDenied : MessageConstant.AccessDenied;
         response.setStatus(status.value());
         return HttpErrorEntity.create(status, message, request.getRequestURI());
     }

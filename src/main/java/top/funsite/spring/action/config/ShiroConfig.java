@@ -11,7 +11,6 @@ import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.ShiroHttpServletResponse;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -81,14 +80,14 @@ public class ShiroConfig {
     }
 
     @Bean
-    public Realm realm(@Autowired UserService userService) {
+    public Realm realm(UserService userService) {
         loginUrl = environment.getProperty("shiro.loginUrl", "/login");
         keySeparator = environment.getProperty("shiro.sessionKeySeparator", "");
         return new DatabaseRealm(userService);
     }
 
     @Bean
-    public DefaultWebSecurityManager securityManager(@Autowired Realm realm, @Autowired RedisTemplate<String, Object> redisTemplate) {
+    public DefaultWebSecurityManager securityManager(Realm realm, RedisTemplate<String, Object> redisTemplate) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setSessionManager(new RedisSessionManager(redisTemplate, keySeparator));
         securityManager.setSubjectFactory(new RedisSubjectFactory());

@@ -1,10 +1,12 @@
 package top.funsite.spring.action.config;
 
+import lombok.Getter;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.spring.web.config.AbstractShiroWebFilterConfiguration;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.ShiroHttpServletResponse;
@@ -12,6 +14,7 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
 import top.funsite.spring.action.service.UserService;
 import top.funsite.spring.action.shiro.RedisSubjectDAO;
@@ -33,21 +36,32 @@ import static top.funsite.spring.action.shiro.configurers.NamedFilter.*;
 /**
  * Shiro 配置类。
  * <ol>
- *     <li>Shiro 重定向为何默认带上 JSESSIONID？See {@link ShiroHttpServletResponse#encodeRedirectURL(String)}.</li>
+ *     <li>Shiro 重定向默认带上 JSESSIONID？See {@link ShiroHttpServletResponse#encodeRedirectURL(String)}.</li>
+ *     <li>使用 Bean 定义 Shiro Filter. See {@link ShiroFilterFactoryBean}.</li>
  * </ol>
- * <p>使用 Bean 定义 Shiro Filter. See {@link ShiroFilterFactoryBean}.</p>
  * <p>401 unauthenticated</p>
  * <p>403 unauthorized</p>
+ *
+ * @see AbstractShiroWebFilterConfiguration
  */
 @Configuration
 public class ShiroConfig {
 
-    public static final String KEY_SEPARATOR = "AppSessions:";
-
-    public static final String LOGIN_URL = "/login";
-
     @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private Environment environment;
+
+    /**
+     * 登录接口地址，默认为 {@code /login}
+     */
+    @Getter
+    private static String loginUrl;
+
+    /**
+     * 存储在 redis 中的 session 数据的分隔符，默认为空。
+     */
+
+    @Getter
+    private static String keySeparator;
 
     /**
      * 解决 Shiro 权限注解不生效的问题。
@@ -68,13 +82,15 @@ public class ShiroConfig {
 
     @Bean
     public Realm realm(@Autowired UserService userService) {
+        loginUrl = environment.getProperty("shiro.loginUrl", "/login");
+        keySeparator = environment.getProperty("shiro.sessionKeySeparator", "");
         return new DatabaseRealm(userService);
     }
 
     @Bean
-    public DefaultWebSecurityManager securityManager(@Autowired Realm realm) {
+    public DefaultWebSecurityManager securityManager(@Autowired Realm realm, @Autowired RedisTemplate<String, Object> redisTemplate) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setSessionManager(new RedisSessionManager(redisTemplate, KEY_SEPARATOR));
+        securityManager.setSessionManager(new RedisSessionManager(redisTemplate, keySeparator));
         securityManager.setSubjectFactory(new RedisSubjectFactory());
         securityManager.setSubjectDAO(new RedisSubjectDAO());
         securityManager.setRealm(realm);
@@ -85,7 +101,7 @@ public class ShiroConfig {
     public ShiroFilterFactoryBean shiroFilterFactoryBean(DefaultWebSecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        shiroFilterFactoryBean.setLoginUrl(LOGIN_URL);
+        shiroFilterFactoryBean.setLoginUrl(loginUrl);
 
         FilterChainBuilder filterChainBuilder = createFilterChainDefinition();
         Map<String, String> filterChainMap = filterChainBuilder.buildChainMap();

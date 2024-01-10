@@ -61,7 +61,7 @@ public class RedisSessionManager extends DefaultWebSessionManager {
     }
 
     private String getJsessionid(HttpServletRequest request) {
-        // 防止重定向带上 url 上带 jsessionid.
+        // 防止重定向后的 url 上带 jsessionid.
         // 参见 org.apache.shiro.web.servlet.ShiroHttpServletResponse#isEncodeable
         request.setAttribute(ShiroHttpServletRequest.SESSION_ID_URL_REWRITING_ENABLED, isSessionIdUrlRewritingEnabled());
 

@@ -56,7 +56,7 @@ public class ShiroConfig {
     private static String loginUrl;
 
     /**
-     * 存储在 redis 中的 session 数据的分隔符，默认为空。
+     * 存储在 redis 中的 session 数据的分隔符，默认为 ""。
      */
 
     @Getter

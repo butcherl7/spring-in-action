@@ -4,7 +4,7 @@ import org.apache.shiro.web.filter.authc.PassThruAuthenticationFilter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMethod;
-import top.funsite.spring.action.shiro.HttpErrorEntity;
+import top.funsite.spring.action.domin.HttpErrorEntity;
 import top.funsite.spring.action.shiro.MessageConstant;
 import top.funsite.spring.action.util.JsonUtils;
 

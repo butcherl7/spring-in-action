@@ -5,7 +5,6 @@ import org.apache.shiro.authc.pam.AuthenticationStrategy;
 import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 
 import java.util.Collection;
@@ -15,7 +14,7 @@ import java.util.Collection;
  *
  * @see ModularRealmAuthenticator#doMultiRealmAuthentication(Collection, AuthenticationToken)
  */
-public class BearerRealm extends AuthorizingRealm {
+public class BearerRealm extends AbstractRealm {
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authToken) throws AuthenticationException {

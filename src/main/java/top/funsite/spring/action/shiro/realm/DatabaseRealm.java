@@ -3,7 +3,6 @@ package top.funsite.spring.action.shiro.realm;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import top.funsite.spring.action.domin.UserDTO;
 import top.funsite.spring.action.domin.entity.Permission;
@@ -21,7 +20,7 @@ import static top.funsite.spring.action.util.JsonUtils.DATE_TIME_FORMATTER;
 /**
  * 从数据库检索用户并获取用户信息的 Realm.
  */
-public class DatabaseRealm extends AuthorizingRealm {
+public class DatabaseRealm extends AbstractRealm {
 
     private final UserService userService;
 
@@ -33,16 +32,14 @@ public class DatabaseRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         UsernamePasswordToken uToken = (UsernamePasswordToken) token;
         String username = uToken.getUsername();
-        char[] cPassword = uToken.getPassword();
 
-        String password = String.valueOf(cPassword);
-
-        User user = userService.getByUsername(username);
+        User user = userService.getByUsername(uToken.getUsername());
 
         if (user == null) {
             throw new UnknownAccountException();
         }
 
+        String password = user.getPassword();
         LocalDateTime unlockedTime = user.getUnlockedTime();
 
         if (Boolean.FALSE.equals(user.getEnabled())) {
@@ -50,9 +47,6 @@ public class DatabaseRealm extends AuthorizingRealm {
         }
         if (unlockedTime != null && unlockedTime.isAfter(LocalDateTime.now())) {
             throw new LockedAccountException("账号被锁定，请在 " + unlockedTime.format(DATE_TIME_FORMATTER) + " 后再试");
-        }
-        if (!user.getPassword().equals(password)) {
-            throw new IncorrectCredentialsException();
         }
 
         Set<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());

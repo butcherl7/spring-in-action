@@ -18,12 +18,12 @@ public class ShiroProperties {
     /**
      * 登录接口 URL，默认为 {@code /login}
      */
-    private String loginUrl;
+    private String loginUrl = "/login";
 
     /**
      * 存储在 redis 中的 session 数据的分隔符，默认为 ""。
      */
-    private String sessionKeySeparator;
+    private String sessionKeySeparator = "";
 
     /**
      * 会话超时时间（默认 30 分钟），如果未指定持续时间后缀，将使用秒。

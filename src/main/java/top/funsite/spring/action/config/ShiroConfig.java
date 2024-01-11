@@ -18,7 +18,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import top.funsite.spring.action.service.UserService;
 import top.funsite.spring.action.shiro.RedisSubjectDAO;
 import top.funsite.spring.action.shiro.RedisSubjectFactory;
-import top.funsite.spring.action.shiro.configurers.FilterChainBuilder;
+import top.funsite.spring.action.shiro.configurers.AuthorizeRequestsDefiner;
 import top.funsite.spring.action.shiro.filter.AuthFilter;
 import top.funsite.spring.action.shiro.filter.JwtFilter;
 import top.funsite.spring.action.shiro.filter.PermissionsFilter;
@@ -102,17 +102,17 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         shiroFilterFactoryBean.setLoginUrl(loginUrl);
 
-        FilterChainBuilder filterChainBuilder = createFilterChainDefinition();
-        Map<String, String> filterChainMap = filterChainBuilder.buildChainMap();
-        Map<String, Logical> appliedLogicalMap = filterChainBuilder.buildAuthLogic();
+        AuthorizeRequestsDefiner definer = createRequestsDefiner();
+        Map<String, String> authRequestMap = definer.getDefinedAuthorizationRequest();
+        Map<String, Logical> authLogicMap = definer.getDefinedAuthorizationLogic();
 
         Map<String, Filter> filters = shiroFilterFactoryBean.getFilters();
         // 使用重写过的过滤器代替默认的。
         filters.put(authc.name(), new AuthFilter());
-        filters.put(roles.name(), new RoleFilter(appliedLogicalMap));
-        filters.put(perms.name(), new PermissionsFilter(appliedLogicalMap));
+        filters.put(roles.name(), new RoleFilter(authLogicMap));
+        filters.put(perms.name(), new PermissionsFilter(authLogicMap));
         filters.put(jwt.name(), new JwtFilter());
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainMap);
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(authRequestMap);
         return shiroFilterFactoryBean;
     }
 
@@ -128,8 +128,8 @@ public class ShiroConfig {
      * @see DefaultShiroFilterChainDefinition
      * @see <a href="https://www.jianshu.com/p/0bad726d0454">关于springMvc错误重定向/error</a>
      */
-    private static FilterChainBuilder createFilterChainDefinition() {
-        return FilterChainBuilder.newBuilder()
+    private static AuthorizeRequestsDefiner createRequestsDefiner() {
+        return AuthorizeRequestsDefiner.define()
                 .antMatchers("/login", "/error", "/favicon.ico").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("home1").hasRole("home1")

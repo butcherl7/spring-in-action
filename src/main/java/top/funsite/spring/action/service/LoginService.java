@@ -27,6 +27,7 @@ public class LoginService {
 
         Date date = new Date();
         String jsessionid = generateJsessionid();
+        String redisKey = ShiroConfig.getKeySeparator() + jsessionid;
 
         String host = authToken instanceof HostAuthenticationToken ? ((HostAuthenticationToken) authToken).getHost() : "";
 
@@ -37,7 +38,7 @@ public class LoginService {
         map.put(RedisSession.Key.startTimestamp, date);
         map.put(RedisSession.Key.user, subject.getPrincipal());
         map.put(RedisSession.Key.realmName, subject.getPrincipals().getRealmNames().iterator().next());
-        redisTemplate.opsForHash().putAll(ShiroConfig.getKeySeparator() + jsessionid, map);
+        redisTemplate.opsForHash().putAll(redisKey, map);
 
         return jsessionid;
     }

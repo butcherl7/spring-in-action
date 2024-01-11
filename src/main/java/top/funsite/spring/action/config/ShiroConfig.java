@@ -64,7 +64,7 @@ public class ShiroConfig {
     private static String keySeparator;
 
     /**
-     * 会话超时时间，单位为毫秒，小于等于零视为无时间限制。
+     * 会话超时时间（默认 30 分钟）。
      */
     @Getter
     private static Duration timeout;

@@ -25,6 +25,7 @@ public class DatabaseRealm extends AbstractRealm {
     private final UserService userService;
 
     public DatabaseRealm(UserService userService) {
+        super();
         this.userService = userService;
     }
 

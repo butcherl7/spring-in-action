@@ -13,12 +13,12 @@ import org.apache.shiro.web.servlet.ShiroHttpServletResponse;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
 import top.funsite.spring.action.service.UserService;
 import top.funsite.spring.action.shiro.RedisSubjectDAO;
 import top.funsite.spring.action.shiro.RedisSubjectFactory;
 import top.funsite.spring.action.shiro.configurers.AuthorizeRequestsDefiner;
+import top.funsite.spring.action.shiro.configurers.ShiroProperties;
 import top.funsite.spring.action.shiro.filter.AuthFilter;
 import top.funsite.spring.action.shiro.filter.JwtFilter;
 import top.funsite.spring.action.shiro.filter.PermissionsFilter;
@@ -47,7 +47,7 @@ import static top.funsite.spring.action.shiro.configurers.NamedFilter.*;
 public class ShiroConfig {
 
     @Resource
-    private Environment environment;
+    private ShiroProperties shiroProperties;
 
     /**
      * 登录接口地址，默认为 {@code /login}
@@ -81,8 +81,10 @@ public class ShiroConfig {
 
     @Bean
     public Realm realm(UserService userService) {
-        loginUrl = environment.getProperty("shiro.loginUrl", "/login");
-        keySeparator = environment.getProperty("shiro.sessionKeySeparator", "");
+        {
+            loginUrl = shiroProperties.getLoginUrl();
+            keySeparator = shiroProperties.getSessionKeySeparator();
+        }
         return new DatabaseRealm(userService);
     }
 

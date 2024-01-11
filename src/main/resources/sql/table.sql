@@ -1,3 +1,5 @@
+drop table if exists request_log;
+
 create table request_log
 (
     id            bigint primary key auto_increment comment 'ID',

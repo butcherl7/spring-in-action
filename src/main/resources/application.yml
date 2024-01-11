@@ -8,7 +8,7 @@ spring:
     password:
   sql:
     init:
-      schema-locations: classpath*:schema/ddl.sql
+      schema-locations: classpath*:sql/table.sql
   h2:
     console:
       enabled: true

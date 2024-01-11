@@ -14,5 +14,5 @@ spring:
       enabled: true
 
 shiro:
-  loginUrl: /login
-  sessionKeySeparator: 'AppSessions:'
+  login-url: /login
+  session-key-separator: 'AppSessions:'

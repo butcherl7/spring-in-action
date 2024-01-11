@@ -3,7 +3,7 @@ package top.funsite.spring.action.shiro.configurers;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
-import org.apache.shiro.web.filter.mgt.DefaultFilter;
+import org.apache.shiro.util.AntPathMatcher;
 import org.apache.shiro.web.filter.mgt.FilterChainManager;
 import top.funsite.spring.action.shiro.filter.AuthorizeFilter;
 
@@ -22,7 +22,8 @@ import java.util.stream.Collectors;
  *      .getDefinedAuthorizationRequest();}
  * </pre>
  *
- * @see DefaultFilter
+ * @see NamedFilter
+ * @see AntPathMatcher
  * @see FilterChainManager#createChain(String, String)
  */
 public class AuthorizeRequestsDefiner {

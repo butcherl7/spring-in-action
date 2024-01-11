@@ -28,7 +28,7 @@ public class RoleFilter extends AuthorizeFilter {
             return true;
         }
 
-        Logical logic = getAuthLogic(request);
+        Logical logic = getLogic(request);
 
         if (logic == Logical.AND) {
             return subject.hasAllRoles(roles);

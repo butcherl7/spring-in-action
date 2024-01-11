@@ -1,6 +1,7 @@
 package top.funsite.spring.action.shiro.filter;
 
 import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.aop.RoleAnnotationHandler;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.CollectionUtils;
 import org.apache.shiro.web.filter.authz.RolesAuthorizationFilter;
@@ -14,8 +15,9 @@ import java.util.Set;
  * 如果当前用户具有指定的角色，则允许访问，如果没有指定所有角色，则拒绝访问的过滤器。
  *
  * @see RolesAuthorizationFilter
+ * @see RoleAnnotationHandler
  */
-public class RoleFilter extends AuthorityFilter {
+public class RoleFilter extends AuthorizeFilter {
 
     @Override
     public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
@@ -48,6 +50,6 @@ public class RoleFilter extends AuthorityFilter {
     }
 
     public RoleFilter(Map<String, Logical> appliedLogicalPaths) {
-        this.appliedLogicalPaths = appliedLogicalPaths;
+        this.definedAuthorizationLogicPaths = appliedLogicalPaths;
     }
 }

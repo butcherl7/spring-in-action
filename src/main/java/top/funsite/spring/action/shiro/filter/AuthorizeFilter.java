@@ -11,13 +11,16 @@ import java.util.Map;
 
 /**
  * 关于需要鉴权操作的过滤器。
+ *
+ * @see RoleFilter
+ * @see PermissionsFilter
  */
-public class AuthorityFilter extends PassThruFilter {
+public class AuthorizeFilter extends PassThruFilter {
 
     /**
      * 就像 {@link #appliedPaths}，保存指定接口需要的多个角色、权限的判断关系。
      */
-    protected Map<String, Logical> appliedLogicalPaths = new LinkedHashMap<>();
+    protected Map<String, Logical> definedAuthorizationLogicPaths = new LinkedHashMap<>();
 
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
@@ -33,7 +36,7 @@ public class AuthorityFilter extends PassThruFilter {
     protected Logical getAuthLogic(ServletRequest request) {
         for (String path : this.appliedPaths.keySet()) {
             if (pathsMatch(path, request)) {
-                return this.appliedLogicalPaths.get(path);
+                return this.definedAuthorizationLogicPaths.get(path);
             }
         }
         return Logical.AND;

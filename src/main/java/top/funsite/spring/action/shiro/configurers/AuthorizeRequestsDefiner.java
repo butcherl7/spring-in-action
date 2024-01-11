@@ -5,7 +5,7 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.filter.mgt.DefaultFilter;
 import org.apache.shiro.web.filter.mgt.FilterChainManager;
-import top.funsite.spring.action.shiro.filter.AuthorityFilter;
+import top.funsite.spring.action.shiro.filter.AuthorizeFilter;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  *      .antMatchers("/home","/favicon.ico").permitAll()
  *      .antMatchers("/info").hasRole("admin")
  *      .antMatchers("/**").authenticated()
- *      .buildChainMap();}
+ *      .getDefinedAuthorizationRequest();}
  * </pre>
  *
  * @see DefaultFilter
@@ -67,7 +67,7 @@ public class AuthorizeRequestsDefiner {
      * 获取定义的授权逻辑配置。
      *
      * @return map.
-     * @see AuthorityFilter
+     * @see AuthorizeFilter
      */
     public Map<String, Logical> getDefinedAuthorizationLogic() {
         Map<String, Logical> map = new LinkedHashMap<>();

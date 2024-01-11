@@ -28,6 +28,7 @@ import top.funsite.spring.action.shiro.session.RedisSessionManager;
 
 import javax.annotation.Resource;
 import javax.servlet.Filter;
+import java.time.Duration;
 import java.util.Map;
 
 import static top.funsite.spring.action.shiro.configurers.NamedFilter.*;
@@ -63,6 +64,12 @@ public class ShiroConfig {
     private static String keySeparator;
 
     /**
+     * 会话超时时间，单位为毫秒，小于等于零视为无时间限制。
+     */
+    @Getter
+    private static Duration timeout;
+
+    /**
      * 解决 Shiro 权限注解不生效的问题。
      *
      * @return DefaultAdvisorAutoProxyCreator
@@ -84,6 +91,7 @@ public class ShiroConfig {
         {
             loginUrl = shiroProperties.getLoginUrl();
             keySeparator = shiroProperties.getSessionKeySeparator();
+            timeout = shiroProperties.getTimeout();
         }
         return new DatabaseRealm(userService);
     }

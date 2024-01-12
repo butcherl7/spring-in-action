@@ -1,7 +1,6 @@
 package top.funsite.spring.action.util;
 
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -30,8 +29,10 @@ public class SpringBeanUtils implements ApplicationContextAware {
      * @param <T>  bean 类型。
      * @return bean 的实例。
      */
+    @SuppressWarnings("unchecked")
     public static <T> T getBean(String name) {
-        return getBean(name, null);
+        check();
+        return (T) applicationContext.getBean(name);
     }
 
     /**
@@ -42,7 +43,8 @@ public class SpringBeanUtils implements ApplicationContextAware {
      * @return 与所需类型匹配的单个 bean 的实例。
      */
     public static <T> T getBean(Class<T> requiredType) {
-        return getBean(null, requiredType);
+        check();
+        return applicationContext.getBean(requiredType);
     }
 
     /**
@@ -53,19 +55,12 @@ public class SpringBeanUtils implements ApplicationContextAware {
      * @param <T>          bean 类型。
      * @return bean 的实例。
      */
-    @SuppressWarnings("unchecked")
     public static <T> T getBean(String name, Class<T> requiredType) {
-        Objects.requireNonNull(applicationContext);
+        check();
+        return applicationContext.getBean(name, requiredType);
+    }
 
-        if (StringUtils.isNotBlank(name) && requiredType != null) {
-            return applicationContext.getBean(name, requiredType);
-        }
-        if (StringUtils.isNotBlank(name)) {
-            return (T) applicationContext.getBean(name);
-        }
-        if (requiredType != null) {
-            return applicationContext.getBean(requiredType);
-        }
-        throw new IllegalArgumentException("name and requiredType cannot be all null.");
+    private static void check() {
+        Objects.requireNonNull(applicationContext, "applicationContext must not be null");
     }
 }

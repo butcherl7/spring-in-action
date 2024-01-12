@@ -3,11 +3,14 @@ package top.funsite.spring.action.domin;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Set;
 
 @Getter
 @Setter
-public class UserDTO {
+public class UserDTO implements Serializable {
+
+    private static final long serialVersionUID = -6580744408770092962L;
 
     private String username;
 

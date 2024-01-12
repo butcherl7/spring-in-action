@@ -36,10 +36,10 @@ public class LoginService {
         Map<String, Object> map = new HashMap<>(16);
         map.put(RedisSession.Key.id, jsessionid);
         map.put(RedisSession.Key.host, host);
-        map.put(RedisSession.Key.lastAccessTime, date);
-        map.put(RedisSession.Key.startTimestamp, date);
-        map.put(RedisSession.Key.rememberMe, rememberMe);
         map.put(RedisSession.Key.user, subject.getPrincipal());
+        map.put(RedisSession.Key.startTimestamp, date);
+        map.put(RedisSession.Key.lastAccessTime, date);
+        map.put(RedisSession.Key.rememberMe, rememberMe);
         map.put(RedisSession.Key.realmName, subject.getPrincipals().getRealmNames().iterator().next());
         redisTemplate.opsForHash().putAll(redisKey, map);
 

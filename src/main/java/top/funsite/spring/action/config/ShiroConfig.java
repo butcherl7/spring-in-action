@@ -140,6 +140,7 @@ public class ShiroConfig {
         return AuthorizeRequestsDefiner.define()
                 .antMatchers("/login", "/error", "/favicon.ico").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/info").rememberMe()
                 .antMatchers("/home1").hasRole("home1")
                 .antMatchers("/home3").hasAnyRoles("home1", "home3")
                 .antMatchers("/jwt").jwt()

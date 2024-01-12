@@ -27,6 +27,7 @@ public class RedisSession implements ValidatingSession {
         String host = "host";
         String user = "user";
         String realmName = "realmName";
+        String rememberMe = "rememberMe";
         String startTimestamp = "startTimestamp";
         String lastAccessTime = "lastAccessTime";
     }

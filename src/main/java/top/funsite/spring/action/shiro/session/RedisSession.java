@@ -196,6 +196,16 @@ public class RedisSession implements ValidatingSession {
         return timeout;
     }
 
+    /**
+     * 当前会话的用户，登录时是否选择了 {@code rememberMe}.
+     *
+     * @return {@code True} 则表示选择了 {@code rememberMe}.
+     */
+    public boolean isRememberMe() {
+        Object object = getAttribute(Key.rememberMe);
+        return object instanceof Boolean && (Boolean) object;
+    }
+
     private static String assertString(Object key) {
         if (!(key instanceof String)) {
             String msg = "RedisSession based implementations of the Shiro Session interface requires attribute keys " +

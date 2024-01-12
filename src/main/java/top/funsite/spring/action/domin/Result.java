@@ -9,10 +9,6 @@ import java.util.Objects;
 @Setter
 public class Result<T> {
 
-    public static final int OK = 0;
-
-    public static final int FAIL = 1;
-
     private int code;
 
     private String msg;
@@ -22,9 +18,15 @@ public class Result<T> {
     private final long timestamp = System.currentTimeMillis();
 
     public static Result<Void> fail(String message) {
+        return fail(ServiceStatus.ERROR, message);
+    }
+
+    public static Result<Void> fail(ServiceStatus status, String message) {
+        assert status.isError();
         Objects.requireNonNull(message, "fail message must not be null");
+
         Result<Void> result = new Result<>();
-        result.setCode(FAIL);
+        result.setCode(status.value());
         result.setMsg(message);
         return result;
     }

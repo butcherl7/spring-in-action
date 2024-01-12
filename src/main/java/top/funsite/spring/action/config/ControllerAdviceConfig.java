@@ -1,10 +1,7 @@
 package top.funsite.spring.action.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.DisabledAccountException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
@@ -13,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import top.funsite.spring.action.domin.HttpErrorEntity;
 import top.funsite.spring.action.domin.Result;
+import top.funsite.spring.action.domin.ServiceStatus;
 import top.funsite.spring.action.exception.ServiceException;
 import top.funsite.spring.action.shiro.MessageConstant;
 
@@ -34,19 +32,26 @@ public class ControllerAdviceConfig {
     @ExceptionHandler(AuthenticationException.class)
     public Result<Void> handleAuthenticationException(AuthenticationException e) {
         String message = e.getMessage();
+        ServiceStatus status = ServiceStatus.AUTHENTICATION_ERROR;
         if (message == null) {
             if (e instanceof UnknownAccountException) {
                 message = "账号不存在";
+                status = ServiceStatus.UNKNOWN_ACCOUNT;
+            } else if (e instanceof LockedAccountException) {
+                message = "账号被锁定";
+                status = ServiceStatus.ACCOUNT_LOCKED;
             } else if (e instanceof DisabledAccountException) {
                 message = "账号被禁用";
+                status = ServiceStatus.ACCOUNT_DISABLED;
             } else if (e instanceof IncorrectCredentialsException) {
                 message = "密码错误";
+                status = ServiceStatus.INCORRECT_CREDENTIALS;
             } else {
                 log.warn(e.getMessage(), e);
                 message = "身份验证错误";
             }
         }
-        return Result.fail(message);
+        return Result.fail(status, message);
     }
 
     /**

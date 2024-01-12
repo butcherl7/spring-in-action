@@ -80,7 +80,7 @@ public class ControllerAdviceConfig {
      */
     @ExceptionHandler(ServiceException.class)
     public Result<Void> handleException(ServiceException e) {
-        return Result.fail(e.getMessage());
+        return Result.fail(e.getStatus(), e.getMessage());
     }
 
     /**

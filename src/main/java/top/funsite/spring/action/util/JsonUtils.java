@@ -9,6 +9,8 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -66,6 +68,14 @@ public class JsonUtils {
      */
     public static void writeValue(OutputStream out, Object value) throws IOException {
         DEFAULT_OBJECT_MAPPER.writeValue(out, value);
+    }
+
+    public static void writeValue(ServletResponse response, Object value) {
+        try (ServletOutputStream outputStream = response.getOutputStream()) {
+            writeValue(outputStream, value);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private JsonUtils() {

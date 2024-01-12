@@ -112,7 +112,7 @@ public class AuthorizeRequestsDefiner {
         /**
          * 通过 JWT 的验证才能访问 URL.
          *
-         * @return FilterChainBuilder
+         * @return AuthorizeRequestsDefiner
          */
         public AuthorizeRequestsDefiner jwt() {
             this.filter = NamedFilter.jwt;
@@ -122,7 +122,7 @@ public class AuthorizeRequestsDefiner {
         /**
          * 经过身份验证的用户才能访问 URL.
          *
-         * @return FilterChainBuilder
+         * @return AuthorizeRequestsDefiner
          */
         public AuthorizeRequestsDefiner authenticated() {
             this.filter = NamedFilter.authc;
@@ -133,7 +133,7 @@ public class AuthorizeRequestsDefiner {
          * 拥有指定的角色才能访问 URL.
          *
          * @param role 角色名称。
-         * @return FilterChainBuilder
+         * @return AuthorizeRequestsDefiner
          */
         public AuthorizeRequestsDefiner hasRole(String role) {
             return hasAllRoles(role);
@@ -143,7 +143,7 @@ public class AuthorizeRequestsDefiner {
          * 拥有指定的任意一个角色就能访问 URL.
          *
          * @param roles 角色名称数组。
-         * @return FilterChainBuilder
+         * @return AuthorizeRequestsDefiner
          */
         public AuthorizeRequestsDefiner hasAnyRoles(String... roles) {
             return requiredAuthorities(NamedFilter.roles, Logical.OR, roles);
@@ -153,7 +153,7 @@ public class AuthorizeRequestsDefiner {
          * 拥有指定的所有角色才能访问 URL.
          *
          * @param roles 角色名称数组。
-         * @return FilterChainBuilder
+         * @return AuthorizeRequestsDefiner
          */
         public AuthorizeRequestsDefiner hasAllRoles(String... roles) {
             return requiredAuthorities(NamedFilter.roles, Logical.AND, roles);
@@ -163,7 +163,7 @@ public class AuthorizeRequestsDefiner {
          * 拥有指定的权限才能访问 URL.
          *
          * @param permission 权限名称数组。
-         * @return FilterChainBuilder
+         * @return AuthorizeRequestsDefiner
          */
         public AuthorizeRequestsDefiner hasPermission(String permission) {
             return hasAllPermissions(permission);
@@ -173,7 +173,7 @@ public class AuthorizeRequestsDefiner {
          * 拥有指定的任意一个权限就能访问 URL.
          *
          * @param permissions 权限名称数组。
-         * @return FilterChainBuilder
+         * @return AuthorizeRequestsDefiner
          */
         public AuthorizeRequestsDefiner hasAnyPermissions(String... permissions) {
             return requiredAuthorities(NamedFilter.perms, Logical.OR, permissions);
@@ -183,7 +183,7 @@ public class AuthorizeRequestsDefiner {
          * 拥有指定的所有权限才能访问 URL.
          *
          * @param permissions 权限名称数组。
-         * @return FilterChainBuilder
+         * @return AuthorizeRequestsDefiner
          */
         public AuthorizeRequestsDefiner hasAllPermissions(String... permissions) {
             return requiredAuthorities(NamedFilter.perms, Logical.AND, permissions);
@@ -192,7 +192,7 @@ public class AuthorizeRequestsDefiner {
         /**
          * 指定任何人都允许访问 URL.
          *
-         * @return FilterChainBuilder
+         * @return AuthorizeRequestsDefiner
          */
         public AuthorizeRequestsDefiner permitAll() {
             this.filter = NamedFilter.anon;

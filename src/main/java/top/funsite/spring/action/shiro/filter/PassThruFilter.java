@@ -2,14 +2,15 @@ package top.funsite.spring.action.shiro.filter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.PassThruAuthenticationFilter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMethod;
-import top.funsite.spring.action.config.ShiroConfig;
 import top.funsite.spring.action.domin.HttpErrorEntity;
+import top.funsite.spring.action.domin.Result;
 import top.funsite.spring.action.shiro.MessageConstant;
-import top.funsite.spring.action.shiro.session.BlankSession;
+import top.funsite.spring.action.shiro.session.RedisSession;
 import top.funsite.spring.action.util.JsonUtils;
 
 import javax.servlet.ServletRequest;
@@ -19,7 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+
+import static top.funsite.spring.action.domin.ServiceStatus.LOGIN_TIMEOUT;
 
 /**
  * 重写关于身份验证和访问被拒绝的行为。
@@ -63,22 +65,21 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
             return true;
         }
 
-        Session session = getSubject(request, response).getSession();
+        Subject subject = getSubject(request, response);
+        Session session = subject.getSession();
 
-        long timeout = ShiroConfig.getTimeout().getSeconds() * 1000L;
+        if (session instanceof RedisSession) {
+            RedisSession redisSession = ((RedisSession) session);
 
-        if (session != null && !BlankSession.ID.equals(session.getId()) && timeout > 0) {
-            long currentTime = System.currentTimeMillis();
-            long lastAccessTime = session.getLastAccessTime().getTime();
+            boolean timeout = redisSession.isTimeout();
+            boolean rememberMe = redisSession.isRememberMe();
 
-            long diff = currentTime - lastAccessTime;
-
-            log.debug("CurrentTime   : {}", MILLI_TIME_FORMAT.format(new Date(currentTime)));
-            log.debug("LastAccessTime: {}", MILLI_TIME_FORMAT.format(session.getLastAccessTime()));
-            log.debug("Diff          : {} ms", diff);
-
-            if (diff > timeout) {
-                log.warn("timeout");
+            if (timeout && !rememberMe) {
+                // 登录超时就主动退出登录。
+                subject.logout();
+                resp.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                JsonUtils.writeValue(response, Result.fail(LOGIN_TIMEOUT));
+                return false;
             }
         }
 

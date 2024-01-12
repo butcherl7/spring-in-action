@@ -31,11 +31,13 @@ public class RedisSubjectFactory extends DefaultWebSubjectFactory {
         SecurityManager securityManager = wsc.resolveSecurityManager();
 
         PrincipalCollection principals = null;
+        boolean timeout = false;
 
         if (session instanceof RedisSession) {
             UserDTO userDTO = (UserDTO) session.getAttribute(RedisSession.Key.user);
             String realmName = (String) session.getAttribute(RedisSession.Key.realmName);
             principals = new SimplePrincipalCollection(userDTO, realmName);
+            timeout = ((RedisSession) session).isTimeout();
         } else {
             AuthenticationInfo authInfo = wsc.getAuthenticationInfo();
             if (authInfo != null) {
@@ -43,7 +45,7 @@ public class RedisSubjectFactory extends DefaultWebSubjectFactory {
             }
         }
 
-        boolean authenticated = principals != null && principals.getPrimaryPrincipal() instanceof UserDTO;
+        boolean authenticated = principals != null && (principals.getPrimaryPrincipal() instanceof UserDTO) && !timeout;
 
         return new WebDelegatingSubject(principals, authenticated, host, session, request, response, securityManager);
     }

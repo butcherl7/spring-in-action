@@ -1,16 +1,22 @@
 package top.funsite.spring.action.shiro.session;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.InvalidSessionException;
 import org.apache.shiro.session.mgt.ValidatingSession;
 import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import top.funsite.spring.action.config.ShiroConfig;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class RedisSession implements ValidatingSession {
+
+    protected static final SimpleDateFormat MILLI_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -19,6 +25,8 @@ public class RedisSession implements ValidatingSession {
     private final Map<String, Object> session;
 
     private final String sessionKey;
+
+    private Boolean timeout = null;
 
     /// keys
 
@@ -91,6 +99,10 @@ public class RedisSession implements ValidatingSession {
 
     @Override
     public void touch() throws InvalidSessionException {
+        // 如果已经超时就不再更新访问时间。
+        if (isTimeout()) {
+            return;
+        }
         hashOperations.put(sessionKey, Key.lastAccessTime, new Date());
     }
 
@@ -151,6 +163,37 @@ public class RedisSession implements ValidatingSession {
 
     @Override
     public void validate() throws InvalidSessionException {
+    }
+
+    /**
+     * 判断当前会话是否属于超时会话。
+     *
+     * @return {@code True} 则表示会话已超时。
+     */
+    public boolean isTimeout() {
+        if (timeout != null) {
+            return timeout;
+        }
+
+        long duration = ShiroConfig.getTimeout().getSeconds() * 1000L;
+
+        if (duration > 0) {
+            long currentTime = System.currentTimeMillis();
+            long lastAccessTime = getLastAccessTime().getTime();
+
+            long diff = currentTime - lastAccessTime;
+
+            if (log.isDebugEnabled()) {
+                log.debug("CurrentTime   : {}", MILLI_TIME_FORMAT.format(new Date(currentTime)));
+                log.debug("LastAccessTime: {}", MILLI_TIME_FORMAT.format(getLastAccessTime()));
+                log.debug("Diff          : {} ms.", diff);
+            }
+
+            timeout = diff > duration;
+        } else {
+            timeout = false;
+        }
+        return timeout;
     }
 
     private static String assertString(Object key) {

@@ -1,6 +1,7 @@
 package top.funsite.spring.action.shiro.session;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.session.InvalidSessionException;
 import org.apache.shiro.session.mgt.ValidatingSession;
 import org.apache.shiro.subject.support.DefaultSubjectContext;
@@ -56,6 +57,10 @@ public class RedisSession implements ValidatingSession {
      * @param sessionKey    session 的 key 值。
      */
     public RedisSession(RedisTemplate<String, Object> redisTemplate, String sessionKey) {
+        Objects.requireNonNull(redisTemplate, "redisTemplate must not be null");
+        if (StringUtils.isBlank(sessionKey)) {
+            throw new IllegalArgumentException("sessionKey must not be blank");
+        }
         this.sessionKey = sessionKey;
         this.redisTemplate = redisTemplate;
         this.hashOperations = redisTemplate.opsForHash();

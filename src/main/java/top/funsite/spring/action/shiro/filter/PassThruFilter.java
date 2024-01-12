@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.PassThruAuthenticationFilter;
+import org.apache.shiro.web.servlet.AbstractShiroFilter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,7 +26,7 @@ import static top.funsite.spring.action.domin.ServiceStatus.LOGIN_TIMEOUT;
 /**
  * 重写关于身份验证和访问被拒绝的行为。
  *
- * @see org.apache.shiro.web.servlet.AbstractFilter
+ * @see AbstractShiroFilter
  */
 @Slf4j
 public class PassThruFilter extends PassThruAuthenticationFilter {

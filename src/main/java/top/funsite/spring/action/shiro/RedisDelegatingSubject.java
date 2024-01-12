@@ -6,7 +6,6 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.support.DelegatingSubject;
 import org.apache.shiro.web.subject.support.WebDelegatingSubject;
-import top.funsite.spring.action.shiro.session.RedisSession;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -25,8 +24,8 @@ public class RedisDelegatingSubject extends WebDelegatingSubject {
 
     @Override
     protected Session decorate(Session session) {
-        if (!(session instanceof RedisSession)) {
-            throw new IllegalArgumentException("session must be redis session.");
+        if (session == null) {
+            throw new IllegalArgumentException("session cannot be null.");
         }
         return session;
     }

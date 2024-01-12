@@ -13,12 +13,17 @@ public class Result<T> {
 
     private String msg;
 
+    // @JsonInclude(JsonInclude.Include.NON_NULL) // null 不序列化
     private T data;
 
     private final long timestamp = System.currentTimeMillis();
 
     public static Result<Void> fail(String message) {
         return fail(ServiceStatus.ERROR, message);
+    }
+
+    public static Result<Void> fail(ServiceStatus status) {
+        return fail(status, status.reasonPhrase());
     }
 
     public static Result<Void> fail(ServiceStatus status, String message) {

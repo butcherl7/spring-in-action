@@ -17,5 +17,7 @@ public enum NamedFilter {
 
     roles,
 
+    remember,
+
     jwt
 }

@@ -6,6 +6,7 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.util.AntPathMatcher;
 import org.apache.shiro.web.filter.mgt.FilterChainManager;
 import top.funsite.spring.action.shiro.filter.AuthorizeFilter;
+import top.funsite.spring.action.shiro.filter.RememberedFilter;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -116,6 +117,17 @@ public class AuthorizeRequestsDefiner {
          */
         public AuthorizeRequestsDefiner jwt() {
             this.filter = NamedFilter.jwt;
+            return authorizeRequestsDefiner;
+        }
+
+        /**
+         * 会话已超时，但通过 {@code rememberMe} 保留了主体信息时也可以访问 URL.
+         *
+         * @return AuthorizeRequestsDefiner
+         * @see RememberedFilter
+         */
+        public AuthorizeRequestsDefiner rememberMe() {
+            this.filter = NamedFilter.remember;
             return authorizeRequestsDefiner;
         }
 

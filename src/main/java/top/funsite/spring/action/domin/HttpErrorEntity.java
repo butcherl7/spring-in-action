@@ -5,7 +5,13 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 /**
- * Http status 非 200 下的响应信息。
+ * HTTP 响应状态码<strong>不是成功响应</strong> (200–299) 下的响应信息。例如：
+ * <li>401 未通过身份认证</li>
+ * <li>403 未经授权</li>
+ * <li>500 服务器遇到未知错误</li>
+ * <li>……</li>
+ *
+ * @see <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status">HTTP 响应状态码 - HTTP | MDN</a>
  */
 @Getter
 @Setter

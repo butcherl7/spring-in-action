@@ -10,7 +10,6 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.SubjectContext;
 import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
 import org.apache.shiro.web.subject.WebSubjectContext;
-import org.apache.shiro.web.subject.support.WebDelegatingSubject;
 import top.funsite.spring.action.domin.UserDTO;
 import top.funsite.spring.action.shiro.session.RedisSession;
 
@@ -47,6 +46,6 @@ public class RedisSubjectFactory extends DefaultWebSubjectFactory {
 
         boolean authenticated = principals != null && (principals.getPrimaryPrincipal() instanceof UserDTO) && !timeout;
 
-        return new WebDelegatingSubject(principals, authenticated, host, session, request, response, securityManager);
+        return new RedisDelegatingSubject(principals, authenticated, host, session, request, response, securityManager);
     }
 }

@@ -19,10 +19,7 @@ import top.funsite.spring.action.shiro.RedisSubjectDAO;
 import top.funsite.spring.action.shiro.RedisSubjectFactory;
 import top.funsite.spring.action.shiro.configurers.AuthorizeRequestsDefiner;
 import top.funsite.spring.action.shiro.configurers.ShiroProperties;
-import top.funsite.spring.action.shiro.filter.AuthFilter;
-import top.funsite.spring.action.shiro.filter.JwtFilter;
-import top.funsite.spring.action.shiro.filter.PermissionsFilter;
-import top.funsite.spring.action.shiro.filter.RoleFilter;
+import top.funsite.spring.action.shiro.filter.*;
 import top.funsite.spring.action.shiro.realm.DatabaseRealm;
 import top.funsite.spring.action.shiro.session.RedisSessionManager;
 
@@ -119,6 +116,7 @@ public class ShiroConfig {
         Map<String, Filter> filters = shiroFilterFactoryBean.getFilters();
         // 使用重写过的过滤器代替默认的。
         filters.put(authc.name(), new AuthFilter());
+        filters.put(remember.name(), new RememberedFilter());
         filters.put(roles.name(), new RoleFilter(authLogicMap));
         filters.put(perms.name(), new PermissionsFilter(authLogicMap));
         filters.put(jwt.name(), new JwtFilter());

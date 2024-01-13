@@ -19,7 +19,7 @@ public enum NamedFilter {
 
     authc(AuthFilter.class),
 
-    perms(PermissionsFilter.class),
+    perms(PermissionFilter.class),
 
     roles(RoleFilter.class),
 

@@ -15,7 +15,7 @@ import java.util.Map;
  * @see PermissionsAuthorizationFilter
  * @see PermissionAnnotationHandler
  */
-public class PermissionsFilter extends AuthorizeFilter {
+public class PermissionFilter extends AuthorizeFilter {
 
     @Override
     public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
@@ -44,10 +44,10 @@ public class PermissionsFilter extends AuthorizeFilter {
         return true;
     }
 
-    public PermissionsFilter() {
+    public PermissionFilter() {
     }
 
-    public PermissionsFilter(Map<String, Logical> appliedLogicalPaths) {
+    public PermissionFilter(Map<String, Logical> appliedLogicalPaths) {
         this.definedAuthorizationLogicPaths = appliedLogicalPaths;
     }
 }

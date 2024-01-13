@@ -118,7 +118,7 @@ public class ShiroConfig {
         filters.put(authc.name(), new AuthFilter());
         filters.put(remember.name(), new RememberedFilter());
         filters.put(roles.name(), new RoleFilter(authLogicMap));
-        filters.put(perms.name(), new PermissionsFilter(authLogicMap));
+        filters.put(perms.name(), new PermissionFilter(authLogicMap));
         filters.put(jwt.name(), new JwtFilter());
         shiroFilterFactoryBean.setFilterChainDefinitionMap(authRequestMap);
         return shiroFilterFactoryBean;

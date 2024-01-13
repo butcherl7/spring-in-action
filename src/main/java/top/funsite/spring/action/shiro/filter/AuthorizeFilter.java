@@ -13,7 +13,7 @@ import java.util.Map;
  * 关于需要鉴权操作的过滤器。
  *
  * @see RoleFilter
- * @see PermissionsFilter
+ * @see PermissionFilter
  */
 public class AuthorizeFilter extends PassThruFilter {
 

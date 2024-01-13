@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class JsonUtils {
+public class JSONUtils {
 
     /**
      * ObjectMapper，默认配置了：
@@ -78,6 +78,6 @@ public class JsonUtils {
         }
     }
 
-    private JsonUtils() {
+    private JSONUtils() {
     }
 }

@@ -12,7 +12,7 @@ import top.funsite.spring.action.domin.HttpErrorEntity;
 import top.funsite.spring.action.domin.Result;
 import top.funsite.spring.action.shiro.MessageConstant;
 import top.funsite.spring.action.shiro.session.RedisSession;
-import top.funsite.spring.action.util.JsonUtils;
+import top.funsite.spring.action.util.JSONUtils;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -76,7 +76,7 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
                 // 登录超时就主动退出登录。
                 subject.logout();
                 resp.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                JsonUtils.writeValue(response, Result.fail(LOGIN_TIMEOUT));
+                JSONUtils.writeValue(response, Result.fail(LOGIN_TIMEOUT));
                 return false;
             }
         }
@@ -100,7 +100,7 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
         resp.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         HttpErrorEntity entity = HttpErrorEntity.create(status, message, req.getRequestURI());
-        JsonUtils.writeValue(response.getOutputStream(), entity);
+        JSONUtils.writeValue(response.getOutputStream(), entity);
         return false;
     }
 }

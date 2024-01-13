@@ -9,7 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import static top.funsite.spring.action.util.JsonUtils.DEFAULT_OBJECT_MAPPER;
+import static top.funsite.spring.action.util.JSONUtils.DEFAULT_OBJECT_MAPPER;
 
 /**
  * Redis Config.

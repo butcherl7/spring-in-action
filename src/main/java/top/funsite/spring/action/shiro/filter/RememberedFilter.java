@@ -13,7 +13,7 @@ import javax.servlet.ServletResponse;
  * @see Subject#isRemembered()
  * @see AuthorizeRequestsDefiner.RequestMatcherRegistry#rememberMe()
  */
-public class RememberedFilter extends PassThruFilter {
+public class RememberedFilter extends AuthFilter {
 
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) {

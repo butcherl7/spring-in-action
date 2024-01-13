@@ -20,7 +20,7 @@ public class AuthorizeFilter extends PassThruFilter {
     /**
      * 就像 {@link #appliedPaths}，保存指定接口需要的多个角色、权限的判断关系。
      */
-    protected Map<String, Logical> definedAuthorizationLogicPaths = new LinkedHashMap<>();
+    protected Map<String, Logical> authorizationLogicPaths = new LinkedHashMap<>();
 
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
@@ -34,9 +34,9 @@ public class AuthorizeFilter extends PassThruFilter {
      * @return 在指定了多个权限的情况下进行权限检查的逻辑操作，AND 为默认值。
      */
     protected Logical getLogic(ServletRequest request) {
-        for (String path : this.definedAuthorizationLogicPaths.keySet()) {
+        for (String path : this.authorizationLogicPaths.keySet()) {
             if (pathsMatch(path, request)) {
-                return this.definedAuthorizationLogicPaths.get(path);
+                return this.authorizationLogicPaths.get(path);
             }
         }
         return Logical.AND;

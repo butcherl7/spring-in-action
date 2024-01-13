@@ -47,7 +47,7 @@ public class PermissionFilter extends AuthorizeFilter {
     public PermissionFilter() {
     }
 
-    public PermissionFilter(Map<String, Logical> appliedLogicalPaths) {
-        this.definedAuthorizationLogicPaths = appliedLogicalPaths;
+    public PermissionFilter(Map<String, Logical> authorizationLogicPaths) {
+        this.authorizationLogicPaths = authorizationLogicPaths;
     }
 }

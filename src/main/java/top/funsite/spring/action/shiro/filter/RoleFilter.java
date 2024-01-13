@@ -49,7 +49,7 @@ public class RoleFilter extends AuthorizeFilter {
     public RoleFilter() {
     }
 
-    public RoleFilter(Map<String, Logical> appliedLogicalPaths) {
-        this.definedAuthorizationLogicPaths = appliedLogicalPaths;
+    public RoleFilter(Map<String, Logical> authorizationLogicPaths) {
+        this.authorizationLogicPaths = authorizationLogicPaths;
     }
 }

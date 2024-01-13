@@ -34,7 +34,7 @@ public class AuthorizeFilter extends PassThruFilter {
      * @return 在指定了多个权限的情况下进行权限检查的逻辑操作，AND 为默认值。
      */
     protected Logical getLogic(ServletRequest request) {
-        for (String path : this.appliedPaths.keySet()) {
+        for (String path : this.definedAuthorizationLogicPaths.keySet()) {
             if (pathsMatch(path, request)) {
                 return this.definedAuthorizationLogicPaths.get(path);
             }

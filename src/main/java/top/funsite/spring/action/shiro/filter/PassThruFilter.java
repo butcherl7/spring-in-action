@@ -54,7 +54,7 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
 
     @Override
     protected final boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
-        return responseDenied((HttpServletRequest) request, (HttpServletResponse) response, HttpStatus.UNAUTHORIZED, MessageConstant.AccessDenied);
+        return onAccessDenied((HttpServletRequest) request, (HttpServletResponse) response);
     }
 
     protected boolean isAccessAllowed(HttpServletRequest request, HttpServletResponse response, Object mappedValue) {

@@ -6,6 +6,8 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.util.AntPathMatcher;
 import org.apache.shiro.web.filter.mgt.FilterChainManager;
 import top.funsite.spring.action.shiro.filter.AuthorizeFilter;
+import top.funsite.spring.action.shiro.filter.DecodedJWTValidator;
+import top.funsite.spring.action.shiro.filter.JwtFilter;
 import top.funsite.spring.action.shiro.filter.RememberedFilter;
 
 import java.util.*;
@@ -84,6 +86,25 @@ public class AuthorizeRequestsDefiner {
         return map;
     }
 
+    /**
+     * 获取定义的已解码的 JWT 验证逻辑。
+     *
+     * @return map.
+     * @see JwtFilter
+     */
+    public Map<String, DecodedJWTValidator> getDefinedDecodedJWTValidator() {
+        Map<String, DecodedJWTValidator> map = new LinkedHashMap<>();
+        for (RequestMatcherRegistry requestMatcherRegistry : requestMatcherRegistries) {
+            DecodedJWTValidator validator = requestMatcherRegistry.decodedJWTValidator;
+            if (validator != null) {
+                for (String antPattern : requestMatcherRegistry.antPatterns) {
+                    map.put(antPattern, validator);
+                }
+            }
+        }
+        return map;
+    }
+
 
     public static AuthorizeRequestsDefiner define() {
         return new AuthorizeRequestsDefiner();
@@ -110,13 +131,25 @@ public class AuthorizeRequestsDefiner {
          */
         private Logical logical = Logical.AND;
 
+        private DecodedJWTValidator decodedJWTValidator;
+
         /**
          * 通过 JWT 的验证才能访问 URL.
          *
          * @return AuthorizeRequestsDefiner
          */
         public AuthorizeRequestsDefiner jwt() {
+            return jwt(null);
+        }
+
+        /**
+         * 通过 JWT 的验证才能访问 URL.
+         *
+         * @return AuthorizeRequestsDefiner
+         */
+        public AuthorizeRequestsDefiner jwt(DecodedJWTValidator decodedJWTValidator) {
             this.filter = NamedFilter.jwt;
+            this.decodedJWTValidator = decodedJWTValidator;
             return authorizeRequestsDefiner;
         }
 

@@ -6,8 +6,8 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.CollectionUtils;
 import org.apache.shiro.web.filter.authz.RolesAuthorizationFilter;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,7 +20,7 @@ import java.util.Set;
 public class RoleFilter extends AuthorizeFilter {
 
     @Override
-    public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+    public boolean isAccessAllowed(HttpServletRequest request, HttpServletResponse response, Object mappedValue) {
         Subject subject = getSubject(request, response);
         Set<String> roles = CollectionUtils.asSet((String[]) mappedValue);
 

@@ -5,8 +5,8 @@ import org.apache.shiro.authz.aop.PermissionAnnotationHandler;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
@@ -18,7 +18,7 @@ import java.util.Map;
 public class PermissionFilter extends AuthorizeFilter {
 
     @Override
-    public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+    public boolean isAccessAllowed(HttpServletRequest request, HttpServletResponse response, Object mappedValue) {
         Subject subject = getSubject(request, response);
         String[] perms = (String[]) mappedValue;
 

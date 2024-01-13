@@ -46,20 +46,28 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
      *  </pre>
      */
     @Override
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        HttpServletRequest req = (HttpServletRequest) request;
-        HttpServletResponse resp = (HttpServletResponse) response;
+    protected final boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+        return isAccessAllowed((HttpServletRequest) request, (HttpServletResponse) response, mappedValue);
+    }
 
-        resp.setCharacterEncoding(StandardCharsets.UTF_8.name());
+    // org.apache.shiro.web.filter.authz.AuthorizationFilter.onAccessDenied
 
-        String origin = req.getHeader("Origin");
-        resp.setHeader("Access-Control-Allow-Origin", origin);
-        resp.setHeader("Access-Control-Allow-Headers", "*");
-        resp.setHeader("Access-Control-Allow-Credentials", "true");
-        resp.setHeader("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
+    @Override
+    protected final boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+        return responseDenied((HttpServletRequest) request, (HttpServletResponse) response, HttpStatus.UNAUTHORIZED, MessageConstant.AccessDenied);
+    }
+
+    protected boolean isAccessAllowed(HttpServletRequest request, HttpServletResponse response, Object mappedValue) {
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+
+        String origin = request.getHeader("Origin");
+        response.setHeader("Access-Control-Allow-Origin", origin);
+        response.setHeader("Access-Control-Allow-Headers", "*");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
 
         // 放行 OPTIONS 请求
-        if (req.getMethod().equals(RequestMethod.OPTIONS.name())) {
+        if (request.getMethod().equals(RequestMethod.OPTIONS.name())) {
             return true;
         }
 
@@ -75,7 +83,7 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
             if (timeout && !rememberMe) {
                 // 登录超时就主动退出登录。
                 subject.logout();
-                resp.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                 JSONUtils.writeValue(response, Result.fail(LOGIN_TIMEOUT));
                 return false;
             }
@@ -84,22 +92,15 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
         return super.isAccessAllowed(request, response, mappedValue);
     }
 
-
-    // org.apache.shiro.web.filter.authz.AuthorizationFilter.onAccessDenied
-
-    @Override
-    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+    protected boolean onAccessDenied(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return responseDenied(request, response, HttpStatus.UNAUTHORIZED, MessageConstant.AccessDenied);
     }
 
-    protected boolean responseDenied(ServletRequest request, ServletResponse response, HttpStatus status, String message) throws IOException {
-        HttpServletRequest req = (HttpServletRequest) request;
-        HttpServletResponse resp = (HttpServletResponse) response;
+    protected boolean responseDenied(HttpServletRequest request, HttpServletResponse response, HttpStatus status, String message) throws IOException {
+        response.setStatus(status.value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        resp.setStatus(status.value());
-        resp.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
-        HttpErrorEntity entity = HttpErrorEntity.create(status, message, req.getRequestURI());
+        HttpErrorEntity entity = HttpErrorEntity.create(status, message, request.getRequestURI());
         JSONUtils.writeValue(response.getOutputStream(), entity);
         return false;
     }

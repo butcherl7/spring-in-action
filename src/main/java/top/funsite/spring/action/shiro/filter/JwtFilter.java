@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 
 import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedHashMap;
@@ -31,21 +30,18 @@ public class JwtFilter extends PassThruFilter {
     }
 
     @Override
-    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
-        HttpServletRequest req = (HttpServletRequest) request;
-        HttpServletResponse resp = (HttpServletResponse) response;
-
-        String token = req.getHeader(HttpHeaders.AUTHORIZATION);
+    protected boolean onAccessDenied(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
         try {
             // demo.
             JWTVerifier verifier = JWT.require(Algorithm.HMAC256("123456"))
                     .build();
             DecodedJWT decodedJWT = verifier.verify(token);
 
-            DecodedJWTValidator validator = getValidator(req);
+            DecodedJWTValidator validator = getValidator(request);
 
             if (validator != null) {
-                return validator.validate(req, resp, decodedJWT);
+                return validator.validate(request, response, decodedJWT);
             }
         } catch (JWTVerificationException e) {
             log.error(e.getMessage(), e);

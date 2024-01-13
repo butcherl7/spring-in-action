@@ -6,7 +6,8 @@ import org.springframework.http.HttpStatus;
 import top.funsite.spring.action.shiro.MessageConstant;
 
 import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class AuthorizeFilter extends PassThruFilter {
     protected Map<String, Logical> authorizationLogicPaths = new LinkedHashMap<>();
 
     @Override
-    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+    protected boolean onAccessDenied(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return responseDenied(request, response, HttpStatus.FORBIDDEN, MessageConstant.PermissionDenied);
     }
 

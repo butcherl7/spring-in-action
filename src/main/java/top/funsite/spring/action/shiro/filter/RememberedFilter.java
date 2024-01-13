@@ -16,7 +16,10 @@ import javax.servlet.ServletResponse;
 public class RememberedFilter extends AuthFilter {
 
     @Override
-    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) {
-        return SecurityUtils.getSubject().isRemembered();
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+        if (SecurityUtils.getSubject().isRemembered()) {
+            return true;
+        }
+        return super.onAccessDenied(request, response);
     }
 }

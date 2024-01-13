@@ -65,10 +65,18 @@ public class ShiroConfig {
     private static String keySeparator;
 
     /**
-     * 会话超时时间（默认 30 分钟）。
+     * 会话超时时间（默认为 30 分钟）。
+     * <p>配置为 0 或小于 0 时视为无超时时间。</p>
      */
     @Getter
     private static Duration timeout;
+
+    /**
+     * 登录时选择了 {@code rememberMe} 后的 session 保存时间，默认 1 天。
+     * <p>可以配置为 0，但若配置小于 0 时仍视为 0.</p>
+     */
+    @Getter
+    private static Duration rememberTime;
 
     /**
      * 解决 Shiro 权限注解不生效的问题。
@@ -93,6 +101,7 @@ public class ShiroConfig {
             loginUrl = shiroProperties.getLoginUrl();
             keySeparator = shiroProperties.getSessionKeySeparator();
             timeout = shiroProperties.getTimeout();
+            rememberTime = shiroProperties.getRememberTime();
         }
         return new DatabaseRealm(userService);
     }

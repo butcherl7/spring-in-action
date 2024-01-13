@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class LoginService {
@@ -48,6 +49,12 @@ public class LoginService {
         map.put(RedisSession.Key.rememberMe, rememberMe);
         map.put(RedisSession.Key.realmName, subject.getPrincipals().getRealmNames().iterator().next());
         redisTemplate.opsForHash().putAll(redisKey, map);
+
+        long timeoutSeconds = ShiroConfig.getTimeout().getSeconds();
+        if (timeoutSeconds > 0) {
+            long rememberSeconds = rememberMe ? ShiroConfig.getRememberTime().getSeconds() : 0;
+            redisTemplate.expire(redisKey, Math.max(timeoutSeconds, rememberSeconds), TimeUnit.SECONDS);
+        }
 
         return jsessionid;
     }

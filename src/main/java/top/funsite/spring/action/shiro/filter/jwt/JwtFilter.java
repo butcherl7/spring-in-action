@@ -1,4 +1,4 @@
-package top.funsite.spring.action.shiro.filter;
+package top.funsite.spring.action.shiro.filter.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -10,6 +10,7 @@ import org.apache.commons.collections.MapUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
+import top.funsite.spring.action.shiro.filter.PassThruFilter;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;

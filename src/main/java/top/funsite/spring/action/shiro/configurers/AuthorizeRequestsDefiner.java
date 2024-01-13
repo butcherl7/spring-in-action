@@ -6,9 +6,9 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.util.AntPathMatcher;
 import org.apache.shiro.web.filter.mgt.FilterChainManager;
 import top.funsite.spring.action.shiro.filter.AuthorizeFilter;
-import top.funsite.spring.action.shiro.filter.DecodedJWTValidator;
-import top.funsite.spring.action.shiro.filter.JwtFilter;
 import top.funsite.spring.action.shiro.filter.RememberedFilter;
+import top.funsite.spring.action.shiro.filter.jwt.DecodedJWTValidator;
+import top.funsite.spring.action.shiro.filter.jwt.JwtFilter;
 
 import java.util.*;
 import java.util.stream.Collectors;

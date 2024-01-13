@@ -1,4 +1,4 @@
-package top.funsite.spring.action.shiro.filter;
+package top.funsite.spring.action.shiro.filter.jwt;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 

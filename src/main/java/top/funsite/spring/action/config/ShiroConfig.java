@@ -19,7 +19,11 @@ import top.funsite.spring.action.shiro.RedisSubjectDAO;
 import top.funsite.spring.action.shiro.RedisSubjectFactory;
 import top.funsite.spring.action.shiro.configurers.AuthorizeRequestsDefiner;
 import top.funsite.spring.action.shiro.configurers.ShiroProperties;
-import top.funsite.spring.action.shiro.filter.*;
+import top.funsite.spring.action.shiro.filter.AuthFilter;
+import top.funsite.spring.action.shiro.filter.PermissionFilter;
+import top.funsite.spring.action.shiro.filter.RememberedFilter;
+import top.funsite.spring.action.shiro.filter.RoleFilter;
+import top.funsite.spring.action.shiro.filter.jwt.JwtFilter;
 import top.funsite.spring.action.shiro.realm.DatabaseRealm;
 import top.funsite.spring.action.shiro.session.RedisSessionManager;
 

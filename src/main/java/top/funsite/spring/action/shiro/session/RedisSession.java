@@ -4,9 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.session.InvalidSessionException;
 import org.apache.shiro.session.mgt.ValidatingSession;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.lang.Nullable;
 import top.funsite.spring.action.config.ShiroConfig;
 
 import java.io.Serializable;
@@ -39,6 +41,7 @@ public class RedisSession implements ValidatingSession {
         String rememberMe = "rememberMe";
         String startTimestamp = "startTimestamp";
         String lastAccessTime = "lastAccessTime";
+        String lastRememberedAccessTime = "lastRememberedAccessTime";
     }
 
     /**
@@ -104,11 +107,9 @@ public class RedisSession implements ValidatingSession {
 
     @Override
     public void touch() throws InvalidSessionException {
-        // 如果已经超时就不再更新访问时间。
-        if (isTimeout()) {
-            return;
-        }
-        hashOperations.put(sessionKey, Key.lastAccessTime, new Date());
+        // 如果会话超时就更新 lastRememberedAccessTime.
+        String timeKey = isTimeout() ? Key.lastRememberedAccessTime : Key.lastAccessTime;
+        hashOperations.put(sessionKey, timeKey, new Date());
     }
 
     @Override
@@ -207,6 +208,17 @@ public class RedisSession implements ValidatingSession {
     public boolean isRememberMe() {
         Object object = getAttribute(Key.rememberMe);
         return object instanceof Boolean && (Boolean) object;
+    }
+
+    /**
+     * 返回 {@code Remembered} 状态下应用程序最后一次接收到来自与此会话关联的用户的请求或方法调用的时间。
+     *
+     * @return {@code Remembered} 状态下用户最后一次与系统交互的时间（可能为空，如果不在 {@code Remembered} 状态下的话）。
+     * @see Subject#isRemembered()
+     */
+    @Nullable
+    public Date getLastRememberedAccessTime() {
+        return cast(session.get(Key.lastRememberedAccessTime));
     }
 
     private static String assertString(Object key) {

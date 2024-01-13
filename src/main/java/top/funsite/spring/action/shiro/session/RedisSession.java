@@ -134,7 +134,6 @@ public class RedisSession implements ValidatingSession {
     public void setAttribute(Object key, Object value) throws InvalidSessionException {
         try {
             String sKey = assertString(key);
-
             if (BLACK_KEYS.contains(sKey)) {
                 return;
             }
@@ -149,7 +148,6 @@ public class RedisSession implements ValidatingSession {
         Object o = null;
         try {
             String sKey = assertString(key);
-
             boolean hasKey = hashOperations.hasKey(sessionKey, sKey);
             if (hasKey) {
                 o = hashOperations.get(sessionKey, sKey);

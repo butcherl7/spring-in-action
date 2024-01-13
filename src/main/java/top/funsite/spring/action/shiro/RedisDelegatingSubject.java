@@ -4,14 +4,16 @@ import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.ProxiedSession;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.DelegatingSubject;
 import org.apache.shiro.web.subject.support.WebDelegatingSubject;
+import top.funsite.spring.action.shiro.session.RedisSession;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 /**
- * Subject，取消了对 session 的代理。
+ * Subject，取消了对 session 的代理，{@link Subject#getSession()} 在已登录的情况下直接获取到 {@link RedisSession}.
  *
  * @see ProxiedSession
  * @see DelegatingSubject#decorate

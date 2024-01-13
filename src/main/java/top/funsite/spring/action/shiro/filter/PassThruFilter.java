@@ -19,7 +19,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import static top.funsite.spring.action.domin.ServiceStatus.LOGIN_TIMEOUT;
@@ -34,7 +33,7 @@ import static top.funsite.spring.action.domin.ServiceStatus.LOGIN_TIMEOUT;
 public class PassThruFilter extends PassThruAuthenticationFilter {
 
     /**
-     * {@inheritDoc}`lgfg
+     * {@inheritDoc}
      *
      * <p>1. 放行 OPTIONS 请求。</p>
      * <p>2. 防止出现跨域问题，参考 <a href="https://www.imooc.com/article/7989">CORS 实现跨域时授权问题（401错误）的解决</a></p>
@@ -96,12 +95,12 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
         return responseDenied(request, response, HttpStatus.UNAUTHORIZED, MessageConstant.AccessDenied);
     }
 
-    protected boolean responseDenied(HttpServletRequest request, HttpServletResponse response, HttpStatus status, String message) throws IOException {
+    protected boolean responseDenied(HttpServletRequest request, HttpServletResponse response, HttpStatus status, String message) {
         response.setStatus(status.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         HttpErrorEntity entity = HttpErrorEntity.create(status, message, request.getRequestURI());
-        JSONUtils.writeValue(response.getOutputStream(), entity);
+        JSONUtils.writeValue(response, entity);
         return false;
     }
 }

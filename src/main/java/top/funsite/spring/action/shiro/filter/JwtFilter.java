@@ -30,7 +30,7 @@ public class JwtFilter extends PassThruFilter {
     }
 
     @Override
-    protected boolean onAccessDenied(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected boolean onAccessDenied(HttpServletRequest request, HttpServletResponse response) {
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
         try {
             // demo.

@@ -25,7 +25,7 @@ public class AuthorizeFilter extends PassThruFilter {
     protected Map<String, Logical> authorizationLogicPaths = new LinkedHashMap<>();
 
     @Override
-    protected boolean onAccessDenied(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected boolean onAccessDenied(HttpServletRequest request, HttpServletResponse response) {
         return responseDenied(request, response, HttpStatus.FORBIDDEN, MessageConstant.PermissionDenied);
     }
 

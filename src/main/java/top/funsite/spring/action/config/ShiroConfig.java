@@ -123,8 +123,8 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setLoginUrl(loginUrl);
 
         AuthorizeRequestsDefiner definer = createRequestsDefiner();
-        Map<String, String> authRequestMap = definer.getDefinedAuthorizationRequest();
-        Map<String, Logical> authLogicMap = definer.getDefinedAuthorizationLogic();
+        Map<String, String> authRequestMap = definer.getDefinedPath();
+        Map<String, Logical> authLogicMap = definer.getDefinedLogic();
 
         Map<String, Filter> filters = shiroFilterFactoryBean.getFilters();
         // 使用重写过的过滤器代替默认的。

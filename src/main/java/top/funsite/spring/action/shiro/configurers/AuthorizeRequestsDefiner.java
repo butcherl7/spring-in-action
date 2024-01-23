@@ -45,7 +45,7 @@ public class AuthorizeRequestsDefiner {
      * @return map.
      * @see ShiroFilterFactoryBean#setFilterChainDefinitionMap(Map)
      */
-    public Map<String, String> getDefinedAuthorizationRequest() {
+    public Map<String, String> getDefinedPath() {
         Map<String, String> map = new LinkedHashMap<>();
         for (RequestMatcherRegistry requestMatcherRegistry : requestMatcherRegistries) {
             String chainDefinition = requestMatcherRegistry.filter.name();
@@ -70,7 +70,7 @@ public class AuthorizeRequestsDefiner {
      * @return map.
      * @see AuthorizeFilter
      */
-    public Map<String, Logical> getDefinedAuthorizationLogic() {
+    public Map<String, Logical> getDefinedLogic() {
         Map<String, Logical> map = new LinkedHashMap<>();
         for (RequestMatcherRegistry requestMatcherRegistry : requestMatcherRegistries) {
             String[] authorities = requestMatcherRegistry.authorities;

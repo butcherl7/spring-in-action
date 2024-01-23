@@ -35,6 +35,24 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
     /**
      * {@inheritDoc}
      *
+     * @apiNote 使用 {@code final} 修饰是为了重写后向子类直接传递 {@code HttpServletRequest} 和 {@code HttpServletResponse}.
+     */
+    @Override
+    protected final boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+        return isAccessAllowed((HttpServletRequest) request, (HttpServletResponse) response, mappedValue);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @apiNote 使用 {@code final} 修饰是为了重写后向子类直接传递 {@code HttpServletRequest} 和 {@code HttpServletResponse}.
+     */
+    @Override
+    protected final boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+        return onAccessDenied((HttpServletRequest) request, (HttpServletResponse) response);
+    }
+
+    /**
      * <p>1. 放行 OPTIONS 请求。</p>
      * <p>2. 防止出现跨域问题，参考 <a href="https://www.imooc.com/article/7989">CORS 实现跨域时授权问题（401错误）的解决</a></p>
      * <pre>
@@ -46,16 +64,6 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
      *  response.setHeader("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");}
      *  </pre>
      */
-    @Override
-    protected final boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        return isAccessAllowed((HttpServletRequest) request, (HttpServletResponse) response, mappedValue);
-    }
-
-    @Override
-    protected final boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
-        return onAccessDenied((HttpServletRequest) request, (HttpServletResponse) response);
-    }
-
     protected boolean isAccessAllowed(HttpServletRequest request, HttpServletResponse response, Object mappedValue) {
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 

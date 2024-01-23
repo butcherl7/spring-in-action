@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * 用于 Shiro 添加基于 URL 的授权。e.g.
  * <pre>
  * {@code
- *  return AuthorizeRequestsDefiner.define()
+ *  return new AuthorizeRequestsDefiner()
  *      .antMatchers("/login").permitAll()
  *      .antMatchers("/home","/favicon.ico").permitAll()
  *      .antMatchers("/info").hasRole("admin")
@@ -37,9 +37,6 @@ public class AuthorizeRequestsDefiner {
         RequestMatcherRegistry requestMatcherRegistry = new RequestMatcherRegistry(this, antPatterns);
         requestMatcherRegistries.add(requestMatcherRegistry);
         return requestMatcherRegistry;
-    }
-
-    private AuthorizeRequestsDefiner() {
     }
 
     /**
@@ -103,11 +100,6 @@ public class AuthorizeRequestsDefiner {
             }
         }
         return map;
-    }
-
-
-    public static AuthorizeRequestsDefiner define() {
-        return new AuthorizeRequestsDefiner();
     }
 
     public static class RequestMatcherRegistry {

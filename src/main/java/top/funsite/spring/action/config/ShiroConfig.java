@@ -150,7 +150,7 @@ public class ShiroConfig {
      * @see <a href="https://www.jianshu.com/p/0bad726d0454">关于springMvc错误重定向/error</a>
      */
     private static AuthorizeRequestsDefiner createRequestsDefiner() {
-        return AuthorizeRequestsDefiner.define()
+        return new AuthorizeRequestsDefiner()
                 .antMatchers("/login", "/error", "/favicon.ico").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/logout").rememberMe()

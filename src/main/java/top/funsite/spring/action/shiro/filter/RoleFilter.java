@@ -19,6 +19,13 @@ import java.util.Set;
  */
 public class RoleFilter extends AuthorizeFilter {
 
+    public RoleFilter() {
+    }
+
+    public RoleFilter(Map<String, Logical> authorizationLogicPaths) {
+        this.authorizationLogicPaths = authorizationLogicPaths;
+    }
+
     @Override
     public boolean isAccessAllowed(HttpServletRequest request, HttpServletResponse response, Object mappedValue) {
         Subject subject = getSubject(request, response);
@@ -44,12 +51,5 @@ public class RoleFilter extends AuthorizeFilter {
         }
 
         return true;
-    }
-
-    public RoleFilter() {
-    }
-
-    public RoleFilter(Map<String, Logical> authorizationLogicPaths) {
-        this.authorizationLogicPaths = authorizationLogicPaths;
     }
 }

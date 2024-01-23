@@ -17,6 +17,13 @@ import java.util.Map;
  */
 public class PermissionFilter extends AuthorizeFilter {
 
+    public PermissionFilter() {
+    }
+
+    public PermissionFilter(Map<String, Logical> authorizationLogicPaths) {
+        this.authorizationLogicPaths = authorizationLogicPaths;
+    }
+
     @Override
     public boolean isAccessAllowed(HttpServletRequest request, HttpServletResponse response, Object mappedValue) {
         Subject subject = getSubject(request, response);
@@ -42,12 +49,5 @@ public class PermissionFilter extends AuthorizeFilter {
         }
 
         return true;
-    }
-
-    public PermissionFilter() {
-    }
-
-    public PermissionFilter(Map<String, Logical> authorizationLogicPaths) {
-        this.authorizationLogicPaths = authorizationLogicPaths;
     }
 }

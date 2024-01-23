@@ -1,7 +1,7 @@
 package top.funsite.spring.action.shiro.filter;
 
-import org.apache.commons.collections.MapUtils;
 import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.util.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import top.funsite.spring.action.shiro.MessageConstant;
 
@@ -36,7 +36,7 @@ public class AuthorizeFilter extends PassThruFilter {
      * @return 在指定了多个权限的情况下进行权限检查的逻辑操作，AND 为默认值。
      */
     protected Logical getLogic(ServletRequest request) {
-        if (MapUtils.isEmpty(this.authorizationLogicPaths)) {
+        if (CollectionUtils.isEmpty(this.authorizationLogicPaths)) {
             return Logical.AND;
         }
 

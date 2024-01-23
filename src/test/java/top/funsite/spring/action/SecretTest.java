@@ -44,7 +44,6 @@ public class SecretTest {
                 .withSubject("Test")
                 .withAudience("a", "b", "c")
                 .withIssuedAt(new Date())
-                .withIssuedAt(new Date())
                 .withJWTId(UUID.randomUUID().toString().replaceAll("-", ""))
                 .withKeyId("Hello")
                 // .withNotBefore(now.plusMinutes(30).atZone(ZoneId.systemDefault()).toInstant())

@@ -5,6 +5,7 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.util.AntPathMatcher;
 import org.apache.shiro.web.filter.mgt.FilterChainManager;
+import org.jetbrains.annotations.ApiStatus;
 import top.funsite.spring.action.shiro.filter.AuthorizeFilter;
 import top.funsite.spring.action.shiro.filter.RememberedFilter;
 import top.funsite.spring.action.shiro.filter.jwt.DecodedJWTValidator;
@@ -89,6 +90,7 @@ public class AuthorizeRequestsDefiner {
      * @return map.
      * @see JwtFilter
      */
+    @ApiStatus.Experimental
     public Map<String, DecodedJWTValidator> getDefinedDecodedJWTValidator() {
         Map<String, DecodedJWTValidator> map = new LinkedHashMap<>();
         for (RequestMatcherRegistry requestMatcherRegistry : requestMatcherRegistries) {

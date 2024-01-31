@@ -72,7 +72,7 @@ public class ControllerAdviceConfig {
             message = MessageConstant.AccessDenied;
         }
         response.setStatus(status.value());
-        return HttpErrorEntity.create(status, message, request.getRequestURI());
+        return HttpErrorEntity.of(status, message, request.getRequestURI());
     }
 
     /**
@@ -91,6 +91,6 @@ public class ControllerAdviceConfig {
         log.error(e.getMessage(), e);
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         response.setStatus(status.value());
-        return HttpErrorEntity.create(status, e.getMessage(), request.getRequestURI());
+        return HttpErrorEntity.of(status, e.getMessage(), request.getRequestURI());
     }
 }

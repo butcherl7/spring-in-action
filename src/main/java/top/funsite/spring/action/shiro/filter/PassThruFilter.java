@@ -107,7 +107,7 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
         response.setStatus(status.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        HttpErrorEntity entity = HttpErrorEntity.create(status, message, request.getRequestURI());
+        HttpErrorEntity entity = HttpErrorEntity.of(status, message, request.getRequestURI());
         JSONUtils.writeValue(response, entity);
         return false;
     }

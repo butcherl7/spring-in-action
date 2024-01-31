@@ -27,7 +27,7 @@ public class HttpErrorEntity {
 
     private String path;
 
-    public static HttpErrorEntity create(HttpStatus status, String message, String path) {
+    public static HttpErrorEntity of(HttpStatus status, String message, String path) {
         HttpErrorEntity entity = new HttpErrorEntity();
         entity.setTimestamp(System.currentTimeMillis());
         entity.setStatus((long) status.value());

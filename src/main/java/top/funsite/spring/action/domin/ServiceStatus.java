@@ -1,10 +1,18 @@
 package top.funsite.spring.action.domin;
 
 /**
- * <li>0 OK</li>
- * <li>1 错误（无法判断具体的错误类型）</li>
- * <li>100xx 登录错误</li>
- * <li>101xx 通用错误</li>
+ * 接口状态码定义。
+ * <table>
+ *     <thead>
+ *         <tr><th>Code</th><th>Comment</th></tr>
+ *     </thead>
+ *     <tbody>
+ *         <tr><td>0</td><td>OK</td></tr>
+ *         <tr><td>1</td><td>错误（无法判断具体的错误类型）</td></tr>
+ *         <tr><td>100xx</td><td>登录错误</td></tr>
+ *         <tr><td>101xx</td><td>通用错误</td></tr>
+ *     </tbody>
+ * </table>
  */
 public enum ServiceStatus {
 

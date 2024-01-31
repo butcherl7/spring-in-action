@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class RedisSession implements ValidatingSession {
 
-    protected static final SimpleDateFormat MILLI_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    protected static final SimpleDateFormat MILLI_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
 
     private final RedisTemplate<String, Object> redisTemplate;
 

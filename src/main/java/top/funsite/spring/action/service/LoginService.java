@@ -26,7 +26,7 @@ public class LoginService {
     public String login(AuthenticationToken authToken) {
         Subject subject = SecurityUtils.getSubject();
 
-        // 如果在已登录的情况下重新登录，那就注销掉这个登录。
+        // 如果在已登录的情况那就先退出登录。
         if (subject.isAuthenticated() || subject.isRemembered()) {
             subject.logout();
         }

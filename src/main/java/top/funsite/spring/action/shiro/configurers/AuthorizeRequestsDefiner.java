@@ -48,17 +48,17 @@ public class AuthorizeRequestsDefiner {
      */
     public Map<String, String> getDefinedPath() {
         Map<String, String> map = new LinkedHashMap<>();
-        for (RequestMatcherRegistry requestMatcherRegistry : requestMatcherRegistries) {
-            String chainDefinition = requestMatcherRegistry.filter.name();
-            String[] authorities = requestMatcherRegistry.authorities;
+        for (RequestMatcherRegistry registry : requestMatcherRegistries) {
+            String chainDefinition = registry.filter.name();
+            String[] authorities = registry.authorities;
 
             if (ArrayUtils.isNotEmpty(authorities)) {
-                chainDefinition = NamedFilter.authc.name() + "," + requestMatcherRegistry.filter.name() + Arrays
+                chainDefinition = NamedFilter.authc.name() + "," + registry.filter.name() + Arrays
                         .stream(authorities)
                         .collect(Collectors.joining(",", "[", "]"));
             }
 
-            for (String antPattern : requestMatcherRegistry.antPatterns) {
+            for (String antPattern : registry.antPatterns) {
                 map.put(antPattern, chainDefinition);
             }
         }
@@ -73,10 +73,10 @@ public class AuthorizeRequestsDefiner {
      */
     public Map<String, Logical> getDefinedLogic() {
         Map<String, Logical> map = new LinkedHashMap<>();
-        for (RequestMatcherRegistry requestMatcherRegistry : requestMatcherRegistries) {
-            if (ArrayUtils.isNotEmpty(requestMatcherRegistry.authorities)) {
-                for (String antPattern : requestMatcherRegistry.antPatterns) {
-                    map.put(antPattern, requestMatcherRegistry.logical);
+        for (RequestMatcherRegistry registry : requestMatcherRegistries) {
+            if (ArrayUtils.isNotEmpty(registry.authorities)) {
+                for (String antPattern : registry.antPatterns) {
+                    map.put(antPattern, registry.logical);
                 }
             }
         }
@@ -92,10 +92,10 @@ public class AuthorizeRequestsDefiner {
     @ApiStatus.Experimental
     public Map<String, DecodedJWTValidator> getDefinedDecodedJWTValidator() {
         Map<String, DecodedJWTValidator> map = new LinkedHashMap<>();
-        for (RequestMatcherRegistry requestMatcherRegistry : requestMatcherRegistries) {
-            DecodedJWTValidator validator = requestMatcherRegistry.decodedJWTValidator;
+        for (RequestMatcherRegistry registry : requestMatcherRegistries) {
+            DecodedJWTValidator validator = registry.decodedJWTValidator;
             if (validator != null) {
-                for (String antPattern : requestMatcherRegistry.antPatterns) {
+                for (String antPattern : registry.antPatterns) {
                     map.put(antPattern, validator);
                 }
             }

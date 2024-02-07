@@ -74,8 +74,7 @@ public class AuthorizeRequestsDefiner {
     public Map<String, Logical> getDefinedLogic() {
         Map<String, Logical> map = new LinkedHashMap<>();
         for (RequestMatcherRegistry requestMatcherRegistry : requestMatcherRegistries) {
-            String[] authorities = requestMatcherRegistry.authorities;
-            if (authorities != null && authorities.length > 0) {
+            if (ArrayUtils.isNotEmpty(requestMatcherRegistry.authorities)) {
                 for (String antPattern : requestMatcherRegistry.antPatterns) {
                     map.put(antPattern, requestMatcherRegistry.logical);
                 }

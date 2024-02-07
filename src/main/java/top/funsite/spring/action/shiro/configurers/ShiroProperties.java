@@ -53,7 +53,7 @@ public class ShiroProperties {
         }
     }
 
-    public void setRememberDays(Duration rememberTime) {
+    public void setRememberTime(Duration rememberTime) {
         if (rememberTime == null) {
             this.rememberTime = Duration.ofSeconds(0);
         } else {

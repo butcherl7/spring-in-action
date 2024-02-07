@@ -15,7 +15,7 @@ public class Result<T> {
     private static final ServiceStatus ERROR = ServiceStatus.ERROR;
 
     /**
-     * 表示从逻辑上业务处理是否成功。
+     * 表示业务处理是否成功。
      */
     private boolean ok;
 
@@ -77,8 +77,8 @@ public class Result<T> {
 
         Result<Void> result = new Result<>();
         result.setOk(false);
-        result.setCode(status.value());
         result.setMsg(message);
+        result.setCode(status.value());
         result.setTimestamp(System.currentTimeMillis());
         return result;
     }

@@ -47,7 +47,7 @@ public class RedisSession implements ValidatingSession {
     /**
      * 被禁止作为 session key 的名单。
      */
-    private static final List<String> BLACK_KEYS = Arrays.asList(
+    private static final List<String> PROHIBITED_KEYS = Arrays.asList(
             // 不需要把 principals 存到 session. 也有序列化异常的问题。
             DefaultSubjectContext.AUTHENTICATED_SESSION_KEY,
             DefaultSubjectContext.PRINCIPALS_SESSION_KEY
@@ -135,7 +135,7 @@ public class RedisSession implements ValidatingSession {
     public void setAttribute(Object key, Object value) throws InvalidSessionException {
         try {
             String sKey = assertString(key);
-            if (BLACK_KEYS.contains(sKey)) {
+            if (PROHIBITED_KEYS.contains(sKey)) {
                 return;
             }
             hashOperations.put(sessionKey, sKey, value);

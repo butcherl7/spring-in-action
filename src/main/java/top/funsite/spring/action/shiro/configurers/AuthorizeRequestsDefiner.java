@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  *      .antMatchers("/home","/favicon.ico").permitAll()
  *      .antMatchers("/info").hasRole("admin")
  *      .antMatchers("/**").authenticated()
- *      .getDefinedAuthorizationRequest();}
+ *      .getDefinedPath();}
  * </pre>
  *
  * @see NamedFilter

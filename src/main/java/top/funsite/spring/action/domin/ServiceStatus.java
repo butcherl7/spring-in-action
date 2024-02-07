@@ -54,8 +54,4 @@ public enum ServiceStatus {
     public String reasonPhrase() {
         return this.reasonPhrase;
     }
-
-    public boolean isError() {
-        return value != 0;
-    }
 }

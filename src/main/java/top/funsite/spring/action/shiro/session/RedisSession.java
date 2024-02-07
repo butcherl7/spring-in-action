@@ -1,7 +1,6 @@
 package top.funsite.spring.action.shiro.session;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.session.InvalidSessionException;
 import org.apache.shiro.session.mgt.ValidatingSession;
 import org.apache.shiro.subject.Subject;
@@ -61,9 +60,8 @@ public class RedisSession implements ValidatingSession {
      */
     public RedisSession(RedisTemplate<String, Object> redisTemplate, String sessionKey) {
         Objects.requireNonNull(redisTemplate, "redisTemplate must not be null");
-        if (StringUtils.isBlank(sessionKey)) {
-            throw new IllegalArgumentException("sessionKey must not be blank");
-        }
+        Objects.requireNonNull(sessionKey, "sessionKey must not be null");
+
         this.sessionKey = sessionKey;
         this.redisTemplate = redisTemplate;
         this.hashOperations = redisTemplate.opsForHash();

@@ -16,9 +16,15 @@ package top.funsite.spring.action.domin;
  */
 public enum ServiceStatus {
 
-    OK(0, "OK"),
+    /// 基础状态码与 HTTP 响应状态码相同，方便设置响应状态码。
 
-    ERROR(1, "Error"),
+    OK(200, "OK"),
+
+    UNAUTHORIZED(401, "Unauthorized"),
+
+    FORBIDDEN(403, "Forbidden"),
+
+    ERROR(500, "Internal Server Error"),
 
     /// 100xx
 

@@ -8,8 +8,8 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
+import top.funsite.spring.action.domin.ServiceStatus;
 import top.funsite.spring.action.shiro.filter.PassThruFilter;
 
 import javax.servlet.ServletRequest;
@@ -46,7 +46,7 @@ public class JwtFilter extends PassThruFilter {
             }
         } catch (JWTVerificationException e) {
             log.error(e.getMessage(), e);
-            return super.responseDenied(request, response, HttpStatus.UNAUTHORIZED, e.getMessage());
+            return super.responseDenied(response, ServiceStatus.UNAUTHORIZED, e.getMessage());
         }
         return true;
     }

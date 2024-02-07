@@ -5,10 +5,8 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import top.funsite.spring.action.domin.HttpErrorEntity;
 import top.funsite.spring.action.domin.Result;
 import top.funsite.spring.action.domin.ServiceStatus;
 import top.funsite.spring.action.exception.ServiceException;
@@ -61,18 +59,18 @@ public class ControllerAdviceConfig {
      * @see UnauthenticatedException
      */
     @ExceptionHandler(AuthorizationException.class)
-    public HttpErrorEntity handleAuthorizationException(AuthorizationException e, HttpServletRequest request, HttpServletResponse response) {
-        HttpStatus status;
+    public Result<Void> handleAuthorizationException(AuthorizationException e, HttpServletRequest request, HttpServletResponse response) {
+        ServiceStatus status;
         String message;
         if (e instanceof UnauthorizedException) {
-            status = HttpStatus.FORBIDDEN;
+            status = ServiceStatus.FORBIDDEN;
             message = MessageConstant.PermissionDenied;
         } else {
-            status = HttpStatus.UNAUTHORIZED;
+            status = ServiceStatus.UNAUTHORIZED;
             message = MessageConstant.AccessDenied;
         }
         response.setStatus(status.value());
-        return HttpErrorEntity.of(status, message, request.getRequestURI());
+        return Result.fail(status, message);
     }
 
     /**
@@ -87,10 +85,10 @@ public class ControllerAdviceConfig {
      * 最后捕获所有未知的异常。
      */
     @ExceptionHandler(Exception.class)
-    public HttpErrorEntity handleException(Exception e, HttpServletRequest request, HttpServletResponse response) {
+    public Result<Void> handleException(Exception e, HttpServletResponse response) {
         log.error(e.getMessage(), e);
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        ServiceStatus status = ServiceStatus.ERROR;
         response.setStatus(status.value());
-        return HttpErrorEntity.of(status, e.getMessage(), request.getRequestURI());
+        return Result.fail(status);
     }
 }

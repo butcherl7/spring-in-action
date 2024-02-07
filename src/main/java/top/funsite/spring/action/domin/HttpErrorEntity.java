@@ -12,9 +12,11 @@ import org.springframework.http.HttpStatus;
  * <li>……</li>
  *
  * @see <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status">HTTP 响应状态码 - HTTP | MDN</a>
+ * @deprecated 统一使用 {@link Result}.
  */
 @Getter
 @Setter
+@Deprecated
 public class HttpErrorEntity {
 
     private Long timestamp;

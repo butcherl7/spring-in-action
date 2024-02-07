@@ -6,11 +6,10 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.PassThruAuthenticationFilter;
 import org.apache.shiro.web.filter.authz.AuthorizationFilter;
 import org.apache.shiro.web.servlet.AbstractShiroFilter;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMethod;
-import top.funsite.spring.action.domin.HttpErrorEntity;
 import top.funsite.spring.action.domin.Result;
+import top.funsite.spring.action.domin.ServiceStatus;
 import top.funsite.spring.action.shiro.MessageConstant;
 import top.funsite.spring.action.shiro.session.RedisSession;
 import top.funsite.spring.action.util.JSONUtils;
@@ -100,14 +99,14 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
     }
 
     protected boolean onAccessDenied(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return responseDenied(request, response, HttpStatus.UNAUTHORIZED, MessageConstant.AccessDenied);
+        return responseDenied(response, ServiceStatus.UNAUTHORIZED, MessageConstant.AccessDenied);
     }
 
-    protected boolean responseDenied(HttpServletRequest request, HttpServletResponse response, HttpStatus status, String message) {
+    protected boolean responseDenied(HttpServletResponse response, ServiceStatus status, String message) {
         response.setStatus(status.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        HttpErrorEntity entity = HttpErrorEntity.of(status, message, request.getRequestURI());
+        Result<Void> entity = Result.fail(status, message);
         JSONUtils.writeValue(response, entity);
         return false;
     }

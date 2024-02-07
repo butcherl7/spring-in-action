@@ -67,10 +67,6 @@ public class RedisSession implements ValidatingSession {
         this.sessionKey = sessionKey;
         this.redisTemplate = redisTemplate;
         this.hashOperations = redisTemplate.opsForHash();
-        // 不存在就创建。
-        if (!Boolean.TRUE.equals(redisTemplate.hasKey(sessionKey))) {
-            redisTemplate.opsForHash().put(sessionKey, Key.id, sessionKey);
-        }
         this.session = hashOperations.entries(sessionKey);
     }
 

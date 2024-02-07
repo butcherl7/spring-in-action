@@ -53,7 +53,7 @@ public class RedisSessionManager extends DefaultWebSessionManager {
         log.debug("jsessionid is {}.", jsessionid);
         log.debug("sessionKey is {}.", sessionKey);
 
-        if (isBlank(jsessionid) || BlankSession.ID.equals(jsessionid) || Boolean.FALSE.equals(redisTemplate.hasKey(sessionKey))) {
+        if (isBlank(jsessionid) || Boolean.FALSE.equals(redisTemplate.hasKey(sessionKey))) {
             log.debug("Session does not exist, return BlankSession.");
             return BlankSession.getInstance();
         }

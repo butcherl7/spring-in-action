@@ -17,7 +17,7 @@ public class BlankSession implements Session {
 
     private static final Date FINAL_DATE = new Date(0L);
 
-    public static final String ID = "blank";
+    public static final String ID = "";
 
     private BlankSession() {
     }

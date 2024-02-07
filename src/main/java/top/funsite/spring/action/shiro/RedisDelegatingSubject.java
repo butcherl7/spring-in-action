@@ -13,7 +13,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 /**
- * Subject，取消了对 session 的代理，在已登录的情况下调用 {@link Subject#getSession()} 直接获取到 {@link RedisSession}.
+ * Subject，取消了对 session 的代理，在已登录的情况下调用 {@link Subject#getSession()} 直接返回 {@link RedisSession}。
  *
  * @see ProxiedSession
  * @see DelegatingSubject#decorate

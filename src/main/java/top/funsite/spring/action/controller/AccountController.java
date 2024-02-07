@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.funsite.spring.action.domin.Result;
+import top.funsite.spring.action.domin.UserDTO;
 import top.funsite.spring.action.exception.BadParameterException;
 import top.funsite.spring.action.service.LoginService;
 import top.funsite.spring.action.shiro.session.RedisSession;
@@ -46,7 +48,7 @@ public class AccountController {
     }
 
     @GetMapping("info")
-    public Object info() {
+    public Result<UserDTO> info() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         Subject subject = SecurityUtils.getSubject();
@@ -58,7 +60,7 @@ public class AccountController {
         log.info("lastAccessTime:           {}", sdf.format(lastAccessTime));
         log.info("lastRememberedAccessTime: {}", lastRememberedAccessTime == null ? null : sdf.format(lastRememberedAccessTime));
 
-        return subject.getPrincipal();
+        return Result.ok((UserDTO) subject.getPrincipal());
     }
 
     @GetMapping("home1")

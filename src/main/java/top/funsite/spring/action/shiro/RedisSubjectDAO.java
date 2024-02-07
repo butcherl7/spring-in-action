@@ -16,10 +16,10 @@ public class RedisSubjectDAO extends DefaultSubjectDAO {
      *
      * @param subject the subject for which state will be persisted to its session.
      * @see RedisSession#setAttribute(Object, Object)
+     * @see #removeFromSession(Subject)
      */
     @Override
     protected void saveToSession(Subject subject) {
         super.saveToSession(subject);
-        // super.removeFromSession(subject);
     }
 }

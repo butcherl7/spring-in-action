@@ -31,21 +31,27 @@ public class ControllerAdviceConfig {
         String message = e.getMessage();
         ServiceStatus status = ServiceStatus.AUTHENTICATION_ERROR;
         if (message == null) {
-            if (e instanceof UnknownAccountException) {
-                message = "账号不存在";
-                status = ServiceStatus.UNKNOWN_ACCOUNT;
-            } else if (e instanceof LockedAccountException) {
-                message = "账号被锁定";
-                status = ServiceStatus.ACCOUNT_LOCKED;
-            } else if (e instanceof DisabledAccountException) {
-                message = "账号被禁用";
-                status = ServiceStatus.ACCOUNT_DISABLED;
-            } else if (e instanceof IncorrectCredentialsException) {
-                message = "密码错误";
-                status = ServiceStatus.INCORRECT_CREDENTIALS;
-            } else {
-                log.warn(e.getMessage(), e);
-                message = "身份验证错误";
+            switch (e) {
+                case UnknownAccountException ignored -> {
+                    message = "账号不存在";
+                    status = ServiceStatus.UNKNOWN_ACCOUNT;
+                }
+                case LockedAccountException ignored -> {
+                    message = "账号被锁定";
+                    status = ServiceStatus.ACCOUNT_LOCKED;
+                }
+                case DisabledAccountException ignored -> {
+                    message = "账号被禁用";
+                    status = ServiceStatus.ACCOUNT_DISABLED;
+                }
+                case IncorrectCredentialsException ignored -> {
+                    message = "密码错误";
+                    status = ServiceStatus.INCORRECT_CREDENTIALS;
+                }
+                default -> {
+                    log.warn(e.getMessage(), e);
+                    message = "身份验证错误";
+                }
             }
         }
         return Result.fail(status, message);

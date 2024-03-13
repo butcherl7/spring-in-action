@@ -80,9 +80,7 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
         Subject subject = getSubject(request, response);
         Session session = subject.getSession();
 
-        if (session instanceof RedisSession) {
-            RedisSession redisSession = ((RedisSession) session);
-
+        if (session instanceof RedisSession redisSession) {
             boolean timeout = redisSession.isTimeout();
             boolean rememberMe = redisSession.isRememberMe();
 

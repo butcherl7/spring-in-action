@@ -68,12 +68,10 @@ public class SecretTest {
             System.out.println(id);
             System.out.println(keyId);
         } catch (JWTVerificationException e) {
-            if (e instanceof TokenExpiredException) {
-                TokenExpiredException ex = (TokenExpiredException) e;
+            if (e instanceof TokenExpiredException ex) {
                 ZonedDateTime zonedDateTime = ex.getExpiredOn().atZone(ZoneId.systemDefault());
                 System.err.println("The Token has expired on " + zonedDateTime.format(formatter));
-            } else if (e instanceof IncorrectClaimException) {
-                IncorrectClaimException ex = (IncorrectClaimException) e;
+            } else if (e instanceof IncorrectClaimException ex) {
                 String claimName = ex.getClaimName();
                 Claim claimValue = ex.getClaimValue();
                 // RegisteredClaims.NOT_BEFORE

@@ -1,10 +1,9 @@
 package top.funsite.spring.action.service;
 
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import top.funsite.spring.action.domin.entity.User;
 import top.funsite.spring.action.mapper.UserMapper;
-
-import javax.annotation.Resource;
 
 @Service
 public class UserService {

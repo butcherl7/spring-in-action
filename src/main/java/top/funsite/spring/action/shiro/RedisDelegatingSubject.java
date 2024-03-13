@@ -1,5 +1,7 @@
 package top.funsite.spring.action.shiro;
 
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.ProxiedSession;
 import org.apache.shiro.session.Session;
@@ -8,9 +10,6 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.DelegatingSubject;
 import org.apache.shiro.web.subject.support.WebDelegatingSubject;
 import top.funsite.spring.action.shiro.session.RedisSession;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 
 /**
  * Subject，取消了对 session 的代理，在已登录的情况下调用 {@link Subject#getSession()} 直接返回 {@link RedisSession}。

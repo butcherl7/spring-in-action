@@ -1,6 +1,7 @@
 package top.funsite.spring.action.util;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.Objects;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;

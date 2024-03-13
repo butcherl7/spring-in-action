@@ -1,5 +1,6 @@
 package top.funsite.spring.action.service;
 
+import jakarta.annotation.Resource;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.HostAuthenticationToken;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import top.funsite.spring.action.config.ShiroConfig;
 import top.funsite.spring.action.shiro.session.RedisSession;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;

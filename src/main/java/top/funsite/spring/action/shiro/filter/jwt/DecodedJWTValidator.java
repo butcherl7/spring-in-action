@@ -1,9 +1,8 @@
 package top.funsite.spring.action.shiro.filter.jwt;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * 对已经正确解码过的 JWT 进行进一步的验证。

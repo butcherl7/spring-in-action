@@ -1,5 +1,7 @@
 package top.funsite.spring.action.config;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationException;
@@ -11,9 +13,6 @@ import top.funsite.spring.action.domin.Result;
 import top.funsite.spring.action.domin.ServiceStatus;
 import top.funsite.spring.action.exception.ServiceException;
 import top.funsite.spring.action.shiro.MessageConstant;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * 匹配全局异常并给出响应。

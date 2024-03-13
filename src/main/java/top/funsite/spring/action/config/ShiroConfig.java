@@ -1,5 +1,7 @@
 package top.funsite.spring.action.config;
 
+import jakarta.annotation.Resource;
+import jakarta.servlet.Filter;
 import lombok.Getter;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -27,8 +29,6 @@ import top.funsite.spring.action.shiro.filter.jwt.JwtFilter;
 import top.funsite.spring.action.shiro.realm.DatabaseRealm;
 import top.funsite.spring.action.shiro.session.RedisSessionManager;
 
-import javax.annotation.Resource;
-import javax.servlet.Filter;
 import java.time.Duration;
 import java.util.Map;
 

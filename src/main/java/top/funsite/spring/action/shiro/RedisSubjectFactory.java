@@ -1,5 +1,7 @@
 package top.funsite.spring.action.shiro;
 
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.mgt.SecurityManager;
@@ -12,9 +14,6 @@ import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
 import org.apache.shiro.web.subject.WebSubjectContext;
 import top.funsite.spring.action.domin.UserDTO;
 import top.funsite.spring.action.shiro.session.RedisSession;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 
 @Slf4j
 public class RedisSubjectFactory extends DefaultWebSubjectFactory {

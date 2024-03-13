@@ -1,10 +1,9 @@
 package top.funsite.spring.action.service;
 
+import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import top.funsite.spring.action.domin.entity.User;
-
-import javax.annotation.Resource;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

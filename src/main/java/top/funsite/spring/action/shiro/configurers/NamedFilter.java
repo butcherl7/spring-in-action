@@ -1,5 +1,6 @@
 package top.funsite.spring.action.shiro.configurers;
 
+import jakarta.servlet.Filter;
 import lombok.Getter;
 import org.apache.shiro.web.filter.authc.AnonymousFilter;
 import org.apache.shiro.web.filter.mgt.DefaultFilter;
@@ -8,8 +9,6 @@ import top.funsite.spring.action.shiro.filter.PermissionFilter;
 import top.funsite.spring.action.shiro.filter.RememberedFilter;
 import top.funsite.spring.action.shiro.filter.RoleFilter;
 import top.funsite.spring.action.shiro.filter.jwt.JwtFilter;
-
-import javax.servlet.Filter;
 
 /**
  * 定义用到的过滤器名称。

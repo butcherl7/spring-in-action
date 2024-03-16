@@ -1,6 +1,5 @@
-package top.funsite.spring.action;
+package top.funsite.spring.action.crypto;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -10,13 +9,6 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authc.credential.DefaultPasswordService;
-import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
-import org.apache.shiro.crypto.hash.DefaultHashService;
-import org.apache.shiro.crypto.hash.Hash;
-import org.apache.shiro.crypto.hash.HashProvider;
-import org.apache.shiro.crypto.hash.HashSpi;
-import org.apache.shiro.lang.util.SimpleByteSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -24,11 +16,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.StreamSupport;
+import java.util.Date;
+import java.util.UUID;
 
 @Slf4j
-public class SecretTest {
+public class JWTTest {
 
     /**
      * <ul>
@@ -87,60 +79,5 @@ public class SecretTest {
                 e.printStackTrace();
             }
         }
-    }
-
-    @Test
-    public void bcryptHash() {
-        String password = "123456";
-        String hashed = BCrypt.withDefaults().hashToString(6, password.toCharArray());
-        System.out.println(hashed);
-    }
-
-    @Test
-    public void bcryptVerify() {
-        String password = "123456";
-        String hash = "$2a$18$BBLRD2SI2l9HCe4aH22qhuRhQy4bIac7hoZ8qf15gGfjcn6rxBxl2";
-
-        BCrypt.Result verify = BCrypt.verifyer().verify(password.toCharArray(), hash.toCharArray());
-        System.out.println(verify.verified);
-    }
-
-    @Test
-    public void testBCryptHash() {
-        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher("2b");
-        credentialsMatcher.setHashIterations(4);
-
-        // SimpleHash simpleHash = new SimpleHash("bcrypt", "123456", SimpleByteSource.empty(), 3);
-        // System.out.println(hash);
-
-        List<String> hashAlgorithms = StreamSupport.stream(ServiceLoader.load(HashSpi.class).spliterator(), false)
-                .map(HashSpi::getImplementedAlgorithms)
-                .flatMap(Set::stream)
-                .toList();
-        System.out.println("HashAlgorithms: " + hashAlgorithms);
-
-        // $2y$10$7rOjsAf2U/AKKqpMpCIn6etuOXyQ86tp2Tn9xv6FyXl2T0QYc3.G.
-        String TEST_PASSWORD = "secret#shiro,password;Jo8opech";
-
-        String plainText = "123456";
-
-        DefaultHashService hashService = new DefaultHashService();
-        hashService.setDefaultAlgorithmName("2b");
-
-        DefaultPasswordService passwordService = new DefaultPasswordService();
-        passwordService.setHashService(hashService);
-
-        String encryptPassword = passwordService.encryptPassword(plainText);
-        System.out.println(encryptPassword);
-
-        boolean b1 = passwordService.passwordsMatch(plainText, encryptPassword);
-        System.out.println(b1);
-
-        HashProvider.getByAlgorithmName("2b").ifPresent(hashSpi -> {
-            Hash hash = hashSpi.fromString("$2b$10$kJ/Gvbcc1bXD929k5DXA..TAs5sfvHNddDU1jaqy2GvH9aAEhybp.");
-            boolean b = hash.matchesPassword(new SimpleByteSource(plainText));
-            System.out.println(b);
-            System.out.println(hash);
-        });
     }
 }

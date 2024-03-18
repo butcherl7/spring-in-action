@@ -12,7 +12,7 @@ create table sys_user
     unlocked_time timestamp comment '账号解除锁定的时间',
     enabled       boolean not null default true,
     created_time  timestamp        default current_timestamp(),
-    modified_time timestamp        default current_timestamp()
+    updated_time timestamp default current_timestamp()
 );
 
 create table sys_role

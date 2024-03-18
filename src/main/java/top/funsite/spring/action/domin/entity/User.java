@@ -28,7 +28,7 @@ public class User {
 
     private LocalDateTime createdTime;
 
-    private LocalDateTime modifiedTime;
+    private LocalDateTime updatedTime;
 
     @TableField(exist = false)
     private Set<Role> roles;

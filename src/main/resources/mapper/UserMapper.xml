@@ -8,7 +8,7 @@
         <result column="UNLOCKED_TIME" property="unlockedTime" jdbcType="TIMESTAMP"/>
         <result column="ENABLED" property="enabled" jdbcType="BOOLEAN"/>
         <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP"/>
-        <result column="MODIFIED_TIME" property="modifiedTime" jdbcType="TIMESTAMP"/>
+        <result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP"/>
         <collection property="roles" ofType="top.funsite.spring.action.domin.entity.Role">
             <id column="R_NAME" property="name" jdbcType="VARCHAR"/>
             <result column="R_ENABLED" property="enabled" jdbcType="BOOLEAN"/>
@@ -28,7 +28,7 @@
                A.UNLOCKED_TIME,
                A.ENABLED,
                A.CREATED_TIME,
-               A.MODIFIED_TIME,
+               A.UPDATED_TIME,
                C.NAME         R_NAME,
                C.ENABLED      R_ENABLED,
                C.CREATED_TIME R_CREATED_TIME,

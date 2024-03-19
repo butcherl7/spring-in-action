@@ -1,5 +1,6 @@
-drop table if exists sys_role_permission;
 drop table if exists sys_user_role;
+drop table if exists sys_user_permission;
+drop table if exists sys_role_permission;
 drop table if exists sys_user;
 drop table if exists sys_role;
 drop table if exists sys_permission;
@@ -36,6 +37,15 @@ create table sys_user_role
     role_name    varchar not null
         constraint fk_ur_rn references sys_role (name) on delete cascade on update cascade,
     created_time timestamp default current_timestamp()
+);
+
+create table sys_user_permission
+(
+    uid             bigint  not null
+        constraint fk_up_un references sys_user (id) on delete cascade on update cascade,
+    permission_name varchar not null
+        constraint fk_up_rn references sys_role (name) on delete cascade on update cascade,
+    created_time    timestamp default current_timestamp()
 );
 
 create table sys_role_permission

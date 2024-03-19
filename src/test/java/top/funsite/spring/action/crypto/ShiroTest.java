@@ -73,16 +73,15 @@ public class ShiroTest {
     }
 
     @Test
-    public void testBcryptPasswordService() {
-        String plaintext = "123456";
-        String ciphertext = "$2b$10$MEkYQf7wy3KhbLh9SyI0Oe.zy.u1J6MfIUjcBPu38FTwbIlr2Tv/2";
+    public void testBcrypt() {
+        var plaintext = "123456";
+        var ciphertext = "$2b$10$MEkYQf7wy3KhbLh9SyI0Oe.zy.u1J6MfIUjcBPu38FTwbIlr2Tv/2";
 
-        StrongerHashPasswordService passwordService = new StrongerHashPasswordService();
-        String encryptPassword = passwordService.encryptPassword(plaintext);
-        log.info(encryptPassword);
+        var passwordService = new StrongerHashPasswordService(Algorithm.BCRYPT_2B);
+        // String encryptPassword = passwordService.encryptPassword(plaintext);
+        // log.info(encryptPassword);
 
-        boolean bString = passwordService.passwordsMatch(plaintext, ciphertext);
-        assertTrue(bString);
+        assertTrue(passwordService.passwordsMatch(plaintext, ciphertext));
     }
 
     @Test
@@ -90,7 +89,7 @@ public class ShiroTest {
         var plaintext = "123456";
         var ciphertext = "$argon2id$v=19$t=1,m=65536,p=4$uYg08RWy4+lHoPHwz/Ou1w$y7K7Awgw51rdEmHiQBDacqLV//3gb7q3OU2wSvD0DWg";
 
-        StrongerHashPasswordService passwordService = new StrongerHashPasswordService(Algorithm.ARGON2_ID);
+        var passwordService = new StrongerHashPasswordService(Algorithm.ARGON2_ID);
         // String password = passwordService.encryptPassword(plaintext);
         // log.info("password: {}", password);
         assertTrue(passwordService.passwordsMatch(plaintext, ciphertext));

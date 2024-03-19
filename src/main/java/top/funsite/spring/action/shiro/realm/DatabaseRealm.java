@@ -5,15 +5,10 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
 import top.funsite.spring.action.domin.UserDTO;
-import top.funsite.spring.action.domin.entity.Permission;
-import top.funsite.spring.action.domin.entity.Role;
 import top.funsite.spring.action.domin.entity.User;
 import top.funsite.spring.action.service.UserService;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static top.funsite.spring.action.util.JSONUtils.DATE_TIME_FORMATTER;
 
@@ -50,14 +45,11 @@ public class DatabaseRealm extends AbstractRealm {
             throw new LockedAccountException("账号被锁定，请在 " + unlockedTime.format(DATE_TIME_FORMATTER) + " 后再试");
         }
 
-        Set<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
-        Set<String> permissions = user.getRoles().stream().map(Role::getPermissions).flatMap(Collection::stream).map(Permission::getName).collect(Collectors.toSet());
-
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername(username);
         userDTO.setPassword(password);
-        userDTO.setRoles(roles);
-        userDTO.setPermissions(permissions);
+        userDTO.setRoles(user.getRoles());
+        userDTO.setPermissions(user.getPermissions());
         return new SimpleAuthenticationInfo(userDTO, password, getName());
     }
 

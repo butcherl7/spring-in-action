@@ -31,5 +31,8 @@ public class User {
     private LocalDateTime updatedTime;
 
     @TableField(exist = false)
-    private Set<Role> roles;
+    private Set<String> roles;
+
+    @TableField(exist = false)
+    private Set<String> permissions;
 }

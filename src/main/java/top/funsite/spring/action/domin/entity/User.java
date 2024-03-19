@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
+import top.funsite.spring.action.domin.entity.struct.Enable;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -13,7 +14,7 @@ import java.util.Set;
 @Getter
 @Setter
 @TableName("sys_user")
-public class User {
+public class User implements Enable {
 
     @TableId(type = IdType.AUTO)
     private Long id;

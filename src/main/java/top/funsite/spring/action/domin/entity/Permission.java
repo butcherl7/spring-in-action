@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import top.funsite.spring.action.domin.entity.struct.Enable;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -13,7 +14,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @TableName("sys_permission")
-public class Permission {
+public class Permission implements Enable {
 
     @TableId(type = IdType.INPUT)
     private String name;

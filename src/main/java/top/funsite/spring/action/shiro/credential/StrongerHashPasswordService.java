@@ -12,7 +12,7 @@ import org.apache.shiro.crypto.hash.format.ProvidedHashFormat;
 import java.util.Map;
 
 /**
- * Hash Password Service，默认使用 {@link Algorithm#ARGON2_ID} 加密算法。
+ * Hash Password Service.
  *
  * @see AbstractCryptHash
  * @see NoIdentifierFormat
@@ -31,10 +31,6 @@ public final class StrongerHashPasswordService extends DefaultPasswordService {
         for (Algorithm algorithm : Algorithm.values()) {
             formatClassNames.put(algorithm.getAlgorithmName(), formatName);
         }
-    }
-
-    public StrongerHashPasswordService() {
-        this(Algorithm.ARGON2_ID);
     }
 
     public StrongerHashPasswordService(Algorithm algorithm) {

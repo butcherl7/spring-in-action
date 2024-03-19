@@ -35,7 +35,7 @@ public class DatabaseRealm extends AbstractRealm {
         String password = user.getPassword();
         LocalDateTime unlockedTime = user.getUnlockedTime();
 
-        if (Boolean.FALSE.equals(user.getEnabled())) {
+        if (!user.isEnabled()) {
             throw new DisabledAccountException("账号已被禁用，详情请咨讠");
         }
         if (unlockedTime != null && unlockedTime.isAfter(LocalDateTime.now())) {

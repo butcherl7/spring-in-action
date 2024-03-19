@@ -4,7 +4,7 @@ import org.apache.shiro.authc.credential.PasswordMatcher;
 
 public class StrongerHashMatcher extends PasswordMatcher {
 
-    public StrongerHashMatcher() {
-        setPasswordService(new StrongerHashPasswordService());
+    public StrongerHashMatcher(Algorithm algorithm) {
+        setPasswordService(new StrongerHashPasswordService(algorithm));
     }
 }

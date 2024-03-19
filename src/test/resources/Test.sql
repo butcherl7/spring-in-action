@@ -14,3 +14,32 @@ FROM SYS_USER A
 WHERE A.USERNAME = 'admin';
 
 SELECT DATEADD('HOUR', 1, CURRENT_TIMESTAMP);
+
+select a.name
+from sys_role a,
+     sys_user_role b
+where a.name = b.role_name
+  and a.enabled is true
+  and b.uid = 1;
+
+select a.name
+from sys_permission a,
+     sys_user_permission b
+where a.name = b.permission_name
+  and a.enabled is true
+  and b.uid = 1
+union all
+select b.name
+from sys_role a,
+     sys_permission b,
+     sys_user_role c,
+     sys_role_permission d
+where a.name = c.role_name
+  and a.name = d.role_name
+  and b.name = d.permission_name
+  and a.enabled is true
+  and b.enabled is true
+  and c.uid = 1;
+
+select *
+from SYS_PERMISSION;

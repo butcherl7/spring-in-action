@@ -7,6 +7,7 @@ import org.apache.shiro.crypto.hash.Hash;
 import org.apache.shiro.crypto.hash.HashSpi;
 import org.apache.shiro.lang.util.SimpleByteSource;
 import org.junit.jupiter.api.Test;
+import top.funsite.spring.action.shiro.credential.Algorithm;
 import top.funsite.spring.action.shiro.credential.NoIdentifierFormat;
 import top.funsite.spring.action.shiro.credential.StrongerHashPasswordService;
 
@@ -82,5 +83,16 @@ public class ShiroTest {
 
         boolean bString = passwordService.passwordsMatch(plaintext, ciphertext);
         assertTrue(bString);
+    }
+
+    @Test
+    public void testArgon2() {
+        var plaintext = "123456";
+        var ciphertext = "$argon2id$v=19$t=1,m=65536,p=4$uYg08RWy4+lHoPHwz/Ou1w$y7K7Awgw51rdEmHiQBDacqLV//3gb7q3OU2wSvD0DWg";
+
+        StrongerHashPasswordService passwordService = new StrongerHashPasswordService(Algorithm.ARGON2_ID);
+        // String password = passwordService.encryptPassword(plaintext);
+        // log.info("password: {}", password);
+        assertTrue(passwordService.passwordsMatch(plaintext, ciphertext));
     }
 }

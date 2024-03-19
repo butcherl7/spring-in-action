@@ -8,7 +8,7 @@ import top.funsite.spring.action.domin.entity.User;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-class UserDTOServiceTest {
+class UserServiceTest {
 
     @Resource
     private UserService userService;

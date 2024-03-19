@@ -8,6 +8,13 @@ import java.util.Set;
 
 public interface RoleMapper extends BaseMapper<Role> {
 
-    @Select("select role_name from sys_user_role where uid = #{uid}")
+    @Select("""
+            select a.name
+            from sys_role a,
+                 sys_user_role b
+            where a.name = b.role_name
+              and a.enabled is true
+              and b.uid = #{uid}
+            """)
     Set<String> selectRolesNameByUID(long uid);
 }

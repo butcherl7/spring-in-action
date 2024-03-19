@@ -26,10 +26,7 @@ public class DatabaseRealm extends AbstractRealm {
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        UsernamePasswordToken uToken = (UsernamePasswordToken) token;
-        String username = uToken.getUsername();
-
-        User user = userService.getByUsername(uToken.getUsername());
+        User user = userService.getByUsername((String) token.getPrincipal());
 
         if (user == null) {
             throw new UnknownAccountException();
@@ -45,12 +42,7 @@ public class DatabaseRealm extends AbstractRealm {
             throw new LockedAccountException("账号被锁定，请在 " + unlockedTime.format(DATE_TIME_FORMATTER) + " 后再试");
         }
 
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUsername(username);
-        userDTO.setPassword(password);
-        userDTO.setRoles(user.getRoles());
-        userDTO.setPermissions(user.getPermissions());
-        return new SimpleAuthenticationInfo(userDTO, password, getName());
+        return new SimpleAuthenticationInfo(UserDTO.from(user), password, getName());
     }
 
     @Override

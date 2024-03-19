@@ -2,6 +2,7 @@ package top.funsite.spring.action.domin;
 
 import lombok.Getter;
 import lombok.Setter;
+import top.funsite.spring.action.domin.entity.User;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -21,4 +22,16 @@ public class UserDTO implements Serializable {
     private Set<String> roles;
 
     private Set<String> permissions;
+
+    public static UserDTO from(User user) {
+        if (user == null) {
+            return null;
+        }
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(user.getUsername());
+        userDTO.setPassword(user.getPassword());
+        userDTO.setRoles(user.getRoles());
+        userDTO.setPermissions(user.getPermissions());
+        return userDTO;
+    }
 }

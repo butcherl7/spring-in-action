@@ -12,12 +12,7 @@ import org.apache.shiro.crypto.hash.format.ProvidedHashFormat;
 import java.util.Map;
 
 /**
- * Hash Password Service，可使用的算法有：
- * <ul>
- *     <li>Argon2: argon2id, argon2i, argon2d</li>
- *     <li>BCrypt: 2, 2a, 2b, 2y</li>
- * </ul>
- * 默认使用 Bcrypt 2b。
+ * Hash Password Service，默认使用 {@link Algorithm#BCRYPT_2B} 加密算法。
  *
  * @see AbstractCryptHash
  * @see NoIdentifierFormat

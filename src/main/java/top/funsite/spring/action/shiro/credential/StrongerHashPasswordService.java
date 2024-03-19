@@ -18,7 +18,7 @@ import java.util.Map;
  * @see NoIdentifierFormat
  * @see ProvidedHashFormat
  */
-public class StrongerHashPasswordService extends DefaultPasswordService {
+public final class StrongerHashPasswordService extends DefaultPasswordService {
 
     private static final NoIdentifierFormat NO_IDENTIFIER_FORMAT = new NoIdentifierFormat();
 

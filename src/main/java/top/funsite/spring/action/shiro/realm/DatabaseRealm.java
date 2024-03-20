@@ -9,8 +9,7 @@ import top.funsite.spring.action.domin.entity.User;
 import top.funsite.spring.action.service.UserService;
 
 import java.time.LocalDateTime;
-
-import static top.funsite.spring.action.util.JSONUtils.DATE_TIME_FORMATTER;
+import java.time.temporal.ChronoUnit;
 
 /**
  * 从数据库检索用户并获取用户信息的 Realm.
@@ -36,10 +35,14 @@ public class DatabaseRealm extends AbstractRealm {
         LocalDateTime unlockedTime = user.getUnlockedTime();
 
         if (!user.isEnabled()) {
-            throw new DisabledAccountException("账号已被禁用，详情请咨讠");
+            throw new DisabledAccountException("This account has been disabled.");
         }
-        if (unlockedTime != null && unlockedTime.isAfter(LocalDateTime.now())) {
-            throw new LockedAccountException("账号被锁定，请在 " + unlockedTime.format(DATE_TIME_FORMATTER) + " 后再试");
+        if (unlockedTime != null) {
+            long until = LocalDateTime.now().until(unlockedTime, ChronoUnit.SECONDS);
+            if (until > 0) {
+                long min = until >= 60 ? (long) Math.ceil(until / 60.0) : 1L;
+                throw new LockedAccountException("Account locked, please try again in " + min + " minutes.");
+            }
         }
 
         return new SimpleAuthenticationInfo(UserDTO.from(user), password, getName());

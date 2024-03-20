@@ -27,8 +27,8 @@ public class UserService {
             return null;
         }
 
-        Set<String> roles = roleMapper.selectRolesNameByUID(user.getId());
-        Set<String> permissions = permissionMapper.selectPermissionsNameByUID(user.getId());
+        Set<String> roles = roleMapper.selectUserRoles(user.getId());
+        Set<String> permissions = permissionMapper.selectUserPermissions(user.getId());
 
         user.setRoles(roles);
         user.setPermissions(permissions);

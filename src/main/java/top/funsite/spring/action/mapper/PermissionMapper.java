@@ -28,5 +28,5 @@ public interface PermissionMapper extends BaseMapper<Permission> {
               and b.enabled is true
               and c.uid = #{uid}
             """)
-    Set<String> selectPermissionsNameByUID(long uid);
+    Set<String> selectUserPermissions(long uid);
 }

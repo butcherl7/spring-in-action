@@ -16,5 +16,5 @@ public interface RoleMapper extends BaseMapper<Role> {
               and a.enabled is true
               and b.uid = #{uid}
             """)
-    Set<String> selectRolesNameByUID(long uid);
+    Set<String> selectUserRoles(long uid);
 }

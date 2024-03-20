@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 @Slf4j
@@ -28,9 +29,14 @@ public class CodeTest {
         System.out.println(Math.ceil(d));
     }
 
+    /**
+     * @see <a href="https://baike.baidu.com/item/%E8%AF%AD%E8%A8%80%E4%BB%A3%E7%A0%81/6594123?fr=aladdin">语言代码_百度百科</a>
+     */
     @Test
     void testResourceBundle() {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("i18n/messages");
+        Locale locale = Locale.of("zh", "hant");
+
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("i18n/messages", locale);
         String string = resourceBundle.getString("login.account.locked");
         String formatted = MessageFormat.format(string, "10");
         System.out.println(formatted);

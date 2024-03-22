@@ -34,7 +34,7 @@ public class NoIdentifierFormat implements ModularCryptFormat, ParsableHashForma
 
     @Override
     public Hash parse(String formatted) {
-        requireNonNull(formatted, "formatted in DontFormat.parse(String formatted)");
+        requireNonNull(formatted, "formatted in NoIdentifierFormat.parse(String formatted)");
 
         final String suffix = formatted.substring(TOKEN_DELIMITER.length());
         final String[] parts = suffix.split("\\$");

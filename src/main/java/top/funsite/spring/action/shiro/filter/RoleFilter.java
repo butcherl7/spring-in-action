@@ -22,8 +22,8 @@ public class RoleFilter extends AuthorizeFilter {
     public RoleFilter() {
     }
 
-    public RoleFilter(Map<String, Logical> authorizationLogicPaths) {
-        this.authorizationLogicPaths = authorizationLogicPaths;
+    public RoleFilter(Map<String, Logical> logicPaths) {
+        this.logicPaths = logicPaths;
     }
 
     @Override

@@ -9,7 +9,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.MapUtils;
+import org.apache.shiro.util.CollectionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.Nullable;
 import top.funsite.spring.action.domin.ServiceStatus;
@@ -53,7 +53,7 @@ public class JwtFilter extends PassThruFilter {
 
     @Nullable
     protected DecodedJWTValidator getValidator(ServletRequest request) {
-        if (MapUtils.isEmpty(this.decodedJWTValidationPaths)) {
+        if (CollectionUtils.isEmpty(this.decodedJWTValidationPaths)) {
             return null;
         }
 

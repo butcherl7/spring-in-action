@@ -25,8 +25,8 @@ public class RedisConfig {
         ObjectMapper mapper = DEFAULT_OBJECT_MAPPER.copy();
         mapper.activateDefaultTyping(mapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
 
-        final StringRedisSerializer keySerializer = new StringRedisSerializer();
-        final GenericJackson2JsonRedisSerializer redisSerializer = new GenericJackson2JsonRedisSerializer(mapper);
+        final var keySerializer = new StringRedisSerializer();
+        final var redisSerializer = new GenericJackson2JsonRedisSerializer(mapper);
 
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);

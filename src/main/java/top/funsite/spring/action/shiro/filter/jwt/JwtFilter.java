@@ -21,13 +21,13 @@ import java.util.Map;
 @Slf4j
 public class JwtFilter extends PassThruFilter {
 
-    protected Map<String, DecodedJWTValidator> decodedJWTValidationPaths = new LinkedHashMap<>();
+    protected Map<String, DecodedJWTValidator> validatorsPaths = new LinkedHashMap<>();
 
     public JwtFilter() {
     }
 
-    public JwtFilter(Map<String, DecodedJWTValidator> decodedJWTValidationPaths) {
-        this.decodedJWTValidationPaths = decodedJWTValidationPaths;
+    public JwtFilter(Map<String, DecodedJWTValidator> validatorsPaths) {
+        this.validatorsPaths = validatorsPaths;
     }
 
     @Override
@@ -53,13 +53,13 @@ public class JwtFilter extends PassThruFilter {
 
     @Nullable
     protected DecodedJWTValidator getValidator(ServletRequest request) {
-        if (CollectionUtils.isEmpty(this.decodedJWTValidationPaths)) {
+        if (CollectionUtils.isEmpty(this.validatorsPaths)) {
             return null;
         }
 
-        for (String path : this.decodedJWTValidationPaths.keySet()) {
+        for (String path : this.validatorsPaths.keySet()) {
             if (pathsMatch(path, request)) {
-                return this.decodedJWTValidationPaths.get(path);
+                return this.validatorsPaths.get(path);
             }
         }
         return null;

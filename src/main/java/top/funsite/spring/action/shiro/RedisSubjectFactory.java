@@ -31,11 +31,11 @@ public class RedisSubjectFactory extends DefaultWebSubjectFactory {
         PrincipalCollection principals = null;
         boolean timeout = false;
 
-        if (session instanceof RedisSession) {
+        if (session instanceof RedisSession redisSession) {
             UserDTO userDTO = (UserDTO) session.getAttribute(RedisSession.Key.user);
             String realmName = (String) session.getAttribute(RedisSession.Key.realmName);
             principals = new SimplePrincipalCollection(userDTO, realmName);
-            timeout = ((RedisSession) session).isTimeout();
+            timeout = redisSession.isTimeout();
         } else {
             AuthenticationInfo authInfo = wsc.getAuthenticationInfo();
             if (authInfo != null) {

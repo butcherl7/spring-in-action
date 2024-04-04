@@ -117,6 +117,9 @@ public class ShiroConfig {
     @Bean
     public DefaultWebSecurityManager securityManager(Realm realm, RedisTemplate<String, Object> redisTemplate) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        /*ModularRealmAuthenticator authenticator = new ModularRealmAuthenticator();
+        authenticator.setAuthenticationStrategy(new AtLeastOneSuccessfulStrategy());
+        securityManager.setAuthenticator(authenticator);*/
         securityManager.setSessionManager(new RedisSessionManager(redisTemplate, keySeparator));
         securityManager.setSubjectFactory(new RedisSubjectFactory());
         securityManager.setSubjectDAO(new RedisSubjectDAO());

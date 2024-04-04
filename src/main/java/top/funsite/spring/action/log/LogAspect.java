@@ -20,7 +20,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import top.funsite.spring.action.entity.LogEntity;
-import top.funsite.spring.action.log.annotation.RequestLog;
+import top.funsite.spring.action.log.annotation.ApiLog;
 import top.funsite.spring.action.log.event.LogEvent;
 
 import java.lang.reflect.Method;
@@ -59,7 +59,7 @@ public class LogAspect {
     @Resource
     private ApplicationContext applicationContext;
 
-    @Pointcut("@annotation(top.funsite.spring.action.log.annotation.RequestLog)")
+    @Pointcut("@annotation(top.funsite.spring.action.log.annotation.ApiLog)")
     public void pointCut() {
     }
 
@@ -70,9 +70,9 @@ public class LogAspect {
         try {
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             Method method = signature.getMethod();
-            RequestLog requestLog = method.getAnnotation(RequestLog.class);
+            ApiLog apiLog = method.getAnnotation(ApiLog.class);
 
-            if (requestLog == null) {
+            if (apiLog == null) {
                 return joinPoint.proceed();
             }
 
@@ -80,12 +80,12 @@ public class LogAspect {
 
             logEntity = new LogEntity();
             logEntity.setError(false);
-            logEntity.setName(requestLog.name());
+            logEntity.setName(apiLog.name());
             logEntity.setMethodName(methodName);
             logEntity.setRequestTime(LocalDateTime.now());
 
             // log request parameter
-            if (requestLog.logRequest()) {
+            if (apiLog.logRequest()) {
                 Map<String, Object> parameterMap = new HashMap<>(16);
 
                 Parameter[] parameters = method.getParameters();
@@ -118,9 +118,9 @@ public class LogAspect {
                 logEntity.setRequestURI(request.getRequestURI());
 
                 // log headers
-                if (requestLog.headers() != null) {
+                if (apiLog.headers() != null) {
                     Map<String, Object> map = new HashMap<>(16);
-                    for (String name : requestLog.headers()) {
+                    for (String name : apiLog.headers()) {
                         List<String> headers = new ArrayList<>();
                         Enumeration<String> enumeration = request.getHeaders(name);
                         while (enumeration.hasMoreElements()) {
@@ -145,7 +145,7 @@ public class LogAspect {
             Object proceed = joinPoint.proceed();
 
             // log response result
-            if (requestLog.logResponse()) {
+            if (apiLog.logResponse()) {
                 logEntity.setResult(toJson(proceed));
             }
 

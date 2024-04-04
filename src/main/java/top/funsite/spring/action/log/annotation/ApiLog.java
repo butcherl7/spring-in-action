@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RequestLog {
+public @interface ApiLog {
 
     /**
      * 接口在日志记录的名称。

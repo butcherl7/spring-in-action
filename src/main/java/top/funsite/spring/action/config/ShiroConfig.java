@@ -7,6 +7,7 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.realm.Realm;
+import org.apache.shiro.spring.boot.autoconfigure.ShiroAutoConfiguration;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.AbstractShiroWebFilterConfiguration;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
@@ -95,6 +96,13 @@ public class ShiroConfig {
         return proxyCreator;
     }
 
+    /**
+     * 默认的 Realm，Spring 环境下必须要有一个 Realm Bean.
+     *
+     * @param userService UserService
+     * @return DatabaseRealm
+     * @see ShiroAutoConfiguration
+     */
     @Bean
     public Realm realm(UserService userService) {
         {

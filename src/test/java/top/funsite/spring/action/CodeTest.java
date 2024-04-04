@@ -1,6 +1,9 @@
 package top.funsite.spring.action;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.Permission;
+import org.apache.shiro.authz.permission.AllPermission;
+import org.apache.shiro.authz.permission.WildcardPermission;
 import org.junit.jupiter.api.Test;
 
 import java.text.MessageFormat;
@@ -40,5 +43,13 @@ public class CodeTest {
         String string = resourceBundle.getString("login.account.locked");
         String formatted = MessageFormat.format(string, "10");
         System.out.println(formatted);
+    }
+
+    @Test
+    void t() {
+        Permission allPermission = new AllPermission();
+        Permission permission = new WildcardPermission("food:bread:*");
+        boolean b = allPermission.implies(new WildcardPermission("food:*:make"));
+        System.out.println(b);
     }
 }

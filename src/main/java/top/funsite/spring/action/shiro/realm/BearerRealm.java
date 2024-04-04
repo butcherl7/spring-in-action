@@ -15,8 +15,8 @@ public class BearerRealm extends AbstractRealm {
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authToken) throws AuthenticationException {
-        BearerToken uToken = (BearerToken) authToken;
-        String token = uToken.getToken();
+        BearerToken bearer = (BearerToken) authToken;
+        String token = bearer.getToken();
         return new SimpleAuthenticationInfo(token, token, getName());
     }
 

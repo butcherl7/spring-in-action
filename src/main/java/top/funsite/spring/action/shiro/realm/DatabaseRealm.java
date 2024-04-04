@@ -24,8 +24,10 @@ public class DatabaseRealm extends AbstractRealm {
     }
 
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        User user = userService.getByUsername((String) token.getPrincipal());
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authToken) throws AuthenticationException {
+        UsernamePasswordToken upToken = (UsernamePasswordToken) authToken;
+
+        User user = userService.getByUsername(upToken.getUsername());
 
         if (user == null) {
             throw new UnknownAccountException();

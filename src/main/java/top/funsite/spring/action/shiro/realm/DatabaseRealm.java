@@ -55,6 +55,8 @@ public class DatabaseRealm extends AbstractRealm {
         UserDTO userDTO = (UserDTO) principals.getPrimaryPrincipal();
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(userDTO.getRoles());
         info.setStringPermissions(userDTO.getPermissions());
+        // if admin
+        // info.setObjectPermissions(Collections.singleton(new AllPermission()));
         return info;
     }
 

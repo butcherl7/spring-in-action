@@ -1,6 +1,5 @@
 package top.funsite.spring.action.config;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.*;
@@ -64,17 +63,17 @@ public class ControllerAdviceConfig {
      * @see UnauthenticatedException
      */
     @ExceptionHandler(AuthorizationException.class)
-    public Result<Void> handleAuthorizationException(AuthorizationException e, HttpServletRequest request, HttpServletResponse response) {
+    public Result<Void> handleAuthorizationException(AuthorizationException e, HttpServletResponse response) {
         ServiceStatus status;
         String message;
         if (e instanceof UnauthorizedException) {
-            status = ServiceStatus.FORBIDDEN;
+            status = ServiceStatus.UNAUTHORIZED;
             message = MessageConstant.PermissionDenied;
         } else {
             status = ServiceStatus.UNAUTHORIZED;
             message = MessageConstant.AccessDenied;
         }
-        response.setStatus(status.value());
+        response.setStatus(status.status());
         return Result.fail(status, message);
     }
 
@@ -90,10 +89,8 @@ public class ControllerAdviceConfig {
      * 最后捕获所有未知的异常。
      */
     @ExceptionHandler(Exception.class)
-    public Result<Void> handleException(Exception e, HttpServletResponse response) {
+    public Result<Void> handleException(Exception e) {
         log.error(e.getMessage(), e);
-        ServiceStatus status = ServiceStatus.ERROR;
-        response.setStatus(status.value());
-        return Result.fail(status);
+        return Result.fail(ServiceStatus.ERROR, "Internal Server Error");
     }
 }

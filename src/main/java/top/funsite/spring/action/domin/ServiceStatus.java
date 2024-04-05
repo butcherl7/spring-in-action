@@ -7,8 +7,8 @@ package top.funsite.spring.action.domin;
  *         <tr><th>Code</th><th>Comment</th></tr>
  *     </thead>
  *     <tbody>
- *         <tr><td>0</td><td>OK</td></tr>
- *         <tr><td>1</td><td>错误（无法判断具体的错误类型）</td></tr>
+ *         <tr><td>200</td><td>OK</td></tr>
+ *         <tr><td>500</td><td>错误（无法判断具体的错误类型）</td></tr>
  *         <tr><td>100xx</td><td>登录错误</td></tr>
  *         <tr><td>101xx</td><td>通用错误</td></tr>
  *     </tbody>
@@ -16,48 +16,45 @@ package top.funsite.spring.action.domin;
  */
 public enum ServiceStatus {
 
-    /// 基础状态码与 HTTP 响应状态码相同，方便设置响应状态码。
+    OK(200),
 
-    OK(200, "OK"),
+    /**
+     * 未通过身份验证。
+     */
+    UNAUTHENTICATED(401),
 
-    UNAUTHORIZED(401, "Unauthorized"),
+    /**
+     * 没有执行请求或访问资源的权限。
+     */
+    UNAUTHORIZED(403),
 
-    FORBIDDEN(403, "Forbidden"),
-
-    ERROR(500, "Internal Server Error"),
+    ERROR(500),
 
     /// 100xx
 
-    AUTHENTICATION_ERROR(10000, "Authentication Error"),
+    AUTHENTICATION_ERROR(10000),
 
-    UNKNOWN_ACCOUNT(10001, "Unknown Account"),
+    UNKNOWN_ACCOUNT(10001),
 
-    INCORRECT_CREDENTIALS(10002, "Incorrect Credentials"),
+    INCORRECT_CREDENTIALS(10002),
 
-    ACCOUNT_DISABLED(10003, "Account Disabled"),
+    ACCOUNT_DISABLED(10003),
 
-    ACCOUNT_LOCKED(10004, "Account Locked"),
+    ACCOUNT_LOCKED(10004),
 
-    LOGIN_TIMEOUT(10005, "Login Timeout"),
+    LOGIN_TIMEOUT(10005),
 
     /// 101xx
 
-    BAD_PARAMETER(10101, "Bad Parameter");
+    BAD_PARAMETER(10101);
 
-    private final int value;
+    private final int status;
 
-    private final String reasonPhrase;
-
-    ServiceStatus(int value, String reasonPhrase) {
-        this.value = value;
-        this.reasonPhrase = reasonPhrase;
+    ServiceStatus(int status) {
+        this.status = status;
     }
 
-    public int value() {
-        return this.value;
-    }
-
-    public String reasonPhrase() {
-        return this.reasonPhrase;
+    public int status() {
+        return this.status;
     }
 }

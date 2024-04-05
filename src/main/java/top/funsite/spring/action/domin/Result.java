@@ -1,68 +1,53 @@
 package top.funsite.spring.action.domin;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Value;
 
-import java.util.Objects;
-
-@Getter
-@Setter
-@JsonPropertyOrder({"ok", "msg", "code", "data", "timestamp"})
+@Value
+@JsonPropertyOrder({"timestamp", "status", "msg", "data",})
 public class Result<T> {
 
     private static final ServiceStatus OK = ServiceStatus.OK;
     private static final ServiceStatus ERROR = ServiceStatus.ERROR;
 
     /**
-     * 表示业务处理是否成功。
-     */
-    private boolean ok;
-
-    /**
      * 状态码。
      */
-    private int code;
+    int status;
 
     /**
      * 提示信息。
      */
-    private String msg;
+    String message;
 
     /**
      * 业务数据。
      */
-    private T data; // @JsonInclude(JsonInclude.Include.NON_NULL) // null 不序列化
+    T data; // @JsonInclude(JsonInclude.Include.NON_NULL) // null 不序列化
 
     /**
      * 响应时间戳。
      */
-    private long timestamp;
+    long timestamp;
 
     /**
      * 响应业务成功。
      *
      * @param data data.
-     * @return ok Result with data.
+     * @return OK Result with data.
      */
     public static <T> Result<T> ok(T data) {
-        Result<T> result = new Result<T>();
-        result.setOk(true);
-        result.setData(data);
-        result.setCode(OK.value());
-        result.setMsg(OK.reasonPhrase());
-        result.setTimestamp(System.currentTimeMillis());
-        return result;
+        return new Result<>(OK.status(), null, data);
     }
 
     /**
-     * 响应业务失败，使用 {@link ServiceStatus#reasonPhrase()} 作为错误消息。
+     * 响应业务失败。
      *
-     * @param status ServiceStatus.
-     * @return fail Result.
+     * @param message msg，错误消息。
+     * @return failed Result.
      */
-    public static Result<Void> fail(ServiceStatus status) {
-        return fail(status, status.reasonPhrase());
+    public static Result<Void> fail(String message) {
+        return Result.fail(ERROR, message);
     }
 
     /**
@@ -70,17 +55,16 @@ public class Result<T> {
      *
      * @param status  ServiceStatus.
      * @param message msg，错误消息。
-     * @return fail Result.
+     * @return failed Result.
      */
     public static Result<Void> fail(ServiceStatus status, String message) {
-        Objects.requireNonNull(message, "fail message must not be null");
-
-        Result<Void> result = new Result<>();
-        result.setOk(false);
-        result.setMsg(message);
-        result.setCode(status.value());
-        result.setTimestamp(System.currentTimeMillis());
-        return result;
+        return new Result<>(status.status(), message, null);
     }
 
+    public Result(int status, String message, T data) {
+        this.status = status;
+        this.message = message;
+        this.data = data;
+        this.timestamp = System.currentTimeMillis();
+    }
 }

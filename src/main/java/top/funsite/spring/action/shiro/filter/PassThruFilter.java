@@ -88,7 +88,7 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
                 // 登录超时就主动退出登录。
                 subject.logout();
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                JSONUtils.writeValue(response, Result.fail(LOGIN_TIMEOUT));
+                JSONUtils.writeValue(response, Result.fail(LOGIN_TIMEOUT, ""));
                 return false;
             }
         }
@@ -97,15 +97,22 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
     }
 
     protected boolean onAccessDenied(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return responseDenied(response, ServiceStatus.UNAUTHORIZED, MessageConstant.AccessDenied);
+        Result<Void> result = Result.fail(ServiceStatus.UNAUTHENTICATED, MessageConstant.AccessDenied);
+        return responseDenied(response, HttpServletResponse.SC_UNAUTHORIZED, result);
     }
 
-    protected boolean responseDenied(HttpServletResponse response, ServiceStatus status, String message) {
-        response.setStatus(status.value());
+    /**
+     * 向客户端响应错误。
+     *
+     * @param response   HttpServletResponse
+     * @param statusCode 使用指定的状态代码向客户端发送错误响应并清除缓冲区。例如，状态代码 {@link HttpServletResponse#SC_UNAUTHORIZED} 或 {@link HttpServletResponse#SC_FORBIDDEN}。
+     * @param result     failed Result
+     * @return false
+     */
+    protected boolean responseDenied(HttpServletResponse response, int statusCode, Result<?> result) {
+        response.setStatus(statusCode);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
-        Result<Void> entity = Result.fail(status, message);
-        JSONUtils.writeValue(response, entity);
+        JSONUtils.writeValue(response, result);
         return false;
     }
 }

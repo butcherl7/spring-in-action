@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.Nullable;
+import top.funsite.spring.action.domin.Result;
 import top.funsite.spring.action.domin.ServiceStatus;
 import top.funsite.spring.action.shiro.filter.PassThruFilter;
 
@@ -46,7 +47,7 @@ public class JwtFilter extends PassThruFilter {
             }
         } catch (JWTVerificationException e) {
             log.error(e.getMessage(), e);
-            return super.responseDenied(response, ServiceStatus.UNAUTHORIZED, e.getMessage());
+            return super.responseDenied(response, HttpServletResponse.SC_UNAUTHORIZED, Result.fail(ServiceStatus.UNAUTHENTICATED, e.getMessage()));
         }
         return true;
     }

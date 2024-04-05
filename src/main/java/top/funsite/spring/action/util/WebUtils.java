@@ -15,7 +15,7 @@ public class WebUtils {
     }
 
     public static String getRequestIp(HttpServletRequest request) {
-        Objects.requireNonNull(request, "HttpServletRequest 不能为空");
+        Objects.requireNonNull(request, "request must not be null");
 
         final String unknown = "UNKNOWN";
         final String ipv4Localhost = "127.0.0.1";

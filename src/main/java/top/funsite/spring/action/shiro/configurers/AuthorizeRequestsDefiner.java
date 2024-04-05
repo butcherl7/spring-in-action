@@ -8,7 +8,7 @@ import org.apache.shiro.web.filter.mgt.FilterChainManager;
 import org.jetbrains.annotations.ApiStatus;
 import top.funsite.spring.action.shiro.filter.AuthorizeFilter;
 import top.funsite.spring.action.shiro.filter.RememberedFilter;
-import top.funsite.spring.action.shiro.filter.jwt.DecodedJWTValidator;
+import top.funsite.spring.action.shiro.filter.jwt.DecodedJWTAuthenticator;
 import top.funsite.spring.action.shiro.filter.jwt.JwtFilter;
 
 import java.util.*;
@@ -90,10 +90,10 @@ public class AuthorizeRequestsDefiner {
      * @see JwtFilter
      */
     @ApiStatus.Experimental
-    public Map<String, DecodedJWTValidator> getDefinedDecodedJWTValidator() {
-        Map<String, DecodedJWTValidator> map = new LinkedHashMap<>();
+    public Map<String, DecodedJWTAuthenticator> getDefinedDecodedJWTValidator() {
+        Map<String, DecodedJWTAuthenticator> map = new LinkedHashMap<>();
         for (RequestMatcherRegistry registry : requestMatcherRegistries) {
-            DecodedJWTValidator validator = registry.decodedJWTValidator;
+            DecodedJWTAuthenticator validator = registry.decodedJWTAuthenticator;
             if (validator != null) {
                 for (String antPattern : registry.antPatterns) {
                     map.put(antPattern, validator);
@@ -124,7 +124,7 @@ public class AuthorizeRequestsDefiner {
          */
         private Logical logical = Logical.AND;
 
-        private DecodedJWTValidator decodedJWTValidator;
+        private DecodedJWTAuthenticator decodedJWTAuthenticator;
 
         /**
          * 通过 JWT 的验证才能访问 URL.
@@ -140,9 +140,9 @@ public class AuthorizeRequestsDefiner {
          *
          * @return AuthorizeRequestsDefiner
          */
-        public AuthorizeRequestsDefiner jwt(DecodedJWTValidator decodedJWTValidator) {
+        public AuthorizeRequestsDefiner jwt(DecodedJWTAuthenticator decodedJWTAuthenticator) {
             this.filter = NamedFilter.jwt;
-            this.decodedJWTValidator = decodedJWTValidator;
+            this.decodedJWTAuthenticator = decodedJWTAuthenticator;
             return authorizeRequestsDefiner;
         }
 

@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
  * @see JwtFilter
  */
 @FunctionalInterface
-public interface DecodedJWTValidator {
+public interface DecodedJWTAuthenticator {
 
     /**
      * 验证解码过的 JWT 令牌。

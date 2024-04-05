@@ -22,13 +22,13 @@ import java.util.Map;
 @Slf4j
 public class JwtFilter extends PassThruFilter {
 
-    protected Map<String, DecodedJWTValidator> validatorsPaths = new LinkedHashMap<>();
+    protected Map<String, DecodedJWTAuthenticator> authenticatorPaths = new LinkedHashMap<>();
 
     public JwtFilter() {
     }
 
-    public JwtFilter(Map<String, DecodedJWTValidator> validatorsPaths) {
-        this.validatorsPaths = validatorsPaths;
+    public JwtFilter(Map<String, DecodedJWTAuthenticator> authenticatorPaths) {
+        this.authenticatorPaths = authenticatorPaths;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class JwtFilter extends PassThruFilter {
                     .build();
             DecodedJWT decodedJWT = verifier.verify(token);
 
-            DecodedJWTValidator validator = getValidator(request);
+            DecodedJWTAuthenticator validator = getValidator(request);
 
             if (validator != null) {
                 return validator.validate(request, response, decodedJWT);
@@ -53,14 +53,14 @@ public class JwtFilter extends PassThruFilter {
     }
 
     @Nullable
-    protected DecodedJWTValidator getValidator(ServletRequest request) {
-        if (CollectionUtils.isEmpty(this.validatorsPaths)) {
+    protected DecodedJWTAuthenticator getValidator(ServletRequest request) {
+        if (CollectionUtils.isEmpty(this.authenticatorPaths)) {
             return null;
         }
 
-        for (String path : this.validatorsPaths.keySet()) {
+        for (String path : this.authenticatorPaths.keySet()) {
             if (pathsMatch(path, request)) {
-                return this.validatorsPaths.get(path);
+                return this.authenticatorPaths.get(path);
             }
         }
         return null;

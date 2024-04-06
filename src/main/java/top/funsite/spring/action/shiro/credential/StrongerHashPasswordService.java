@@ -28,6 +28,7 @@ public final class StrongerHashPasswordService extends DefaultPasswordService {
         Map<String, String> formatClassNames = HASH_FORMAT_FACTORY.getFormatClassNames();
         String formatName = NoIdentifierFormat.class.getName();
 
+        // 为这些加密算法指定格式化程序。
         for (Algorithm algorithm : Algorithm.values()) {
             formatClassNames.put(algorithm.getAlgorithmName(), formatName);
         }

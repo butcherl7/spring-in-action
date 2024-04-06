@@ -13,14 +13,11 @@ import org.apache.shiro.web.servlet.AbstractShiroFilter;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMethod;
 import top.funsite.spring.action.domin.Result;
-import top.funsite.spring.action.domin.ServiceStatus;
 import top.funsite.spring.action.shiro.MessageConstant;
 import top.funsite.spring.action.shiro.session.RedisSession;
 import top.funsite.spring.action.util.JSONUtils;
 
 import java.nio.charset.StandardCharsets;
-
-import static top.funsite.spring.action.domin.ServiceStatus.LOGIN_TIMEOUT;
 
 /**
  * 重写关于身份验证和访问被拒绝的行为。
@@ -88,7 +85,7 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
                 // 登录超时就主动退出登录。
                 subject.logout();
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                JSONUtils.writeValue(response, Result.fail(LOGIN_TIMEOUT, ""));
+                JSONUtils.writeValue(response, Result.fail("login timeout"));
                 return false;
             }
         }
@@ -97,7 +94,7 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
     }
 
     protected boolean onAccessDenied(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Result<Void> result = Result.fail(ServiceStatus.UNAUTHENTICATED, MessageConstant.AccessDenied);
+        Result<Void> result = Result.fail(MessageConstant.AccessDenied);
         return responseDenied(response, HttpServletResponse.SC_UNAUTHORIZED, result);
     }
 

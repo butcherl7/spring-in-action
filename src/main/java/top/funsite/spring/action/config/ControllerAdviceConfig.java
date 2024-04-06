@@ -9,7 +9,6 @@ import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import top.funsite.spring.action.domin.Result;
-import top.funsite.spring.action.domin.ServiceStatus;
 import top.funsite.spring.action.exception.ServiceException;
 import top.funsite.spring.action.shiro.MessageConstant;
 
@@ -28,24 +27,19 @@ public class ControllerAdviceConfig {
     @ExceptionHandler(AuthenticationException.class)
     public Result<Void> handleAuthenticationException(AuthenticationException e) {
         String message = e.getMessage();
-        ServiceStatus status = ServiceStatus.AUTHENTICATION_ERROR;
         if (message == null) {
             switch (e) {
                 case UnknownAccountException ignored -> {
                     message = "账号不存在";
-                    status = ServiceStatus.UNKNOWN_ACCOUNT;
                 }
                 case LockedAccountException ignored -> {
                     message = "账号被锁定";
-                    status = ServiceStatus.ACCOUNT_LOCKED;
                 }
                 case DisabledAccountException ignored -> {
                     message = "账号被禁用";
-                    status = ServiceStatus.ACCOUNT_DISABLED;
                 }
                 case IncorrectCredentialsException ignored -> {
                     message = "密码错误";
-                    status = ServiceStatus.INCORRECT_CREDENTIALS;
                 }
                 default -> {
                     log.warn(e.getMessage(), e);
@@ -53,7 +47,7 @@ public class ControllerAdviceConfig {
                 }
             }
         }
-        return Result.fail(status, message);
+        return Result.fail(message);
     }
 
     /**
@@ -64,17 +58,17 @@ public class ControllerAdviceConfig {
      */
     @ExceptionHandler(AuthorizationException.class)
     public Result<Void> handleAuthorizationException(AuthorizationException e, HttpServletResponse response) {
-        ServiceStatus status;
+        int status;
         String message;
         if (e instanceof UnauthorizedException) {
-            status = ServiceStatus.UNAUTHORIZED;
+            status = 403;
             message = MessageConstant.PermissionDenied;
         } else {
-            status = ServiceStatus.UNAUTHORIZED;
+            status = 401;
             message = MessageConstant.AccessDenied;
         }
-        response.setStatus(status.status());
-        return Result.fail(status, message);
+        response.setStatus(status);
+        return Result.fail(message);
     }
 
     /**
@@ -82,7 +76,7 @@ public class ControllerAdviceConfig {
      */
     @ExceptionHandler(ServiceException.class)
     public Result<Void> handleException(ServiceException e) {
-        return Result.fail(e.getStatus(), e.getMessage());
+        return Result.fail(e.getMessage());
     }
 
     /**
@@ -91,6 +85,6 @@ public class ControllerAdviceConfig {
     @ExceptionHandler(Exception.class)
     public Result<Void> handleException(Exception e) {
         log.error(e.getMessage(), e);
-        return Result.fail(ServiceStatus.ERROR, "Internal Server Error");
+        return Result.fail("Internal Server Error");
     }
 }

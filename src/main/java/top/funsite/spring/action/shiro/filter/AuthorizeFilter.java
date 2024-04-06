@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.util.CollectionUtils;
 import top.funsite.spring.action.domin.Result;
-import top.funsite.spring.action.domin.ServiceStatus;
 import top.funsite.spring.action.shiro.MessageConstant;
 
 import java.util.LinkedHashMap;
@@ -27,7 +26,7 @@ public class AuthorizeFilter extends PassThruFilter {
 
     @Override
     protected boolean onAccessDenied(HttpServletRequest request, HttpServletResponse response) {
-        return responseDenied(response, HttpServletResponse.SC_FORBIDDEN, Result.fail(ServiceStatus.UNAUTHORIZED, MessageConstant.PermissionDenied));
+        return responseDenied(response, HttpServletResponse.SC_FORBIDDEN, Result.fail(MessageConstant.PermissionDenied));
     }
 
     /**

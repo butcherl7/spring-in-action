@@ -78,7 +78,6 @@ public class ShiroConfig {
      * @see <a href="https://blog.csdn.net/m0_37890289/article/details/94014359">shiro使用注解鉴权时一直404</a>
      */
     @Bean
-    // @ConditionalOnMissingBean
     public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator() {
         DefaultAdvisorAutoProxyCreator proxyCreator = new DefaultAdvisorAutoProxyCreator();
         // proxyCreator.setProxyTargetClass(true);
@@ -150,7 +149,7 @@ public class ShiroConfig {
      * {@code put("/access/role", "authc, roles[ROLE_A,ROLE_B]")}<br />
      * {@code put("/access/perm", "authc, perms[doc:read]")}
      * </p>
-     * "org.apache.catalina.core.StandardHostValve.java:166 status(request, response);"
+     * <p>{@code org.apache.catalina.core.StandardHostValve.java:166?#status(request, response)}</p>
      *
      * @see DefaultShiroFilterChainDefinition
      * @see <a href="https://www.jianshu.com/p/0bad726d0454">关于springMvc错误重定向/error</a>

@@ -4,16 +4,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Value;
 
 @Value
-@JsonPropertyOrder({"timestamp", "status", "msg", "data",})
+@JsonPropertyOrder({"timestamp", "error", "status", "msg", "data",})
 public class Result<T> {
 
-    private static final ServiceStatus OK = ServiceStatus.OK;
-    private static final ServiceStatus ERROR = ServiceStatus.ERROR;
-
-    /**
-     * 状态码。
-     */
-    int status;
+    boolean error;
 
     /**
      * 提示信息。
@@ -37,7 +31,7 @@ public class Result<T> {
      * @return OK Result with data.
      */
     public static <T> Result<T> ok(T data) {
-        return new Result<>(OK.status(), null, data);
+        return new Result<>(false, "OK", data);
     }
 
     /**
@@ -47,22 +41,11 @@ public class Result<T> {
      * @return failed Result.
      */
     public static Result<Void> fail(String message) {
-        return Result.fail(ERROR, message);
+        return new Result<>(true, message, null);
     }
 
-    /**
-     * 响应业务失败。
-     *
-     * @param status  ServiceStatus.
-     * @param message msg，错误消息。
-     * @return failed Result.
-     */
-    public static Result<Void> fail(ServiceStatus status, String message) {
-        return new Result<>(status.status(), message, null);
-    }
-
-    public Result(int status, String message, T data) {
-        this.status = status;
+    public Result(boolean error, String message, T data) {
+        this.error = error;
         this.message = message;
         this.data = data;
         this.timestamp = System.currentTimeMillis();

@@ -138,6 +138,7 @@ public class AuthorizeRequestsDefiner {
         /**
          * 通过 JWT 的验证才能访问 URL.
          *
+         * @param decodedJWTAuthenticator 对已经正确解码过的 JWT 进行进一步验证的回调函数。
          * @return AuthorizeRequestsDefiner
          */
         public AuthorizeRequestsDefiner jwt(DecodedJWTAuthenticator decodedJWTAuthenticator) {
@@ -228,7 +229,7 @@ public class AuthorizeRequestsDefiner {
         }
 
         /**
-         * 指定任何人都允许访问 URL.
+         * 任何人都允许访问 URL.
          *
          * @return AuthorizeRequestsDefiner
          */

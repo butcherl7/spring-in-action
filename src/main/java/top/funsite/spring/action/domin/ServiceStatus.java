@@ -14,6 +14,7 @@ package top.funsite.spring.action.domin;
  *     </tbody>
  * </table>
  */
+@Deprecated
 public enum ServiceStatus {
 
     OK(200),

@@ -169,11 +169,16 @@ public class RedisSession implements ValidatingSession {
      * @return {@code True} 则表示会话已超时。
      */
     public boolean isTimeout() {
+        // 没有启用 RememberMe 永远返回 false
+        if (!ShiroConfig.getRememberMe().isEnabled()) {
+            return false;
+        }
+
         if (timeout != null) {
             return timeout;
         }
 
-        long duration = ShiroConfig.getTimeout().getSeconds() * 1000L;
+        long duration = ShiroConfig.getRememberMe().getTimeout().getSeconds() * 1000L;
 
         if (duration > 0) {
             long currentTime = System.currentTimeMillis();
@@ -186,7 +191,6 @@ public class RedisSession implements ValidatingSession {
                 log.debug("LastAccessTime: {}", MILLI_TIME_FORMAT.format(getLastAccessTime()));
                 log.debug("Diff          : {} ms.", diff);
             }
-
             timeout = diff > duration;
         } else {
             timeout = false;
@@ -218,7 +222,7 @@ public class RedisSession implements ValidatingSession {
     private static String assertString(Object key) {
         if (!(key instanceof String)) {
             String msg = "RedisSession based implementations of the Shiro Session interface requires attribute keys " +
-                    "to be String objects. The RedisSession class does not support anything other than String keys.";
+                         "to be String objects. The RedisSession class does not support anything other than String keys.";
             throw new IllegalArgumentException(msg);
         }
         return (String) key;

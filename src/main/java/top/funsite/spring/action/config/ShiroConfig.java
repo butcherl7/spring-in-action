@@ -3,6 +3,7 @@ package top.funsite.spring.action.config;
 import jakarta.annotation.Resource;
 import jakarta.servlet.Filter;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -52,32 +53,21 @@ public class ShiroConfig {
     @Resource
     private ShiroProperties shiroProperties;
 
-    /**
-     * 登录接口地址，默认为 {@code /login}
-     */
+    @Getter
+    private static RememberMe rememberMe;
     @Getter
     private static String loginUrl;
-
-    /**
-     * 存储在 redis 中的 session 数据的分隔符，默认为 ""。
-     */
-
-    @Getter
-    private static String keySeparator;
-
-    /**
-     * 会话超时时间（默认为 30 分钟）。
-     * <p>配置为 0 或小于 0 时视为无超时时间。</p>
-     */
     @Getter
     private static Duration timeout;
-
-    /**
-     * 登录时选择了 {@code rememberMe} 后的 session 保存时间，默认 1 天。
-     * <p>可以配置为 0，但若配置小于 0 时仍视为 0.</p>
-     */
     @Getter
-    private static Duration rememberTime;
+    private static String sessionKeySeparator;
+
+    @Getter
+    @Setter
+    public static class RememberMe {
+        private boolean enabled;
+        private Duration timeout;
+    }
 
     /**
      * 解决 Shiro 权限注解不生效的问题。
@@ -106,10 +96,15 @@ public class ShiroConfig {
     @Bean
     public Realm realm(UserService userService) {
         {
-            loginUrl = shiroProperties.getLoginUrl();
-            keySeparator = shiroProperties.getSessionKeySeparator();
+            var rememberProps = shiroProperties.getRemember();
+            var remember = new RememberMe();
+            remember.setEnabled(rememberProps.isEnabled());
+            remember.setTimeout(rememberProps.getTimeout());
+
+            rememberMe = remember;
             timeout = shiroProperties.getTimeout();
-            rememberTime = shiroProperties.getRememberTime();
+            loginUrl = shiroProperties.getLoginUrl();
+            sessionKeySeparator = shiroProperties.getSessionKeySeparator();
         }
         return new DatabaseRealm(userService);
     }
@@ -120,7 +115,7 @@ public class ShiroConfig {
         /*ModularRealmAuthenticator authenticator = new ModularRealmAuthenticator();
         authenticator.setAuthenticationStrategy(new AtLeastOneSuccessfulStrategy());
         securityManager.setAuthenticator(authenticator);*/
-        securityManager.setSessionManager(new RedisSessionManager(redisTemplate, keySeparator));
+        securityManager.setSessionManager(new RedisSessionManager(redisTemplate, shiroProperties.getSessionKeySeparator()));
         securityManager.setSubjectFactory(new RedisSubjectFactory());
         securityManager.setSubjectDAO(new RedisSubjectDAO());
         securityManager.setRealm(realm);
@@ -130,8 +125,8 @@ public class ShiroConfig {
     @Bean
     public ShiroFilterFactoryBean shiroFilterFactoryBean(DefaultWebSecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+        shiroFilterFactoryBean.setLoginUrl(shiroProperties.getLoginUrl());
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        shiroFilterFactoryBean.setLoginUrl(loginUrl);
 
         AuthorizeRequestsDefiner definer = createRequestsDefiner();
         Map<String, String> authRequestMap = definer.getDefinedPath();

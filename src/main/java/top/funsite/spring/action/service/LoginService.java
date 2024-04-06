@@ -35,7 +35,7 @@ public class LoginService {
 
         Date date = new Date();
         String jsessionid = generateJsessionid();
-        String redisKey = ShiroConfig.getKeySeparator() + jsessionid;
+        String redisKey = ShiroConfig.getSessionKeySeparator() + jsessionid;
 
         String host = authToken instanceof HostAuthenticationToken ? ((HostAuthenticationToken) authToken).getHost() : "";
         boolean rememberMe = authToken instanceof RememberMeAuthenticationToken && ((RememberMeAuthenticationToken) authToken).isRememberMe();
@@ -50,11 +50,12 @@ public class LoginService {
         map.put(RedisSession.Key.realmName, subject.getPrincipals().getRealmNames().iterator().next());
         redisTemplate.opsForHash().putAll(redisKey, map);
 
-        long timeoutSeconds = ShiroConfig.getTimeout().getSeconds();
-        if (timeoutSeconds > 0) {
-            long rememberSeconds = rememberMe ? ShiroConfig.getRememberTime().getSeconds() : 0;
-            redisTemplate.expire(redisKey, Math.max(timeoutSeconds, rememberSeconds), TimeUnit.SECONDS);
+        long timeout = ShiroConfig.getTimeout().getSeconds();
+
+        if (ShiroConfig.getRememberMe().isEnabled()) {
+            timeout = Math.max(timeout, ShiroConfig.getRememberMe().getTimeout().getSeconds());
         }
+        redisTemplate.expire(redisKey, timeout, TimeUnit.SECONDS);
 
         return jsessionid;
     }

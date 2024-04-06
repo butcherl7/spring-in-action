@@ -1,4 +1,4 @@
-package top.funsite.spring.action.crypto;
+package top.funsite.spring.action;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.credential.DefaultPasswordService;

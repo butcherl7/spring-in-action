@@ -1,4 +1,4 @@
-package top.funsite.spring.action.crypto;
+package top.funsite.spring.action;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Slf4j
-public class JWTTest {
+public class JwtTest {
 
     /**
      * <ul>

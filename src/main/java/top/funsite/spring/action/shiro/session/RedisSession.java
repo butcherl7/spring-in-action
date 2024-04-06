@@ -165,10 +165,10 @@ public class RedisSession implements ValidatingSession {
     /**
      * 判断当前会话是否属于超时会话。
      *
-     * @return {@code True} 则表示会话已超时。
+     * @return {@code True} 表示会话已超时。
      */
     public boolean isTimeout() {
-        // 没有启用 RememberMe 永远返回 false
+        // 没有启用 RememberMe 则永远返回 false
         if (!ShiroConfig.getRememberMe().isEnabled()) {
             return false;
         }

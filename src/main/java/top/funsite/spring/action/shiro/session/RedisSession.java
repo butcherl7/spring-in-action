@@ -52,6 +52,20 @@ public class RedisSession implements ValidatingSession {
     );
 
     /**
+     * 禁止删除的键。
+     */
+    private static final List<String> PROHIBITED_REMOVED_KEYS = List.of(
+            Key.id,
+            Key.host,
+            Key.user,
+            Key.realmName,
+            Key.rememberMe,
+            Key.startTimestamp,
+            Key.lastAccessTime,
+            Key.lastRememberedAccessTime
+    );
+
+    /**
      * 构造函数。
      *
      * @param redisTemplate RedisTemplate
@@ -142,6 +156,9 @@ public class RedisSession implements ValidatingSession {
         Object o = null;
         try {
             String sKey = assertString(key);
+            if (PROHIBITED_REMOVED_KEYS.contains(sKey)) {
+                throw new InvalidSessionException(sKey + " cannot be removed.");
+            }
             boolean hasKey = hashOperations.hasKey(sessionKey, sKey);
             if (hasKey) {
                 o = hashOperations.get(sessionKey, sKey);

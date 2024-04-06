@@ -14,6 +14,7 @@ import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
 import org.apache.shiro.web.subject.WebSubjectContext;
 import top.funsite.spring.action.domin.UserDTO;
 import top.funsite.spring.action.shiro.session.RedisSession;
+import top.funsite.spring.action.shiro.session.RedisSession.Key;
 
 @Slf4j
 public class RedisSubjectFactory extends DefaultWebSubjectFactory {
@@ -31,10 +32,10 @@ public class RedisSubjectFactory extends DefaultWebSubjectFactory {
         PrincipalCollection principals = null;
         boolean timeout = false;
 
-        if (session instanceof RedisSession redisSession) {
-            UserDTO userDTO = (UserDTO) session.getAttribute(RedisSession.Key.user);
-            String realmName = (String) session.getAttribute(RedisSession.Key.realmName);
-            principals = new SimplePrincipalCollection(userDTO, realmName);
+        if (session instanceof RedisSession redisSession
+            && session.getAttribute(Key.user) instanceof UserDTO user
+            && session.getAttribute(Key.realmName) instanceof String realmName) {
+            principals = new SimplePrincipalCollection(user, realmName);
             timeout = redisSession.isTimeout();
         } else {
             AuthenticationInfo authInfo = wsc.getAuthenticationInfo();

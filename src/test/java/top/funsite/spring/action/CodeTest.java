@@ -9,8 +9,11 @@ import org.junit.jupiter.api.Test;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
+
+import static top.funsite.spring.action.util.DateUtils.SIMPLE_MILLI_FORMATTER;
 
 @Slf4j
 public class CodeTest {
@@ -51,5 +54,11 @@ public class CodeTest {
         Permission permission = new WildcardPermission("food:bread:*");
         boolean b = allPermission.implies(new WildcardPermission("food:*:make"));
         System.out.println(b);
+    }
+
+    @Test
+    void testDateFormat() {
+        Date date = new Date();
+        System.out.println(SIMPLE_MILLI_FORMATTER.format(date));
     }
 }

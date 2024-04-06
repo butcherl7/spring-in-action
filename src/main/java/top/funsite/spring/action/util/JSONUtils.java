@@ -13,11 +13,13 @@ import jakarta.servlet.ServletResponse;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+
+import static top.funsite.spring.action.util.DateUtils.DATE_TIME_FORMATTER;
+import static top.funsite.spring.action.util.DateUtils.SIMPLE_DATE_FORMATTER;
 
 public class JSONUtils {
 
@@ -34,18 +36,6 @@ public class JSONUtils {
      */
     public static final ObjectMapper DEFAULT_OBJECT_MAPPER = new ObjectMapper();
 
-    /**
-     * {@value}
-     */
-    public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
-
-    /**
-     * 默认的对 LocalDateTime 的格式化规则。
-     *
-     * @see #DATE_TIME_PATTERN
-     */
-    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
-
     static {
         JavaTimeModule javaTimeModule = new JavaTimeModule();
         // LocalDate LocalTime 和 LocalDateTime 的格式。
@@ -57,7 +47,7 @@ public class JSONUtils {
         javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DATE_TIME_FORMATTER));
 
         DEFAULT_OBJECT_MAPPER.registerModule(javaTimeModule);
-        DEFAULT_OBJECT_MAPPER.setDateFormat(new SimpleDateFormat(DATE_TIME_PATTERN));
+        DEFAULT_OBJECT_MAPPER.setDateFormat(SIMPLE_DATE_FORMATTER);
     }
 
     /**

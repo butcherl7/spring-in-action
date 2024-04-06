@@ -11,14 +11,13 @@ import org.springframework.data.redis.core.RedisTemplate;
 import top.funsite.spring.action.config.ShiroConfig;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import static top.funsite.spring.action.util.DateUtils.SIMPLE_MILLI_FORMATTER;
+
 @Slf4j
 public class RedisSession implements ValidatingSession {
-
-    protected static final SimpleDateFormat MILLI_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
 
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -181,14 +180,15 @@ public class RedisSession implements ValidatingSession {
         long duration = ShiroConfig.getRememberMe().getTimeout().getSeconds() * 1000L;
 
         if (duration > 0) {
-            long currentTime = System.currentTimeMillis();
-            long lastAccessTime = getLastAccessTime().getTime();
+            Date lastAccessDate = getLastAccessTime();
 
+            long lastAccessTime = lastAccessDate.getTime();
+            long currentTime = System.currentTimeMillis();
             long diff = currentTime - lastAccessTime;
 
             if (log.isDebugEnabled()) {
-                log.debug("CurrentTime   : {}", MILLI_TIME_FORMAT.format(new Date(currentTime)));
-                log.debug("LastAccessTime: {}", MILLI_TIME_FORMAT.format(getLastAccessTime()));
+                log.debug("CurrentTime   : {}", SIMPLE_MILLI_FORMATTER.format(new Date(currentTime)));
+                log.debug("LastAccessTime: {}", SIMPLE_MILLI_FORMATTER.format(lastAccessDate));
                 log.debug("Diff          : {} ms.", diff);
             }
             timeout = diff > duration;

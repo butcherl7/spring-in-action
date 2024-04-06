@@ -19,8 +19,9 @@ import top.funsite.spring.action.service.LoginService;
 import top.funsite.spring.action.shiro.session.RedisSession;
 import top.funsite.spring.action.util.WebUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static top.funsite.spring.action.util.DateUtils.SIMPLE_MILLI_FORMATTER;
 
 @Slf4j
 @RestController
@@ -49,16 +50,14 @@ public class AccountController {
 
     @GetMapping("info")
     public Result<UserDTO> info() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
         Subject subject = SecurityUtils.getSubject();
         RedisSession session = (RedisSession) subject.getSession();
 
         Date lastAccessTime = session.getLastAccessTime();
         Date lastRememberedAccessTime = session.getLastRememberedAccessTime();
 
-        log.info("lastAccessTime:           {}", sdf.format(lastAccessTime));
-        log.info("lastRememberedAccessTime: {}", lastRememberedAccessTime == null ? null : sdf.format(lastRememberedAccessTime));
+        log.info("lastAccessTime:           {}", SIMPLE_MILLI_FORMATTER.format(lastAccessTime));
+        log.info("lastRememberedAccessTime: {}", lastRememberedAccessTime == null ? null : SIMPLE_MILLI_FORMATTER.format(lastRememberedAccessTime));
 
         return Result.ok((UserDTO) subject.getPrincipal());
     }

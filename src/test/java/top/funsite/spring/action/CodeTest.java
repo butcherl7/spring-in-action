@@ -46,7 +46,7 @@ public class CodeTest {
     }
 
     @Test
-    void t() {
+    void testShiroPermission() {
         Permission allPermission = new AllPermission();
         Permission permission = new WildcardPermission("food:bread:*");
         boolean b = allPermission.implies(new WildcardPermission("food:*:make"));

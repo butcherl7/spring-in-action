@@ -160,7 +160,6 @@ public class ShiroConfig {
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/logout").rememberMe()
                 .antMatchers("/info").rememberMe()
-                .antMatchers("/home1").hasRole("home1")
                 .antMatchers("/home3").hasAnyRoles("home1", "home3")
                 .antMatchers("/jwt").jwt()
                 .antMatchers("/**").authenticated();

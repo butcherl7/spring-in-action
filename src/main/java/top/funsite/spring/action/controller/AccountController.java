@@ -63,19 +63,19 @@ public class AccountController {
     }
 
     @GetMapping("home1")
-    public String home() {
-        return "Welcome Home 1 😂";
+    public String home1() {
+        return "Welcome Home 1 😀";
     }
 
     @GetMapping("home2")
     @RequiresRoles("home2")
     public String home2() {
-        return "Welcome Home 2 🤣";
+        return "Welcome Home 2 😃";
     }
 
     @GetMapping("home3")
     public String home3() {
-        return "Welcome Home 3 🤣";
+        return "Welcome Home 3 😄";
     }
 
     @GetMapping("jwt")

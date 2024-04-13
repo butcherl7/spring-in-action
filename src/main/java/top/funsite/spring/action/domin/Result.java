@@ -1,10 +1,8 @@
 package top.funsite.spring.action.domin;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Value;
 
 @Value
-@JsonPropertyOrder({"timestamp", "error", "status", "msg", "data",})
 public class Result<T> {
 
     boolean error;

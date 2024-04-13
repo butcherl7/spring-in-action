@@ -14,7 +14,6 @@ import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
 import org.apache.shiro.web.subject.WebSubjectContext;
 import top.funsite.spring.action.domin.UserDTO;
 import top.funsite.spring.action.shiro.session.RedisSession;
-import top.funsite.spring.action.shiro.session.RedisSession.Key;
 
 @Slf4j
 public class RedisSubjectFactory extends DefaultWebSubjectFactory {
@@ -29,14 +28,13 @@ public class RedisSubjectFactory extends DefaultWebSubjectFactory {
         ServletResponse response = wsc.resolveServletResponse();
         SecurityManager securityManager = wsc.resolveSecurityManager();
 
+        UserDTO user = null;
         PrincipalCollection principals = null;
-        boolean timeout = false;
 
-        if (session instanceof RedisSession redisSession
-            && session.getAttribute(Key.user) instanceof UserDTO user
-            && session.getAttribute(Key.realmName) instanceof String realmName) {
+        if (session instanceof RedisSession redisSession && redisSession.isValid()) {
+            user = redisSession.getUser();
+            String realmName = redisSession.getRealmName();
             principals = new SimplePrincipalCollection(user, realmName);
-            timeout = redisSession.isTimeout();
         } else {
             AuthenticationInfo authInfo = wsc.getAuthenticationInfo();
             if (authInfo != null) {
@@ -44,7 +42,11 @@ public class RedisSubjectFactory extends DefaultWebSubjectFactory {
             }
         }
 
-        boolean authenticated = principals != null && (principals.getPrimaryPrincipal() instanceof UserDTO) && !timeout;
+        if (principals != null && principals.getPrimaryPrincipal() instanceof UserDTO u) {
+            user = u;
+        }
+
+        boolean authenticated = user != null;
 
         return new RedisDelegatingSubject(principals, authenticated, host, session, request, response, securityManager);
     }

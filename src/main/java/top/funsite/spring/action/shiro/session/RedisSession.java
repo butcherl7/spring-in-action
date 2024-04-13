@@ -2,6 +2,7 @@ package top.funsite.spring.action.shiro.session;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.InvalidSessionException;
+import org.apache.shiro.session.mgt.SimpleSession;
 import org.apache.shiro.session.mgt.ValidatingSession;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.DefaultSubjectContext;
@@ -17,6 +18,11 @@ import java.util.concurrent.TimeUnit;
 
 import static top.funsite.spring.action.util.DateUtils.SIMPLE_MILLI_FORMATTER;
 
+/**
+ * RedisSession.
+ *
+ * @see SimpleSession
+ */
 @Slf4j
 public class RedisSession implements ValidatingSession {
 
@@ -28,7 +34,9 @@ public class RedisSession implements ValidatingSession {
 
     private final String sessionKey;
 
-    private Boolean timeout = null;
+    private Boolean timedOut = null;
+
+    private Date stopTimestamp;
 
     /// keys
 
@@ -116,13 +124,14 @@ public class RedisSession implements ValidatingSession {
     @Override
     public void touch() throws InvalidSessionException {
         // 如果会话超时就更新 lastRememberedAccessTime.
-        String timeKey = isTimeout() ? Key.lastRememberedAccessTime : Key.lastAccessTime;
-        hashOperations.put(sessionKey, timeKey, new Date());
+        String timeKey = isRememberMeTimedOut() ? Key.lastRememberedAccessTime : Key.lastAccessTime;
+        setAttribute(timeKey, new Date());
     }
 
     @Override
     public void stop() throws InvalidSessionException {
         redisTemplate.delete(sessionKey);
+        this.stopTimestamp = new Date();
     }
 
     @Override
@@ -141,6 +150,7 @@ public class RedisSession implements ValidatingSession {
 
     @Override
     public void setAttribute(Object key, Object value) throws InvalidSessionException {
+        if (!isWritable()) return;
         try {
             String sKey = assertString(key);
             if (PROHIBITED_SET_KEYS.contains(sKey)) {
@@ -162,7 +172,7 @@ public class RedisSession implements ValidatingSession {
             }
             boolean hasKey = hashOperations.hasKey(sessionKey, sKey);
             if (hasKey) {
-                o = hashOperations.get(sessionKey, sKey);
+                o = getAttribute(sKey);
                 hashOperations.delete(sessionKey, sKey);
             }
         } catch (Exception e) {
@@ -173,7 +183,7 @@ public class RedisSession implements ValidatingSession {
 
     @Override
     public boolean isValid() {
-        return true;
+        return this.stopTimestamp == null && getUser() != null && getRealmName() != null;
     }
 
     @Override
@@ -181,23 +191,32 @@ public class RedisSession implements ValidatingSession {
     }
 
     /**
+     * 当 session 已停止或者处于 RememberMe 超时的情况下则不可再向 session 中写入数据。
+     *
+     * @return 返回是否可以向 session 写入其它数据。
+     */
+    private boolean isWritable() {
+        return isValid() && !isRememberMeTimedOut();
+    }
+
+    /**
      * 判断当前会话是否属于超时会话。
      *
      * @return {@code True} 表示会话已超时。
      */
-    public boolean isTimeout() {
+    public boolean isRememberMeTimedOut() {
         // 没有启用 RememberMe 则永远返回 false
         if (!ShiroConfig.getRememberMe().isEnabled()) {
             return false;
         }
 
-        if (timeout != null) {
-            return timeout;
+        if (timedOut != null) {
+            return timedOut;
         }
 
-        long duration = ShiroConfig.getRememberMe().getTimeout().getSeconds() * 1000L;
+        long timeout = ShiroConfig.getRememberMe().getTimeout().getSeconds() * 1000L;
 
-        if (duration > 0) {
+        if (timeout > 0) {
             Date lastAccessDate = getLastAccessTime();
 
             long lastAccessTime = lastAccessDate.getTime();
@@ -209,11 +228,11 @@ public class RedisSession implements ValidatingSession {
                 log.debug("LastAccessTime: {}", SIMPLE_MILLI_FORMATTER.format(lastAccessDate));
                 log.debug("Diff          : {} ms.", diff);
             }
-            timeout = diff > duration;
+            timedOut = diff > timeout;
         } else {
-            timeout = false;
+            timedOut = false;
         }
-        return timeout;
+        return timedOut;
     }
 
     /**

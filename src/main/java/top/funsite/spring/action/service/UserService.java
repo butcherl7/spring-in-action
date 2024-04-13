@@ -2,7 +2,7 @@ package top.funsite.spring.action.service;
 
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
-import top.funsite.spring.action.domin.entity.User;
+import top.funsite.spring.action.domain.entity.User;
 import top.funsite.spring.action.mapper.PermissionMapper;
 import top.funsite.spring.action.mapper.RoleMapper;
 import top.funsite.spring.action.mapper.UserMapper;

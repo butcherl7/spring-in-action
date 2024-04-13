@@ -3,7 +3,7 @@ package top.funsite.spring.action.service;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import top.funsite.spring.action.domin.entity.User;
+import top.funsite.spring.action.domain.entity.User;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

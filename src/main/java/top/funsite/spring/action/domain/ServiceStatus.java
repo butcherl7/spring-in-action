@@ -1,4 +1,4 @@
-package top.funsite.spring.action.domin;
+package top.funsite.spring.action.domain;
 
 /**
  * 接口状态码定义。

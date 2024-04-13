@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.util.CollectionUtils;
-import top.funsite.spring.action.domin.Result;
+import top.funsite.spring.action.domain.Result;
 import top.funsite.spring.action.shiro.MessageConstant;
 
 import java.util.LinkedHashMap;

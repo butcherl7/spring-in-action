@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.Nullable;
-import top.funsite.spring.action.domin.Result;
+import top.funsite.spring.action.domain.Result;
 import top.funsite.spring.action.shiro.filter.PassThruFilter;
 
 import java.util.LinkedHashMap;

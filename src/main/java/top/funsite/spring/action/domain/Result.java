@@ -1,4 +1,4 @@
-package top.funsite.spring.action.domin;
+package top.funsite.spring.action.domain;
 
 import lombok.Value;
 

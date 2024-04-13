@@ -2,7 +2,7 @@ package top.funsite.spring.action.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Select;
-import top.funsite.spring.action.domin.entity.Permission;
+import top.funsite.spring.action.domain.entity.Permission;
 
 import java.util.Set;
 

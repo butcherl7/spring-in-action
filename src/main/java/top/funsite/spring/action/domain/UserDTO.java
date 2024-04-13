@@ -1,8 +1,8 @@
-package top.funsite.spring.action.domin;
+package top.funsite.spring.action.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import top.funsite.spring.action.domin.entity.User;
+import top.funsite.spring.action.domain.entity.User;
 
 import java.io.Serial;
 import java.io.Serializable;

@@ -1,4 +1,4 @@
-package top.funsite.spring.action.domin.entity.struct;
+package top.funsite.spring.action.domain.entity.struct;
 
 public interface Enable {
 

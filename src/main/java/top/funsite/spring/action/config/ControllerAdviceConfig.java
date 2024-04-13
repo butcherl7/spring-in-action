@@ -8,7 +8,7 @@ import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import top.funsite.spring.action.domin.Result;
+import top.funsite.spring.action.domain.Result;
 import top.funsite.spring.action.exception.ServiceException;
 import top.funsite.spring.action.shiro.MessageConstant;
 

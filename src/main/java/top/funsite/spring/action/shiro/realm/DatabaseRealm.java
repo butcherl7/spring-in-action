@@ -4,8 +4,8 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
-import top.funsite.spring.action.domin.UserDTO;
-import top.funsite.spring.action.domin.entity.User;
+import top.funsite.spring.action.domain.UserDTO;
+import top.funsite.spring.action.domain.entity.User;
 import top.funsite.spring.action.service.UserService;
 
 import java.time.LocalDateTime;

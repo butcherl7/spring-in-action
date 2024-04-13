@@ -1,4 +1,4 @@
-package top.funsite.spring.action.domin.entity;
+package top.funsite.spring.action.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
-import top.funsite.spring.action.domin.entity.struct.Enable;
+import top.funsite.spring.action.domain.entity.struct.Enable;
 
 import java.time.LocalDateTime;
 import java.util.Set;

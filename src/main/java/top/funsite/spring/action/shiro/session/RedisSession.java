@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import top.funsite.spring.action.config.ShiroConfig;
+import top.funsite.spring.action.domin.UserDTO;
 
 import java.io.Serializable;
 import java.util.*;
@@ -234,6 +235,14 @@ public class RedisSession implements ValidatingSession {
     @Nullable
     public Date getLastRememberedAccessTime() {
         return cast(session.get(Key.lastRememberedAccessTime));
+    }
+
+    public UserDTO getUser() {
+        return cast(session.get(Key.user));
+    }
+
+    public String getRealmName() {
+        return cast(session.get(Key.realmName));
     }
 
     private static String assertString(Object key) {

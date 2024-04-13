@@ -78,14 +78,10 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
         Session session = subject.getSession();
 
         if (session instanceof RedisSession redisSession) {
-            boolean timeout = redisSession.isTimeout();
-            boolean rememberMe = redisSession.isRememberMe();
-
-            if (timeout && !rememberMe) {
-                // 登录超时就主动退出登录。
+            if (!redisSession.isValid()) {
                 subject.logout();
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                JSONUtils.writeValue(response, Result.fail("login timeout"));
+                JSONUtils.writeValue(response, Result.fail("Invalid session."));
                 return false;
             }
         }

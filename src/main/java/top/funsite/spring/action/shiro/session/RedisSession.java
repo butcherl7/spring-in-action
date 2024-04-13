@@ -84,17 +84,17 @@ public class RedisSession implements ValidatingSession {
 
     @Override
     public Serializable getId() {
-        return cast(session.get(Key.id));
+        return cast(session.get(Key.id), Serializable.class);
     }
 
     @Override
     public Date getStartTimestamp() {
-        return cast(session.get(Key.startTimestamp));
+        return cast(session.get(Key.startTimestamp), Date.class);
     }
 
     @Override
     public Date getLastAccessTime() {
-        return cast(session.get(Key.lastAccessTime));
+        return cast(session.get(Key.lastAccessTime), Date.class);
     }
 
     @Override
@@ -110,7 +110,7 @@ public class RedisSession implements ValidatingSession {
 
     @Override
     public String getHost() {
-        return cast(session.get(Key.host));
+        return cast(session.get(Key.host), String.class);
     }
 
     @Override
@@ -234,15 +234,15 @@ public class RedisSession implements ValidatingSession {
      */
     @Nullable
     public Date getLastRememberedAccessTime() {
-        return cast(session.get(Key.lastRememberedAccessTime));
+        return cast(session.get(Key.lastRememberedAccessTime), Date.class);
     }
 
     public UserDTO getUser() {
-        return cast(session.get(Key.user));
+        return cast(session.get(Key.user), UserDTO.class);
     }
 
     public String getRealmName() {
-        return cast(session.get(Key.realmName));
+        return cast(session.get(Key.realmName), String.class);
     }
 
     private static String assertString(Object key) {
@@ -261,11 +261,7 @@ public class RedisSession implements ValidatingSession {
      * @param <T>    接收类型。
      * @return 强转为对应的接收类型。
      */
-    @SuppressWarnings("unchecked")
-    private static <T> T cast(Object object) {
-        if (object == null) {
-            return null;
-        }
-        return (T) object;
+    private static <T> T cast(Object object, Class<T> clazz) {
+        return clazz.cast(object);
     }
 }

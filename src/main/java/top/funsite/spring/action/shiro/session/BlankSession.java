@@ -52,7 +52,7 @@ public class BlankSession implements Session {
 
     @Override
     public String getHost() {
-        return "unknown";
+        return "";
     }
 
     @Override

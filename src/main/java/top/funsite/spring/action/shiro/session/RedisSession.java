@@ -246,12 +246,10 @@ public class RedisSession implements ValidatingSession {
     }
 
     private static String assertString(Object key) {
-        if (!(key instanceof String)) {
-            String msg = "RedisSession based implementations of the Shiro Session interface requires attribute keys " +
-                         "to be String objects. The RedisSession class does not support anything other than String keys.";
-            throw new IllegalArgumentException(msg);
+        if (key instanceof String sKey) {
+            return sKey;
         }
-        return (String) key;
+        throw new IllegalArgumentException("The key " + key + " is not a String");
     }
 
     /**

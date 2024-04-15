@@ -53,14 +53,10 @@ public class ShiroConfig {
     @Resource
     private ShiroProperties shiroProperties;
 
-    @Getter
-    private static RememberMe rememberMe;
-    @Getter
-    private static String loginUrl;
-    @Getter
-    private static Duration timeout;
-    @Getter
-    private static String sessionKeySeparator;
+    private static @Getter RememberMe rememberMe;
+    private static @Getter String loginUrl;
+    private static @Getter Duration timeout;
+    private static @Getter String sessionKeySeparator;
 
     @Getter
     @Setter

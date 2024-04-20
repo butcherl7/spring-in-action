@@ -3,7 +3,6 @@ package top.funsite.spring.action;
 import org.junit.jupiter.api.Test;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 /**
@@ -32,7 +31,7 @@ public class ThymeleafTests {
         String templateName = "test.html";
 
         // 处理模板
-        String processedHtml = templateEngine.process( "test.html", context);
+        String processedHtml = templateEngine.process("test.html", context);
 
         // 输出处理后的 HTML
         System.out.println(processedHtml);

@@ -3,7 +3,10 @@ package top.funsite.spring.action;
 import org.junit.jupiter.api.Test;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Butcher
@@ -19,6 +22,9 @@ public class ThymeleafTests {
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setPrefix("templates/");
         templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode(TemplateMode.HTML);
+        templateResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        templateResolver.setCacheable(false);
 
         // 设置 TemplateResolver 到 TemplateEngine
         templateEngine.setTemplateResolver(templateResolver);

@@ -29,18 +29,10 @@ public class ControllerExceptionHandler {
         String message = e.getMessage();
         if (message == null) {
             switch (e) {
-                case UnknownAccountException ignored -> {
-                    message = "账号不存在";
-                }
-                case LockedAccountException ignored -> {
-                    message = "账号被锁定";
-                }
-                case DisabledAccountException ignored -> {
-                    message = "账号被禁用";
-                }
-                case IncorrectCredentialsException ignored -> {
-                    message = "密码错误";
-                }
+                case UnknownAccountException ignored -> message = "账号不存在";
+                case LockedAccountException ignored -> message = "账号被锁定";
+                case DisabledAccountException ignored -> message = "账号被禁用";
+                case IncorrectCredentialsException ignored -> message = "密码错误";
                 default -> {
                     log.warn(e.getMessage(), e);
                     message = "身份验证错误";

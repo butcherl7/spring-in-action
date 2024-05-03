@@ -7,7 +7,7 @@ import java.util.Objects;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
- * @author kinglyq
+ * @author Butcher
  */
 public class WebUtils {
 

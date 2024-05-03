@@ -15,7 +15,7 @@ import top.funsite.spring.action.shiro.MessageConstant;
 /**
  * 接口异常处理。
  *
- * @author kinglyq
+ * @author Butcher
  */
 @Slf4j
 @RestControllerAdvice

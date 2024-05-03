@@ -141,14 +141,14 @@ public class ShiroConfig {
     /**
      * <p>配置要拦截接口（规则），例如：</p>
      *
-     * <p>
-     * {@code put("/access/role", "authc, roles[ROLE_A,ROLE_B]")}<br />
-     * {@code put("/access/perm", "authc, perms[doc:read]")}
-     * </p>
+     * <pre>
+     * {@code put("/access/role", "authc, roles[ROLE_A,ROLE_B]")
+     * put("/access/perm", "authc, perms[doc:read]")}
+     * </pre>
      * <p>{@code org.apache.catalina.core.StandardHostValve.java:166?#status(request, response)}</p>
      *
      * @see DefaultShiroFilterChainDefinition
-     * @see <a href="https://www.jianshu.com/p/0bad726d0454">关于springMvc错误重定向/error</a>
+     * @see <a href="https://www.jianshu.com/p/0bad726d0454">关于 SpringMVC 错误重定向 /error</a>
      */
     private static AuthorizeRequestsDefiner createRequestsDefiner() {
         return new AuthorizeRequestsDefiner()

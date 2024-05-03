@@ -7,20 +7,11 @@ public class Result<T> {
 
     boolean error;
 
-    /**
-     * 提示信息。
-     */
     String message;
 
-    /**
-     * 业务数据。
-     */
     T data; // @JsonInclude(JsonInclude.Include.NON_NULL) // null 不序列化
 
-    /**
-     * 响应时间戳。
-     */
-    long timestamp;
+    long timestamp = System.currentTimeMillis();
 
     /**
      * 响应业务成功。
@@ -42,10 +33,9 @@ public class Result<T> {
         return new Result<>(true, message, null);
     }
 
-    public Result(boolean error, String message, T data) {
+    private Result(boolean error, String message, T data) {
+        this.data = data;
         this.error = error;
         this.message = message;
-        this.data = data;
-        this.timestamp = System.currentTimeMillis();
     }
 }

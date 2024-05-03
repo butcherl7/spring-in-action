@@ -13,13 +13,13 @@ import top.funsite.spring.action.exception.ServiceException;
 import top.funsite.spring.action.shiro.MessageConstant;
 
 /**
- * 匹配全局异常并给出响应。
+ * 接口异常处理。
  *
  * @author kinglyq
  */
 @Slf4j
 @RestControllerAdvice
-public class ControllerAdviceConfig {
+public class ControllerExceptionHandler {
 
     /**
      * 登录异常。

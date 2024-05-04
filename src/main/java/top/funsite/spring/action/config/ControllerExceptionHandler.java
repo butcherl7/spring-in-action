@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import top.funsite.spring.action.domain.Result;
 import top.funsite.spring.action.exception.ServiceException;
-import top.funsite.spring.action.shiro.MessageConstant;
+import top.funsite.spring.action.shiro.DeniedMessage;
 
 /**
  * 接口异常处理。
@@ -54,10 +54,10 @@ public class ControllerExceptionHandler {
         String message;
         if (e instanceof UnauthorizedException) {
             status = 403;
-            message = MessageConstant.PermissionDenied;
+            message = DeniedMessage.PERMISSION_DENIED;
         } else {
             status = 401;
-            message = MessageConstant.AccessDenied;
+            message = DeniedMessage.ACCESS_DENIED;
         }
         response.setStatus(status);
         return Result.fail(message);

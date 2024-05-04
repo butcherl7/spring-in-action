@@ -9,7 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import static top.funsite.spring.action.util.JSONUtils.DEFAULT_OBJECT_MAPPER;
+import static top.funsite.spring.action.util.JsonUtils.OBJECT_MAPPER;
 
 /**
  * Redis Config.
@@ -22,7 +22,7 @@ public class RedisConfig {
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
-        ObjectMapper mapper = DEFAULT_OBJECT_MAPPER.copy();
+        ObjectMapper mapper = OBJECT_MAPPER.copy();
         mapper.activateDefaultTyping(mapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
 
         final var keySerializer = new StringRedisSerializer();

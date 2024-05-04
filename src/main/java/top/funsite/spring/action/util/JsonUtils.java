@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter;
 import static top.funsite.spring.action.util.DateUtils.DATE_TIME_FORMATTER;
 import static top.funsite.spring.action.util.DateUtils.SIMPLE_DATE_FORMATTER;
 
-public class JSONUtils {
+public class JsonUtils {
 
     /**
      * ObjectMapper，默认配置了：
@@ -34,7 +34,7 @@ public class JSONUtils {
      * <li>{@link java.util.Date} 格式: yyyy-MM-dd HH:mm:ss</li>
      * </ul>
      */
-    public static final ObjectMapper DEFAULT_OBJECT_MAPPER = new ObjectMapper();
+    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     static {
         JavaTimeModule javaTimeModule = new JavaTimeModule();
@@ -46,8 +46,8 @@ public class JSONUtils {
         javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DATE_TIME_FORMATTER));
         javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DATE_TIME_FORMATTER));
 
-        DEFAULT_OBJECT_MAPPER.registerModule(javaTimeModule);
-        DEFAULT_OBJECT_MAPPER.setDateFormat(SIMPLE_DATE_FORMATTER);
+        OBJECT_MAPPER.registerModule(javaTimeModule);
+        OBJECT_MAPPER.setDateFormat(SIMPLE_DATE_FORMATTER);
     }
 
     /**
@@ -57,7 +57,7 @@ public class JSONUtils {
      * @param value Java Object
      */
     public static void writeValue(OutputStream out, Object value) throws IOException {
-        DEFAULT_OBJECT_MAPPER.writeValue(out, value);
+        OBJECT_MAPPER.writeValue(out, value);
     }
 
     public static void writeValue(ServletResponse response, Object value) {
@@ -68,6 +68,6 @@ public class JSONUtils {
         }
     }
 
-    private JSONUtils() {
+    private JsonUtils() {
     }
 }

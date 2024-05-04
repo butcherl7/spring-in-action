@@ -13,9 +13,9 @@ import org.apache.shiro.web.servlet.AbstractShiroFilter;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMethod;
 import top.funsite.spring.action.domain.Result;
-import top.funsite.spring.action.shiro.MessageConstant;
+import top.funsite.spring.action.shiro.DeniedMessage;
 import top.funsite.spring.action.shiro.session.RedisSession;
-import top.funsite.spring.action.util.JSONUtils;
+import top.funsite.spring.action.util.JsonUtils;
 
 import java.nio.charset.StandardCharsets;
 
@@ -81,7 +81,7 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
             if (!redisSession.isValid()) {
                 subject.logout();
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                JSONUtils.writeValue(response, Result.fail("Invalid session."));
+                JsonUtils.writeValue(response, Result.fail("Invalid session."));
                 return false;
             }
         }
@@ -90,8 +90,8 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
     }
 
     protected boolean onAccessDenied(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Result<Void> result = Result.fail(MessageConstant.AccessDenied);
-        return responseDenied(response, HttpServletResponse.SC_UNAUTHORIZED, result);
+        Result<Void> result = Result.fail(DeniedMessage.ACCESS_DENIED);
+        return responseFailResult(response, HttpServletResponse.SC_UNAUTHORIZED, result);
     }
 
     /**
@@ -102,10 +102,11 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
      * @param result     failed Result
      * @return false
      */
-    protected boolean responseDenied(HttpServletResponse response, int statusCode, Result<?> result) {
+    protected boolean responseFailResult(HttpServletResponse response, int statusCode, Result<?> result) {
+        assert result.isError();
         response.setStatus(statusCode);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        JSONUtils.writeValue(response, result);
+        JsonUtils.writeValue(response, result);
         return false;
     }
 }

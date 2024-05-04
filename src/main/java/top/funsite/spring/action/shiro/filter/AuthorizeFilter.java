@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.util.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
 import top.funsite.spring.action.domain.Result;
 import top.funsite.spring.action.shiro.MessageConstant;
 
@@ -33,8 +34,9 @@ public class AuthorizeFilter extends PassThruFilter {
      * 获取进行权限检查的逻辑操作。
      *
      * @param request the incoming ServletRequest
-     * @return 在指定了多个权限的情况下进行权限检查的逻辑操作，AND 为默认值。
+     * @return 在指定了多个权限的情况下进行权限检查的逻辑操作，{@code Logical.AND} 为默认值。
      */
+    @NotNull
     protected Logical getLogic(ServletRequest request) {
         if (CollectionUtils.isEmpty(this.logicPaths)) {
             return Logical.AND;

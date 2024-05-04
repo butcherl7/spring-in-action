@@ -12,7 +12,7 @@ import top.funsite.spring.action.shiro.configurers.AuthorizeRequestsDefiner;
  * @see Subject#isRemembered()
  * @see AuthorizeRequestsDefiner.RequestMatcherRegistry#rememberMe()
  */
-public class RememberedFilter extends AuthFilter {
+public class RememberedFilter extends AuthenticationFilter {
 
     @Override
     protected boolean onAccessDenied(HttpServletRequest request, HttpServletResponse response) throws Exception {

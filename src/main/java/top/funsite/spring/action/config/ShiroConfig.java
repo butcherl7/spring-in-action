@@ -23,7 +23,7 @@ import top.funsite.spring.action.shiro.RedisSubjectDAO;
 import top.funsite.spring.action.shiro.RedisSubjectFactory;
 import top.funsite.spring.action.shiro.configurers.AuthorizeRequestsDefiner;
 import top.funsite.spring.action.shiro.configurers.ShiroProperties;
-import top.funsite.spring.action.shiro.filter.AuthFilter;
+import top.funsite.spring.action.shiro.filter.AuthenticationFilter;
 import top.funsite.spring.action.shiro.filter.PermissionFilter;
 import top.funsite.spring.action.shiro.filter.RememberedFilter;
 import top.funsite.spring.action.shiro.filter.RoleFilter;
@@ -71,7 +71,7 @@ public class ShiroConfig {
      * @return DefaultAdvisorAutoProxyCreator
      * @see RequiresRoles
      * @see RequiresPermissions
-     * @see <a href="https://blog.csdn.net/m0_37890289/article/details/94014359">shiro使用注解鉴权时一直404</a>
+     * @see <a href="https://blog.csdn.net/m0_37890289/article/details/94014359">Shiro 使用注解鉴权时一直 404</a>
      */
     @Bean
     public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator() {
@@ -104,33 +104,47 @@ public class ShiroConfig {
         return new DatabaseRealm(userService);
     }
 
+    /**
+     * SecurityManager 配置。
+     * <p>Note:</p>
+     * <pre>{@code
+     * // 多 Realm 认证策略
+     * ModularRealmAuthenticator authenticator = new ModularRealmAuthenticator();
+     * authenticator.setAuthenticationStrategy(new AtLeastOneSuccessfulStrategy());
+     * securityManager.setAuthenticator(authenticator);
+     * }</pre>
+     * <pre>{@code
+     * // 配置多个 Realm
+     * securityManager.setRealms(List.of(realm, new BearerRealm()));
+     * }</pre>
+     *
+     * @param realm         default realm (spring bean)
+     * @param redisTemplate RedisTemplate
+     * @return DefaultWebSecurityManager
+     */
     @Bean
     public DefaultWebSecurityManager securityManager(Realm realm, RedisTemplate<String, Object> redisTemplate) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        /*ModularRealmAuthenticator authenticator = new ModularRealmAuthenticator();
-        authenticator.setAuthenticationStrategy(new AtLeastOneSuccessfulStrategy());
-        securityManager.setAuthenticator(authenticator);*/
-        securityManager.setSessionManager(new RedisSessionManager(redisTemplate, shiroProperties.getSessionKeySeparator()));
-        securityManager.setSubjectFactory(new RedisSubjectFactory());
-        securityManager.setSubjectDAO(new RedisSubjectDAO());
         securityManager.setRealm(realm);
-        // securityManager.setRealms(List.of(realm, new BearerRealm()));
+        securityManager.setSubjectDAO(new RedisSubjectDAO());
+        securityManager.setSubjectFactory(new RedisSubjectFactory());
+        securityManager.setSessionManager(new RedisSessionManager(redisTemplate, sessionKeySeparator));
         return securityManager;
     }
 
     @Bean
     public ShiroFilterFactoryBean shiroFilterFactoryBean(DefaultWebSecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
-        shiroFilterFactoryBean.setLoginUrl(shiroProperties.getLoginUrl());
+        shiroFilterFactoryBean.setLoginUrl(loginUrl);
         shiroFilterFactoryBean.setSecurityManager(securityManager);
 
         AuthorizeRequestsDefiner definer = createRequestsDefiner();
-        Map<String, String> authRequestMap = definer.getDefinedPath();
-        Map<String, Logical> authLogicMap = definer.getDefinedLogic();
+        Map<String, String> authRequestMap = definer.getPathDefinition();
+        Map<String, Logical> authLogicMap = definer.getLogicDefinition();
 
         Map<String, Filter> filters = shiroFilterFactoryBean.getFilters();
         // 使用重写过的过滤器代替默认的。
-        filters.put(authc.name(), new AuthFilter());
+        filters.put(authc.name(), new AuthenticationFilter());
         filters.put(remember.name(), new RememberedFilter());
         filters.put(roles.name(), new RoleFilter(authLogicMap));
         filters.put(perms.name(), new PermissionFilter(authLogicMap));

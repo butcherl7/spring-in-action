@@ -4,7 +4,7 @@ import jakarta.servlet.Filter;
 import lombok.Getter;
 import org.apache.shiro.web.filter.authc.AnonymousFilter;
 import org.apache.shiro.web.filter.mgt.DefaultFilter;
-import top.funsite.spring.action.shiro.filter.AuthFilter;
+import top.funsite.spring.action.shiro.filter.AuthenticationFilter;
 import top.funsite.spring.action.shiro.filter.PermissionFilter;
 import top.funsite.spring.action.shiro.filter.RememberedFilter;
 import top.funsite.spring.action.shiro.filter.RoleFilter;
@@ -20,7 +20,7 @@ public enum NamedFilter {
 
     anon(AnonymousFilter.class),
 
-    authc(AuthFilter.class),
+    authc(AuthenticationFilter.class),
 
     perms(PermissionFilter.class),
 

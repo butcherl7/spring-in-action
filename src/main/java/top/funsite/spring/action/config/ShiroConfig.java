@@ -82,7 +82,7 @@ public class ShiroConfig {
     }
 
     /**
-     * 默认的 Realm，Spring 环境下必须要有一个 Realm Bean.
+     * 默认的 Realm，Spring 环境下要求必须要有一个 Realm Bean.
      *
      * @param userService UserService
      * @return DatabaseRealm
@@ -114,6 +114,7 @@ public class ShiroConfig {
         securityManager.setSubjectFactory(new RedisSubjectFactory());
         securityManager.setSubjectDAO(new RedisSubjectDAO());
         securityManager.setRealm(realm);
+        // securityManager.setRealms(List.of(realm, new BearerRealm()));
         return securityManager;
     }
 

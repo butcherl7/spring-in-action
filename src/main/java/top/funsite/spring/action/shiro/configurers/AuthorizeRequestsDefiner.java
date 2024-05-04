@@ -8,7 +8,7 @@ import org.apache.shiro.web.filter.mgt.FilterChainManager;
 import org.jetbrains.annotations.ApiStatus;
 import top.funsite.spring.action.shiro.filter.AuthorizeFilter;
 import top.funsite.spring.action.shiro.filter.RememberedFilter;
-import top.funsite.spring.action.shiro.filter.jwt.DecodedJWTAuthenticator;
+import top.funsite.spring.action.shiro.filter.jwt.DecodedJWTValidator;
 import top.funsite.spring.action.shiro.filter.jwt.JwtFilter;
 
 import java.util.*;
@@ -90,10 +90,10 @@ public class AuthorizeRequestsDefiner {
      * @see JwtFilter
      */
     @ApiStatus.Experimental
-    public Map<String, DecodedJWTAuthenticator> getDefinedDecodedJWTValidator() {
-        Map<String, DecodedJWTAuthenticator> map = new LinkedHashMap<>();
+    public Map<String, DecodedJWTValidator> getDefinedDecodedJWTValidator() {
+        Map<String, DecodedJWTValidator> map = new LinkedHashMap<>();
         for (RequestMatcherRegistry registry : requestMatcherRegistries) {
-            DecodedJWTAuthenticator validator = registry.decodedJWTAuthenticator;
+            DecodedJWTValidator validator = registry.decodedJWTValidator;
             if (validator != null) {
                 for (String antPattern : registry.antPatterns) {
                     map.put(antPattern, validator);
@@ -124,7 +124,7 @@ public class AuthorizeRequestsDefiner {
          */
         private Logical logical = Logical.AND;
 
-        private DecodedJWTAuthenticator decodedJWTAuthenticator;
+        private DecodedJWTValidator decodedJWTValidator;
 
         /**
          * 通过 JWT 的验证才能访问 URL.
@@ -138,12 +138,12 @@ public class AuthorizeRequestsDefiner {
         /**
          * 通过 JWT 的验证才能访问 URL.
          *
-         * @param decodedJWTAuthenticator 对已经正确解码过的 JWT 进行进一步验证的回调函数。
+         * @param decodedJWTValidator 对已经正确解码过的 JWT 进行进一步验证的回调函数。
          * @return AuthorizeRequestsDefiner
          */
-        public AuthorizeRequestsDefiner jwt(DecodedJWTAuthenticator decodedJWTAuthenticator) {
+        public AuthorizeRequestsDefiner jwt(DecodedJWTValidator decodedJWTValidator) {
             this.filter = NamedFilter.jwt;
-            this.decodedJWTAuthenticator = decodedJWTAuthenticator;
+            this.decodedJWTValidator = decodedJWTValidator;
             return authorizeRequestsDefiner;
         }
 

@@ -10,8 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.util.CollectionUtils;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.lang.Nullable;
 import top.funsite.spring.action.domain.Result;
 import top.funsite.spring.action.shiro.filter.PassThruFilter;
 
@@ -21,13 +21,13 @@ import java.util.Map;
 @Slf4j
 public class JwtFilter extends PassThruFilter {
 
-    protected Map<String, DecodedJWTAuthenticator> authenticatorPaths = new LinkedHashMap<>();
+    protected Map<String, DecodedJWTValidator> validationPaths = new LinkedHashMap<>();
 
     public JwtFilter() {
     }
 
-    public JwtFilter(Map<String, DecodedJWTAuthenticator> authenticatorPaths) {
-        this.authenticatorPaths = authenticatorPaths;
+    public JwtFilter(Map<String, DecodedJWTValidator> validationPaths) {
+        this.validationPaths = validationPaths;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class JwtFilter extends PassThruFilter {
                     .build();
             DecodedJWT decodedJWT = verifier.verify(token);
 
-            DecodedJWTAuthenticator validator = getValidator(request);
+            DecodedJWTValidator validator = getValidator(request);
 
             if (validator != null) {
                 return validator.validate(request, response, decodedJWT);
@@ -52,14 +52,14 @@ public class JwtFilter extends PassThruFilter {
     }
 
     @Nullable
-    protected DecodedJWTAuthenticator getValidator(ServletRequest request) {
-        if (CollectionUtils.isEmpty(this.authenticatorPaths)) {
+    protected DecodedJWTValidator getValidator(ServletRequest request) {
+        if (CollectionUtils.isEmpty(this.validationPaths)) {
             return null;
         }
 
-        for (String path : this.authenticatorPaths.keySet()) {
+        for (String path : this.validationPaths.keySet()) {
             if (pathsMatch(path, request)) {
-                return this.authenticatorPaths.get(path);
+                return this.validationPaths.get(path);
             }
         }
         return null;

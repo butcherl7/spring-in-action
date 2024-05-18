@@ -1,5 +1,13 @@
 package top.funsite.spring.action.domain;
 
+/**
+ * Result 是一个泛型记录类，用于表示某个接口调用的结果。
+ *
+ * @param error     表示业务是否出错
+ * @param message   提示信息
+ * @param data      返回的数据
+ * @param timestamp 响应的时间
+ */
 public record Result<T>(boolean error, String message, T data, long timestamp) {
 
     // @JsonInclude(JsonInclude.Include.NON_NULL) // null 不序列化

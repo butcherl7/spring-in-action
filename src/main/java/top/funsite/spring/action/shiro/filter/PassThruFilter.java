@@ -103,7 +103,7 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
      * @return false
      */
     protected boolean responseFailResult(HttpServletResponse response, int statusCode, Result<?> result) {
-        assert result.isError();
+        assert result.error();
         response.setStatus(statusCode);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         JsonUtils.writeValue(response, result);

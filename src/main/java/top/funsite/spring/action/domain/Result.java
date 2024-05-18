@@ -1,17 +1,8 @@
 package top.funsite.spring.action.domain;
 
-import lombok.Value;
+public record Result<T>(boolean error, String message, T data, long timestamp) {
 
-@Value
-public class Result<T> {
-
-    boolean error;
-
-    String message;
-
-    T data; // @JsonInclude(JsonInclude.Include.NON_NULL) // null 不序列化
-
-    long timestamp = System.currentTimeMillis();
+    // @JsonInclude(JsonInclude.Include.NON_NULL) // null 不序列化
 
     /**
      * 响应业务成功。
@@ -34,8 +25,6 @@ public class Result<T> {
     }
 
     private Result(boolean error, String message, T data) {
-        this.data = data;
-        this.error = error;
-        this.message = message;
+        this(error, message, data, System.currentTimeMillis());
     }
 }

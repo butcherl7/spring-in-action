@@ -81,6 +81,18 @@ public class ShiroConfig {
         return proxyCreator;
     }
 
+    private void init() {
+        var rememberProps = shiroProperties.getRemember();
+        var remember = new RememberMe();
+        remember.setEnabled(rememberProps.isEnabled());
+        remember.setTimeout(rememberProps.getTimeout());
+
+        rememberMe = remember;
+        timeout = shiroProperties.getTimeout();
+        loginUrl = shiroProperties.getLoginUrl();
+        sessionKeySeparator = shiroProperties.getSessionKeySeparator();
+    }
+
     /**
      * 默认的 Realm，Spring 环境下要求必须要有一个 Realm Bean.
      *
@@ -90,17 +102,7 @@ public class ShiroConfig {
      */
     @Bean
     public Realm realm(UserService userService) {
-        {
-            var rememberProps = shiroProperties.getRemember();
-            var remember = new RememberMe();
-            remember.setEnabled(rememberProps.isEnabled());
-            remember.setTimeout(rememberProps.getTimeout());
-
-            rememberMe = remember;
-            timeout = shiroProperties.getTimeout();
-            loginUrl = shiroProperties.getLoginUrl();
-            sessionKeySeparator = shiroProperties.getSessionKeySeparator();
-        }
+        init();
         return new DatabaseRealm(userService);
     }
 

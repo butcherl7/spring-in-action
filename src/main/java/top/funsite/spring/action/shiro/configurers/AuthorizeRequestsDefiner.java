@@ -41,12 +41,12 @@ public class AuthorizeRequestsDefiner {
     }
 
     /**
-     * 获取定义的 URL 拦截配置。
+     * 获取接口对应的过滤器链映射，用于创建 Shiro 过滤器截获的过滤器链。
      *
      * @return map.
      * @see ShiroFilterFactoryBean#setFilterChainDefinitionMap(Map)
      */
-    public Map<String, String> getPathDefinition() {
+    public Map<String, String> getFilterChainDefinitionMap() {
         Map<String, String> map = new LinkedHashMap<>();
         for (RequestMatcherRegistry registry : requestMatcherRegistries) {
             String chainDefinition = registry.filter.name();
@@ -66,12 +66,12 @@ public class AuthorizeRequestsDefiner {
     }
 
     /**
-     * 获取定义的授权逻辑配置。
+     * 获取接口对应的权限判断逻辑。
      *
      * @return map.
      * @see AuthorizeFilter
      */
-    public Map<String, Logical> getLogicDefinition() {
+    public Map<String, Logical> getLogicDefinitionMap() {
         Map<String, Logical> map = new LinkedHashMap<>();
         for (RequestMatcherRegistry registry : requestMatcherRegistries) {
             if (ArrayUtils.isNotEmpty(registry.authorities)) {

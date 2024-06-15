@@ -141,17 +141,17 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setSecurityManager(securityManager);
 
         AuthorizeRequestsDefiner definer = createRequestsDefiner();
-        Map<String, String> authRequestMap = definer.getPathDefinition();
-        Map<String, Logical> authLogicMap = definer.getLogicDefinition();
+        Map<String, String> filterChainDefinitionMap = definer.getFilterChainDefinitionMap();
+        Map<String, Logical> logicDefinitionMap = definer.getLogicDefinitionMap();
 
-        Map<String, Filter> filters = shiroFilterFactoryBean.getFilters();
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         // 使用重写过的过滤器代替默认的。
+        Map<String, Filter> filters = shiroFilterFactoryBean.getFilters();
         filters.put(authc.name(), new AuthenticationFilter());
         filters.put(remember.name(), new RememberedFilter());
-        filters.put(roles.name(), new RoleFilter(authLogicMap));
-        filters.put(perms.name(), new PermissionFilter(authLogicMap));
+        filters.put(roles.name(), new RoleFilter(logicDefinitionMap));
+        filters.put(perms.name(), new PermissionFilter(logicDefinitionMap));
         filters.put(jwt.name(), new JwtFilter());
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(authRequestMap);
         return shiroFilterFactoryBean;
     }
 

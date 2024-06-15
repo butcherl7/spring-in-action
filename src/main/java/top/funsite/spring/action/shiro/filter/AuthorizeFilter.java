@@ -23,7 +23,7 @@ public class AuthorizeFilter extends PassThruFilter {
     /**
      * 就像 {@link #appliedPaths}，设置接口需要的多个角色或权限的逻辑关系。
      */
-    protected Map<String, Logical> logicPaths = new LinkedHashMap<>();
+    protected Map<String, Logical> logicDefinitionMap = new LinkedHashMap<>();
 
     @Override
     protected boolean onAccessDenied(HttpServletRequest request, HttpServletResponse response) {
@@ -38,13 +38,13 @@ public class AuthorizeFilter extends PassThruFilter {
      */
     @NotNull
     protected Logical getLogic(ServletRequest request) {
-        if (CollectionUtils.isEmpty(this.logicPaths)) {
+        if (CollectionUtils.isEmpty(this.logicDefinitionMap)) {
             return Logical.AND;
         }
 
-        for (String path : this.logicPaths.keySet()) {
+        for (String path : this.logicDefinitionMap.keySet()) {
             if (pathsMatch(path, request)) {
-                return this.logicPaths.get(path);
+                return this.logicDefinitionMap.get(path);
             }
         }
         return Logical.AND;

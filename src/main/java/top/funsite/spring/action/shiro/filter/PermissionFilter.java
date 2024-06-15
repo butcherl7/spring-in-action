@@ -20,8 +20,8 @@ public class PermissionFilter extends AuthorizeFilter {
     public PermissionFilter() {
     }
 
-    public PermissionFilter(Map<String, Logical> logicPaths) {
-        this.logicPaths = logicPaths;
+    public PermissionFilter(Map<String, Logical> logicDefinitionMap) {
+        this.logicDefinitionMap = logicDefinitionMap;
     }
 
     @Override

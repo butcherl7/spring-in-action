@@ -46,7 +46,7 @@ public class JwtFilter extends PassThruFilter {
             }
         } catch (JWTVerificationException e) {
             log.error(e.getMessage(), e);
-            return super.responseFailResult(response, HttpServletResponse.SC_UNAUTHORIZED, Result.fail(e.getMessage()));
+            return super.responseDenial(response, HttpServletResponse.SC_UNAUTHORIZED, Result.fail(e.getMessage()));
         }
         return true;
     }

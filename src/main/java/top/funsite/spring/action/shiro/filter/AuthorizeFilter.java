@@ -27,7 +27,7 @@ public class AuthorizeFilter extends PassThruFilter {
 
     @Override
     protected boolean onAccessDenied(HttpServletRequest request, HttpServletResponse response) {
-        return responseFailResult(response, HttpServletResponse.SC_FORBIDDEN, Result.fail(DeniedMessage.PERMISSION_DENIED));
+        return responseDenial(response, HttpServletResponse.SC_FORBIDDEN, Result.fail(DeniedMessage.PERMISSION_DENIED));
     }
 
     /**

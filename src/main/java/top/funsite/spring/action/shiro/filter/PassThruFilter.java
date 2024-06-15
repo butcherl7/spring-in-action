@@ -91,7 +91,7 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
 
     protected boolean onAccessDenied(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Result<Void> result = Result.fail(DeniedMessage.ACCESS_DENIED);
-        return responseFailResult(response, HttpServletResponse.SC_UNAUTHORIZED, result);
+        return responseDenial(response, HttpServletResponse.SC_UNAUTHORIZED, result);
     }
 
     /**
@@ -102,7 +102,7 @@ public class PassThruFilter extends PassThruAuthenticationFilter {
      * @param result     failed Result
      * @return false
      */
-    protected boolean responseFailResult(HttpServletResponse response, int statusCode, Result<?> result) {
+    protected boolean responseDenial(HttpServletResponse response, int statusCode, Result<?> result) {
         assert result.error();
         response.setStatus(statusCode);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

@@ -33,5 +33,5 @@ public class ShiroProperties {
     private Duration timeout = Duration.ofMinutes(30);
 
     @NestedConfigurationProperty
-    private RememberProperties remember;
+    private RememberProperties remember = new RememberProperties();
 }

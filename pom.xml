@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.5</version>
+        <version>3.3.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -17,7 +17,20 @@
 
     <properties>
         <java.version>21</java.version>
+        <shiro.version>2.0.1</shiro.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-bom</artifactId>
+                <version>${shiro.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -169,18 +182,6 @@
             <version>24.1.0</version>
         </dependency>
     </dependencies>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-bom</artifactId>
-                <version>2.0.0</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>

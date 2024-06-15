@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  *      .getDefinedPath();}
  * </pre>
  *
- * @see NamedFilter
+ * @see UsedFilter
  * @see AntPathMatcher
  * @see FilterChainManager#createChain(String, String)
  */
@@ -53,7 +53,7 @@ public class AuthorizeRequestsDefiner {
             String[] authorities = registry.authorities;
 
             if (ArrayUtils.isNotEmpty(authorities)) {
-                chainDefinition = NamedFilter.authc.name() + "," + registry.filter.name() + Arrays
+                chainDefinition = UsedFilter.authc.name() + "," + registry.filter.name() + Arrays
                         .stream(authorities)
                         .collect(Collectors.joining(",", "[", "]"));
             }
@@ -112,7 +112,7 @@ public class AuthorizeRequestsDefiner {
         /**
          * 过滤器名称。
          */
-        private NamedFilter filter;
+        private UsedFilter filter;
 
         /**
          * 权限（角色）数组。
@@ -142,7 +142,7 @@ public class AuthorizeRequestsDefiner {
          * @return AuthorizeRequestsDefiner
          */
         public AuthorizeRequestsDefiner jwt(DecodedJWTValidator decodedJWTValidator) {
-            this.filter = NamedFilter.jwt;
+            this.filter = UsedFilter.jwt;
             this.decodedJWTValidator = decodedJWTValidator;
             return authorizeRequestsDefiner;
         }
@@ -154,7 +154,7 @@ public class AuthorizeRequestsDefiner {
          * @see RememberedFilter
          */
         public AuthorizeRequestsDefiner rememberMe() {
-            this.filter = NamedFilter.remember;
+            this.filter = UsedFilter.remember;
             return authorizeRequestsDefiner;
         }
 
@@ -164,7 +164,7 @@ public class AuthorizeRequestsDefiner {
          * @return AuthorizeRequestsDefiner
          */
         public AuthorizeRequestsDefiner authenticated() {
-            this.filter = NamedFilter.authc;
+            this.filter = UsedFilter.authc;
             return authorizeRequestsDefiner;
         }
 
@@ -185,7 +185,7 @@ public class AuthorizeRequestsDefiner {
          * @return AuthorizeRequestsDefiner
          */
         public AuthorizeRequestsDefiner hasAnyRoles(String... roles) {
-            return requiredAuthorities(NamedFilter.roles, Logical.OR, roles);
+            return requiredAuthorities(UsedFilter.roles, Logical.OR, roles);
         }
 
         /**
@@ -195,7 +195,7 @@ public class AuthorizeRequestsDefiner {
          * @return AuthorizeRequestsDefiner
          */
         public AuthorizeRequestsDefiner hasAllRoles(String... roles) {
-            return requiredAuthorities(NamedFilter.roles, Logical.AND, roles);
+            return requiredAuthorities(UsedFilter.roles, Logical.AND, roles);
         }
 
         /**
@@ -215,7 +215,7 @@ public class AuthorizeRequestsDefiner {
          * @return AuthorizeRequestsDefiner
          */
         public AuthorizeRequestsDefiner hasAnyPermissions(String... permissions) {
-            return requiredAuthorities(NamedFilter.perms, Logical.OR, permissions);
+            return requiredAuthorities(UsedFilter.perms, Logical.OR, permissions);
         }
 
         /**
@@ -225,7 +225,7 @@ public class AuthorizeRequestsDefiner {
          * @return AuthorizeRequestsDefiner
          */
         public AuthorizeRequestsDefiner hasAllPermissions(String... permissions) {
-            return requiredAuthorities(NamedFilter.perms, Logical.AND, permissions);
+            return requiredAuthorities(UsedFilter.perms, Logical.AND, permissions);
         }
 
         /**
@@ -234,11 +234,11 @@ public class AuthorizeRequestsDefiner {
          * @return AuthorizeRequestsDefiner
          */
         public AuthorizeRequestsDefiner permitAll() {
-            this.filter = NamedFilter.anon;
+            this.filter = UsedFilter.anon;
             return authorizeRequestsDefiner;
         }
 
-        private AuthorizeRequestsDefiner requiredAuthorities(NamedFilter filter, Logical logical, String... authorities) {
+        private AuthorizeRequestsDefiner requiredAuthorities(UsedFilter filter, Logical logical, String... authorities) {
             this.filter = filter;
             this.logical = logical;
             this.authorities = authorities;

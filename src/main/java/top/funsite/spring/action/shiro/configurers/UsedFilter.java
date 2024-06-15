@@ -16,7 +16,7 @@ import top.funsite.spring.action.shiro.filter.jwt.JwtFilter;
  * @see DefaultFilter
  */
 @Getter
-public enum NamedFilter {
+public enum UsedFilter {
 
     anon(AnonymousFilter.class),
 
@@ -32,7 +32,7 @@ public enum NamedFilter {
 
     private final Class<? extends Filter> filterClass;
 
-    NamedFilter(Class<? extends Filter> filterClass) {
+    UsedFilter(Class<? extends Filter> filterClass) {
         this.filterClass = filterClass;
     }
 }

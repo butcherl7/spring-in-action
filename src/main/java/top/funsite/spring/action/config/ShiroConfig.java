@@ -34,7 +34,7 @@ import top.funsite.spring.action.shiro.session.RedisSessionManager;
 import java.time.Duration;
 import java.util.Map;
 
-import static top.funsite.spring.action.shiro.configurers.NamedFilter.*;
+import static top.funsite.spring.action.shiro.configurers.UsedFilter.*;
 
 /**
  * Shiro 配置类。

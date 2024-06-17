@@ -27,25 +27,22 @@ public class PermissionFilter extends AuthorizeFilter {
     @Override
     public boolean isAccessAllowed(HttpServletRequest request, HttpServletResponse response, Object mappedValue) {
         Subject subject = getSubject(request, response);
-        String[] perms = (String[]) mappedValue;
 
-        if (perms == null || perms.length == 0) {
-            return true;
-        }
+        if (mappedValue instanceof String[] perms && perms.length > 0) {
+            Logical logic = getLogic(request);
 
-        Logical logic = getLogic(request);
-
-        if (logic == Logical.AND) {
-            return subject.isPermittedAll(perms);
-        }
-
-        if (logic == Logical.OR) {
-            for (String perm : perms) {
-                if (subject.isPermitted(perm)) {
-                    return true;
-                }
+            if (logic == Logical.AND) {
+                return subject.isPermittedAll(perms);
             }
-            return false;
+
+            if (logic == Logical.OR) {
+                for (String perm : perms) {
+                    if (subject.isPermitted(perm)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
         }
 
         return true;

@@ -159,9 +159,13 @@ public class ShiroConfig {
      * <p>配置要拦截接口（规则），例如：</p>
      *
      * <pre>
-     * {@code put("/access/role", "authc, roles[ROLE_A,ROLE_B]")
-     * put("/access/perm", "authc, perms[doc:read]")}
+     * {@code
+     * put("/access/role", "authc, roles[ROLE_A,ROLE_B]")
+     * put("/access/perm", "authc, perms[doc:read]")
+     * put("/access/other_role", "roles[ROLE_X]")
+     * }
      * </pre>
+     *
      * <p>{@code org.apache.catalina.core.StandardHostValve.java:166?#status(request, response)}</p>
      *
      * @see DefaultShiroFilterChainDefinition

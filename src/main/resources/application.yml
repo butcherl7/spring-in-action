@@ -1,0 +1,22 @@
+server:
+  port: 7777
+
+app:
+  datasource:
+    default-ds-name: test1
+    target-data-sources:
+      test1:
+        username: tester
+        password: test@123
+        jdbc-url: jdbc:mysql://127.0.0.1:6677/test1?useUnicode=true&serverTimezone=Asia/Shanghai
+        pool-name: test1
+      test2:
+        username: tester
+        password: test@123
+        jdbc-url: jdbc:mysql://127.0.0.1:6677/test2?useUnicode=true&serverTimezone=Asia/Shanghai
+        pool-name: test2
+      test3:
+        username: tester
+        password: test@123
+        jdbc-url: jdbc:mysql://127.0.0.1:6677/test3?useUnicode=true&serverTimezone=Asia/Shanghai
+        pool-name: test3

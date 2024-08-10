@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import top.funsite.spring.action.domain.entity.struct.Enable;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

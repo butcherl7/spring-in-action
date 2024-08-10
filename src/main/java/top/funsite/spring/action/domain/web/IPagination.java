@@ -1,4 +1,4 @@
-package top.funsite.spring.action.domain.r;
+package top.funsite.spring.action.domain.web;
 
 import java.util.List;
 

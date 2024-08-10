@@ -3,9 +3,9 @@ package top.funsite.spring.action.domain;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.junit.jupiter.api.Test;
-import top.funsite.spring.action.domain.r.IPagination;
-import top.funsite.spring.action.domain.r.Pagination;
-import top.funsite.spring.action.domain.r.Result;
+import top.funsite.spring.action.domain.web.IPagination;
+import top.funsite.spring.action.domain.web.Pagination;
+import top.funsite.spring.action.domain.web.Result;
 import top.funsite.spring.action.util.JsonUtils;
 
 import java.util.Collections;

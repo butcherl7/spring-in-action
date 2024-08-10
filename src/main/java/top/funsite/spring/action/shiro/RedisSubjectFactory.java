@@ -12,7 +12,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.SubjectContext;
 import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
 import org.apache.shiro.web.subject.WebSubjectContext;
-import top.funsite.spring.action.domain.UserDTO;
+import top.funsite.spring.action.domain.dto.UserDTO;
 import top.funsite.spring.action.shiro.session.RedisSession;
 
 @Slf4j

@@ -1,4 +1,4 @@
-package top.funsite.spring.action.domain;
+package top.funsite.spring.action.domain.dto;
 
 import lombok.Getter;
 import lombok.Setter;

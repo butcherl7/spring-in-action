@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.util.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
-import top.funsite.spring.action.domain.r.Result;
+import top.funsite.spring.action.domain.web.Result;
 import top.funsite.spring.action.shiro.DeniedMessage;
 
 import java.util.LinkedHashMap;

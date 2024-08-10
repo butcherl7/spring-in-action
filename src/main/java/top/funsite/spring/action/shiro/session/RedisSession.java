@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import top.funsite.spring.action.config.ShiroConfig;
-import top.funsite.spring.action.domain.UserDTO;
+import top.funsite.spring.action.domain.dto.UserDTO;
 
 import java.io.Serializable;
 import java.util.*;

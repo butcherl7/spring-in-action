@@ -179,6 +179,7 @@ public class ShiroConfig {
                 .antMatchers("/info").rememberMe()
                 .antMatchers("/home3").hasAnyRoles("home1", "home3")
                 .antMatchers("/jwt").jwt()
-                .antMatchers("/**").authenticated();
+                .antMatchers("/**")
+                .authenticated();
     }
 }

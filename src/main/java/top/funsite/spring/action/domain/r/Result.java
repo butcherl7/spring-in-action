@@ -5,12 +5,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 /**
- * Result 是一个泛型记录类，作为接口调用响应的结果。
+ * {@code Result} 是一个泛型 {@code record} 类，作为响应接口调用的结果。
  *
- * @param error     {@code True}表示调用出现错误
- * @param message   提示信息
- * @param data      返回的数据
- * @param timestamp 响应的时间
+ * @param error     状态，{@code true} 表示出现错误（不成功）。
+ * @param message   提示信息。
+ * @param data      返回数据。
+ * @param timestamp 响应时间。
+ * @param <T>       数据类型。
  */
 public record Result<T>(boolean error, String message, T data, long timestamp) {
 
@@ -21,8 +22,8 @@ public record Result<T>(boolean error, String message, T data, long timestamp) {
     /**
      * 响应业务成功。
      *
-     * @param data data.
-     * @return OK Result with data.
+     * @param data 接口返回的数据。
+     * @return 返回成功状态的结果。
      */
     public static <T> Result<T> ok(T data) {
         return new Result<>(false, OK, data);
@@ -42,7 +43,7 @@ public record Result<T>(boolean error, String message, T data, long timestamp) {
      * 响应业务失败。
      *
      * @param message 业务失败的描述信息（不能为空）。
-     * @return Result.
+     * @return 返回失败状态的结果。
      */
     public static Result<Void> fail(@NotNull String message) {
         Objects.requireNonNull(message, "message must not be null");

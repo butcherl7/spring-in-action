@@ -3,6 +3,7 @@ package top.funsite.spring.action.domain;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.junit.jupiter.api.Test;
+import top.funsite.spring.action.domain.r.IPagination;
 import top.funsite.spring.action.domain.r.Pagination;
 import top.funsite.spring.action.domain.r.Result;
 import top.funsite.spring.action.util.JsonUtils;
@@ -15,7 +16,7 @@ public class ResultTest {
     @Test
     public void testOkPagination() throws JsonProcessingException {
         Map<String, String> data = Collections.emptyMap();
-        Pagination<String> pagination = new Pagination<>(0, Collections.emptyList());
+        IPagination<String> pagination = Pagination.empty();
 
         var result1 = Result.ok(data);
         var result2 = Result.ok(pagination);

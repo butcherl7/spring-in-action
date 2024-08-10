@@ -29,6 +29,16 @@ public record Result<T>(boolean error, String message, T data, long timestamp) {
     }
 
     /**
+     * 响应业务成功，数据是分页的。
+     *
+     * @param data 分页数据。
+     * @return 返回成功状态的分页数据结果.
+     */
+    public static <T> Result<Pagination<T>> ok(Pagination<T> data) {
+        return new Result<>(false, OK, data);
+    }
+
+    /**
      * 响应业务失败。
      *
      * @param message 业务失败的描述信息（不能为空）。

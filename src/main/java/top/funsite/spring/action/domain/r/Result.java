@@ -35,7 +35,7 @@ public record Result<T>(boolean error, String message, T data, long timestamp) {
      * @param data 分页数据。
      * @return 返回成功状态的分页数据结果.
      */
-    public static <T> Result<Pagination<T>> ok(Pagination<T> data) {
+    public static <T> Result<IPagination<T>> ok(IPagination<T> data) {
         return new Result<>(false, OK, data);
     }
 

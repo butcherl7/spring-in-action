@@ -12,7 +12,7 @@ import org.apache.shiro.web.filter.authz.AuthorizationFilter;
 import org.apache.shiro.web.servlet.AbstractShiroFilter;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMethod;
-import top.funsite.spring.action.domain.Result;
+import top.funsite.spring.action.domain.r.Result;
 import top.funsite.spring.action.shiro.DeniedMessage;
 import top.funsite.spring.action.shiro.session.RedisSession;
 import top.funsite.spring.action.util.JsonUtils;

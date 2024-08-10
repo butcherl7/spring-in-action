@@ -1,4 +1,4 @@
-package top.funsite.spring.action.domain;
+package top.funsite.spring.action.domain.r;
 
 import org.jetbrains.annotations.NotNull;
 

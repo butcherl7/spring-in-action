@@ -20,7 +20,7 @@ public class Permission implements Enable {
 
     private Boolean enabled;
 
-    private LocalDateTime createdTime;
+    private LocalDateTime createAt;
 
     @Override
     public boolean equals(Object o) {

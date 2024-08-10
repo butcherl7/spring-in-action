@@ -26,9 +26,9 @@ public class User implements Enable {
 
     private Boolean enabled;
 
-    private LocalDateTime createdTime;
+    private LocalDateTime createAt;
 
-    private LocalDateTime updatedTime;
+    private LocalDateTime updateAt;
 
     @TableField(exist = false)
     private Set<String> roles;

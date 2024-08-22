@@ -92,7 +92,7 @@ public class RedisSession implements ValidatingSession {
 
     @Override
     public Serializable getId() {
-        return cast(session.get(Key.id), Serializable.class);
+        return cast(session.get(Key.id), String.class);
     }
 
     @Override

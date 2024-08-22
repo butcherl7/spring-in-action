@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import top.funsite.spring.action.domain.dto.UserDTO;
+import top.funsite.spring.action.domain.CurrentUser;
 import top.funsite.spring.action.domain.web.Result;
 import top.funsite.spring.action.exception.BadParameterException;
 import top.funsite.spring.action.service.LoginService;
@@ -49,7 +49,7 @@ public class AccountController {
     }
 
     @GetMapping("info")
-    public Result<UserDTO> info() {
+    public Result<CurrentUser> info() {
         Subject subject = SecurityUtils.getSubject();
         RedisSession session = (RedisSession) subject.getSession();
 
@@ -59,7 +59,7 @@ public class AccountController {
         log.info("lastAccessTime:           {}", SIMPLE_MILLI_FORMATTER.format(lastAccessTime));
         log.info("lastRememberedAccessTime: {}", lastRememberedAccessTime == null ? null : SIMPLE_MILLI_FORMATTER.format(lastRememberedAccessTime));
 
-        return Result.ok((UserDTO) subject.getPrincipal());
+        return Result.ok((CurrentUser) subject.getPrincipal());
     }
 
     @GetMapping("home1")

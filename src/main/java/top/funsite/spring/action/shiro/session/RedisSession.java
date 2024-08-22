@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import top.funsite.spring.action.config.ShiroConfig;
-import top.funsite.spring.action.domain.dto.UserDTO;
+import top.funsite.spring.action.domain.CurrentUser;
 
 import java.io.Serializable;
 import java.util.*;
@@ -256,8 +256,8 @@ public class RedisSession implements ValidatingSession {
         return cast(session.get(Key.lastRememberedAccessTime), Date.class);
     }
 
-    public UserDTO getUser() {
-        return cast(session.get(Key.user), UserDTO.class);
+    public CurrentUser getUser() {
+        return cast(session.get(Key.user), CurrentUser.class);
     }
 
     public String getRealmName() {

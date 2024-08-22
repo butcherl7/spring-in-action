@@ -4,7 +4,7 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
-import top.funsite.spring.action.domain.dto.UserDTO;
+import top.funsite.spring.action.domain.CurrentUser;
 import top.funsite.spring.action.domain.entity.User;
 import top.funsite.spring.action.service.UserService;
 
@@ -47,14 +47,14 @@ public class DatabaseRealm extends AbstractRealm {
             }
         }
 
-        return new SimpleAuthenticationInfo(UserDTO.from(user), password, getName());
+        return new SimpleAuthenticationInfo(CurrentUser.from(user), password, getName());
     }
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        UserDTO userDTO = (UserDTO) principals.getPrimaryPrincipal();
-        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(userDTO.getRoles());
-        info.setStringPermissions(userDTO.getPermissions());
+        CurrentUser currentUser = (CurrentUser) principals.getPrimaryPrincipal();
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(currentUser.getRoles());
+        info.setStringPermissions(currentUser.getPermissions());
         // if admin
         // info.setObjectPermissions(Collections.singleton(new AllPermission()));
         return info;

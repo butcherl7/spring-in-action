@@ -34,6 +34,9 @@ public class RedisSession implements ValidatingSession {
 
     private final String sessionKey;
 
+    /**
+     * 表示会话是否已超时。
+     */
     private Boolean timedOut = null;
 
     private Date stopTimestamp;
@@ -54,7 +57,7 @@ public class RedisSession implements ValidatingSession {
     /**
      * 禁止作为 session key 的键。
      */
-    private static final List<String> PROHIBITED_SET_KEYS = List.of(
+    private static final List<String> PROHIBITED_ADDED_KEYS = List.of(
             // 不需要把 principals 存到 session. 也有序列化异常的问题。
             DefaultSubjectContext.AUTHENTICATED_SESSION_KEY,
             DefaultSubjectContext.PRINCIPALS_SESSION_KEY
@@ -153,7 +156,7 @@ public class RedisSession implements ValidatingSession {
         if (!isWritable()) return;
         try {
             String sKey = assertString(key);
-            if (PROHIBITED_SET_KEYS.contains(sKey)) {
+            if (PROHIBITED_ADDED_KEYS.contains(sKey)) {
                 return;
             }
             hashOperations.put(sessionKey, sKey, value);

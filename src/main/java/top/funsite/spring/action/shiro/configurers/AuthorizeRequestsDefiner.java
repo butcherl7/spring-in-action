@@ -35,18 +35,18 @@ public class AuthorizeRequestsDefiner {
     private final List<RequestMatcherRegistry> requestMatcherRegistries = new ArrayList<>();
 
     public RequestMatcherRegistry antMatchers(String... antPatterns) {
-        RequestMatcherRegistry requestMatcherRegistry = new RequestMatcherRegistry(this, antPatterns);
-        requestMatcherRegistries.add(requestMatcherRegistry);
-        return requestMatcherRegistry;
+        var registry = new RequestMatcherRegistry(this, antPatterns);
+        requestMatcherRegistries.add(registry);
+        return registry;
     }
 
     /**
      * 获取接口对应的过滤器链映射，用于创建 Shiro 过滤器截获的过滤器链。
      *
-     * @return map.
+     * @return FilterChain Definition map.
      * @see ShiroFilterFactoryBean#setFilterChainDefinitionMap(Map)
      */
-    public Map<String, String> getFilterChainDefinitionMap() {
+    public Map<String, String> getFilterChainDefinition() {
         Map<String, String> map = new LinkedHashMap<>();
         for (RequestMatcherRegistry registry : requestMatcherRegistries) {
             String chainDefinition = registry.filter.name();
@@ -68,10 +68,10 @@ public class AuthorizeRequestsDefiner {
     /**
      * 获取接口对应的权限判断逻辑。
      *
-     * @return map.
+     * @return AuthLogic Definition map.
      * @see AuthorizeFilter
      */
-    public Map<String, Logical> getLogicDefinitionMap() {
+    public Map<String, Logical> getAuthLogicDefinition() {
         Map<String, Logical> map = new LinkedHashMap<>();
         for (RequestMatcherRegistry registry : requestMatcherRegistries) {
             if (ArrayUtils.isNotEmpty(registry.authorities)) {
@@ -86,11 +86,11 @@ public class AuthorizeRequestsDefiner {
     /**
      * 获取定义的已解码的 JWT 验证逻辑。
      *
-     * @return map.
+     * @return {@code DecodedJWTValidator} Definition map.
      * @see JwtFilter
      */
     @ApiStatus.Experimental
-    public Map<String, DecodedJWTValidator> getDefinedDecodedJWTValidator() {
+    public Map<String, DecodedJWTValidator> getDecodedJWTValidatorDefinition() {
         Map<String, DecodedJWTValidator> map = new LinkedHashMap<>();
         for (RequestMatcherRegistry registry : requestMatcherRegistries) {
             DecodedJWTValidator validator = registry.decodedJWTValidator;
@@ -105,7 +105,7 @@ public class AuthorizeRequestsDefiner {
 
     public static class RequestMatcherRegistry {
 
-        private final AuthorizeRequestsDefiner authorizeRequestsDefiner;
+        private final AuthorizeRequestsDefiner definer;
 
         private final String[] antPatterns;
 
@@ -144,7 +144,7 @@ public class AuthorizeRequestsDefiner {
         public AuthorizeRequestsDefiner jwt(DecodedJWTValidator decodedJWTValidator) {
             this.filter = UsedFilter.jwt;
             this.decodedJWTValidator = decodedJWTValidator;
-            return authorizeRequestsDefiner;
+            return definer;
         }
 
         /**
@@ -155,7 +155,7 @@ public class AuthorizeRequestsDefiner {
          */
         public AuthorizeRequestsDefiner rememberMe() {
             this.filter = UsedFilter.remember;
-            return authorizeRequestsDefiner;
+            return definer;
         }
 
         /**
@@ -165,7 +165,7 @@ public class AuthorizeRequestsDefiner {
          */
         public AuthorizeRequestsDefiner authenticated() {
             this.filter = UsedFilter.authc;
-            return authorizeRequestsDefiner;
+            return definer;
         }
 
         /**
@@ -235,18 +235,18 @@ public class AuthorizeRequestsDefiner {
          */
         public AuthorizeRequestsDefiner permitAll() {
             this.filter = UsedFilter.anon;
-            return authorizeRequestsDefiner;
+            return definer;
         }
 
         private AuthorizeRequestsDefiner requiredAuthorities(UsedFilter filter, Logical logical, String... authorities) {
             this.filter = filter;
             this.logical = logical;
             this.authorities = authorities;
-            return authorizeRequestsDefiner;
+            return definer;
         }
 
-        RequestMatcherRegistry(AuthorizeRequestsDefiner authorizeRequestsDefiner, String[] antPatterns) {
-            this.authorizeRequestsDefiner = authorizeRequestsDefiner;
+        RequestMatcherRegistry(AuthorizeRequestsDefiner definer, String[] antPatterns) {
+            this.definer = definer;
             this.antPatterns = antPatterns;
         }
     }

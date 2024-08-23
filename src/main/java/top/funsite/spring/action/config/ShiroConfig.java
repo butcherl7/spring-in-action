@@ -4,7 +4,6 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.Filter;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.realm.Realm;
@@ -140,18 +139,19 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setLoginUrl(loginUrl);
         shiroFilterFactoryBean.setSecurityManager(securityManager);
 
-        AuthorizeRequestsDefiner definer = createRequestsDefiner();
-        Map<String, String> filterChainDefinitionMap = definer.getFilterChainDefinitionMap();
-        Map<String, Logical> logicDefinitionMap = definer.getLogicDefinitionMap();
+        var definer = createRequestsDefiner();
+        var filterChainDefinition = definer.getFilterChainDefinition();
+        var authLogicDefinition = definer.getAuthLogicDefinition();
+        var decodedJWTValidatorDefinition = definer.getDecodedJWTValidatorDefinition();
 
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinition);
         // 使用重写过的过滤器代替默认的。
         Map<String, Filter> filters = shiroFilterFactoryBean.getFilters();
         filters.put(authc.name(), new AuthenticationFilter());
         filters.put(remember.name(), new RememberedFilter());
-        filters.put(roles.name(), new RoleFilter(logicDefinitionMap));
-        filters.put(perms.name(), new PermissionFilter(logicDefinitionMap));
-        filters.put(jwt.name(), new JwtFilter());
+        filters.put(roles.name(), new RoleFilter(authLogicDefinition));
+        filters.put(perms.name(), new PermissionFilter(authLogicDefinition));
+        filters.put(jwt.name(), new JwtFilter(decodedJWTValidatorDefinition));
         return shiroFilterFactoryBean;
     }
 
